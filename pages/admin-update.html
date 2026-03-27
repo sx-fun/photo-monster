@@ -419,52 +419,52 @@
     <div class="admin-container">
         <!-- 页面头部 -->
         <div class="admin-header">
-            <h1><i class="fas fa-sync-alt"></i> 内容更新管理</h1>
-            <p>管理 Photo Monster 的内容更新，审核并发布新版本</p>
+            <h1><i class="fas fa-sync-alt"></i> 网站部署管理</h1>
+            <p>管理 Photo Monster 网站版本和本地变更</p>
             <div class="version-info">
                 <div class="version-item">
-                    <label>当前版本</label>
+                    <label>网站版本</label>
                     <span id="currentVersion">--</span>
                 </div>
                 <div class="version-item">
-                    <label>最后更新</label>
+                    <label>最后部署</label>
                     <span id="lastUpdated">--</span>
                 </div>
                 <div class="version-item">
-                    <label>部署状态</label>
+                    <label>线上状态</label>
                     <span id="deployStatus"><i class="fas fa-globe"></i> 检查中...</span>
                 </div>
                 <div class="version-item">
-                    <label>本地待提交</label>
+                    <label>本地未提交</label>
                     <span id="localChanges">--</span>
                 </div>
                 <div class="version-item">
-                    <label>待审核更新</label>
+                    <label>WorkBuddy待处理</label>
                     <span id="pendingCount">0</span>
                 </div>
             </div>
         </div>
 
-        <!-- 待审核更新 -->
+        <!-- 待处理任务 -->
         <div class="update-section">
             <h2>
-                <i class="fas fa-inbox"></i> 
-                待审核更新
+                <i class="fas fa-clipboard-list"></i> 
+                待处理任务
                 <span class="update-badge" id="updateBadge">0</span>
             </h2>
             <div id="pendingUpdates">
                 <div class="empty-state">
                     <i class="fas fa-check-circle"></i>
-                    <p>暂无待审核更新</p>
-                    <p style="font-size: 0.9rem; margin-top: 10px;">点击"检查更新"按钮检测新内容</p>
+                    <p>暂无待处理任务</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">WorkBuddy 检测到的变更将显示在这里</p>
                 </div>
             </div>
             <div class="batch-actions" id="batchActions" style="display: none;">
-                <button class="btn-batch btn-batch-apply" onclick="applyAllUpdates()">
-                    <i class="fas fa-check"></i> 一键应用全部
+                <button class="btn-batch btn-batch-apply" onclick="openDeployFolder()">
+                    <i class="fas fa-folder-open"></i> 打开项目文件夹
                 </button>
-                <button class="btn-batch btn-batch-export" onclick="exportUpdateReport()">
-                    <i class="fas fa-download"></i> 导出报告
+                <button class="btn-batch btn-batch-export" onclick="openGitHubRepo()">
+                    <i class="fab fa-github"></i> 查看仓库
                 </button>
             </div>
         </div>
@@ -479,19 +479,27 @@
             </div>
         </div>
 
-        <!-- 操作按钮 -->
+        <!-- 快捷操作 -->
         <div class="update-section">
-            <h2><i class="fas fa-tools"></i> 管理操作</h2>
+            <h2><i class="fas fa-tools"></i> 快捷操作</h2>
             <div class="batch-actions">
-                <button class="btn-batch btn-batch-apply" onclick="checkForUpdates()">
-                    <i class="fas fa-search"></i> 检查更新
+                <button class="btn-batch btn-batch-apply" onclick="openDeployFolder()">
+                    <i class="fas fa-folder-open"></i> 打开项目文件夹
                 </button>
-                <button class="btn-batch btn-batch-export" onclick="rollbackUpdate()">
-                    <i class="fas fa-undo"></i> 回滚版本
+                <button class="btn-batch btn-batch-apply" onclick="openGitHubPages()">
+                    <i class="fas fa-globe"></i> 访问线上网站
                 </button>
-                <button class="btn-batch btn-batch-export" onclick="requestNotificationPermission()">
-                    <i class="fas fa-bell"></i> 开启通知
+                <button class="btn-batch btn-batch-export" onclick="openGitHubRepo()">
+                    <i class="fab fa-github"></i> GitHub仓库
                 </button>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                <h4 style="margin-bottom: 10px; color: var(--text-primary);"><i class="fas fa-info-circle"></i> 部署步骤</h4>
+                <ol style="padding-left: 20px; color: var(--text-secondary); line-height: 1.8;">
+                    <li>在 WorkBuddy 中完成代码修改</li>
+                    <li>运行 <code style="background: white; padding: 2px 6px; border-radius: 4px;">deploy.bat</code> 推送变更</li>
+                    <li>等待 1-2 分钟后刷新线上网站</li>
+                </ol>
             </div>
         </div>
     </div>
@@ -823,31 +831,19 @@
             showLoading('正在初始化...');
             
             try {
-                // 等待UpdateManager初始化（最多等待10秒）
-                let attempts = 0;
-                const maxAttempts = 100; // 10秒
+                // 更新版本信息和部署状态
+                await updateVersionInfo();
                 
-                while ((!window.updateManager || !window.updateManager.config) && attempts < maxAttempts) {
-                    await new Promise(r => setTimeout(r, 100));
-                    attempts++;
-                }
+                // 渲染待处理任务（基于本地Git状态）
+                await renderPendingUpdates();
                 
-                if (!window.updateManager || !window.updateManager.config) {
-                    throw new Error('更新管理器初始化超时，请刷新页面重试');
-                }
-
-                updateVersionInfo();
+                // 渲染更新历史
                 renderUpdateHistory();
+                
                 hideLoading();
                 
                 // 添加退出登录按钮
                 addLogoutButton();
-                
-                // 监听更新发现事件
-                window.addEventListener('updatesFound', (e) => {
-                    showSuccessToast(`检测到 ${e.detail.count} 个新更新`);
-                    checkForUpdates();
-                });
                 
             } catch (error) {
                 hideLoading();
@@ -884,12 +880,29 @@
         }
 
         // 更新版本信息
-        function updateVersionInfo() {
-            const stats = window.updateManager.getUpdateStats();
-            document.getElementById('currentVersion').textContent = stats.currentVersion;
-            document.getElementById('lastUpdated').textContent = new Date(stats.lastUpdate).toLocaleString('zh-CN');
-            document.getElementById('pendingCount').textContent = stats.pendingCount;
-            document.getElementById('updateBadge').textContent = stats.pendingCount;
+        async function updateVersionInfo() {
+            // 从 sw.js 读取实际版本
+            try {
+                const response = await fetch('../sw.js?nocache=' + Date.now());
+                const text = await response.text();
+                const versionMatch = text.match(/CACHE_VERSION\s*=\s*['"](v\d+)['"]/);
+                if (versionMatch) {
+                    document.getElementById('currentVersion').textContent = versionMatch[1];
+                }
+            } catch (e) {
+                document.getElementById('currentVersion').textContent = '未知';
+            }
+            
+            // 尝试读取部署时间（从Git状态文件）
+            try {
+                const response = await fetch('../data/local-git-status.json?nocache=' + Date.now());
+                const data = await response.json();
+                if (data.lastCheck) {
+                    document.getElementById('lastUpdated').textContent = new Date(data.lastCheck).toLocaleString('zh-CN');
+                }
+            } catch (e) {
+                document.getElementById('lastUpdated').textContent = '--';
+            }
             
             // 检查部署状态
             checkDeployStatus();
@@ -974,49 +987,65 @@
             }
         }
 
-        // 渲染待审核更新
-        function renderPendingUpdates(updates) {
+        // 渲染待处理任务
+        async function renderPendingUpdates(updates) {
             const container = document.getElementById('pendingUpdates');
             const batchActions = document.getElementById('batchActions');
+            const badge = document.getElementById('updateBadge');
+            const pendingCount = document.getElementById('pendingCount');
             
-            if (!updates || updates.length === 0) {
+            // 实际检查本地Git状态
+            let localStatus = { changes: 0, files: [] };
+            try {
+                const response = await fetch('../data/local-git-status.json?nocache=' + Date.now());
+                if (response.ok) {
+                    localStatus = await response.json();
+                }
+            } catch (e) {
+                console.log('[Admin] 无法读取本地状态');
+            }
+            
+            // 更新计数
+            const taskCount = localStatus.changes > 0 ? localStatus.changes : 0;
+            badge.textContent = taskCount;
+            pendingCount.textContent = taskCount;
+            
+            if (taskCount === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-check-circle"></i>
-                        <p>暂无待审核更新</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">点击"检查更新"按钮检测新内容</p>
+                        <p>暂无待处理任务</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">本地代码已同步，没有未提交的变更</p>
                     </div>
                 `;
                 batchActions.style.display = 'none';
                 return;
             }
 
+            // 显示本地未提交的文件列表
             container.innerHTML = `
                 <div class="update-list">
-                    ${updates.map(u => `
-                        <div class="update-item" data-id="${u.id}">
-                            <div class="update-item-header">
-                                <span class="update-item-title">${u.name}</span>
-                                <span class="update-item-type">${u.type || '内容更新'}</span>
-                            </div>
-                            <div class="update-item-desc">${u.description}</div>
-                            <div class="update-item-meta">
-                                <span><i class="fas fa-file"></i> ${u.file}</span>
-                                <span><i class="fas fa-clock"></i> ${new Date(u.timestamp).toLocaleString('zh-CN')}</span>
-                            </div>
-                            <div class="update-item-actions">
-                                <button class="btn-preview" onclick="previewUpdate('${u.id}')">
-                                    <i class="fas fa-eye"></i> 查看
-                                </button>
-                                <button class="btn-apply" onclick="applyUpdate('${u.id}')">
-                                    <i class="fas fa-check"></i> 应用
-                                </button>
-                                <button class="btn-ignore" onclick="ignoreUpdate('${u.id}')">
-                                    <i class="fas fa-times"></i> 忽略
-                                </button>
-                            </div>
+                    <div class="update-item">
+                        <div class="update-item-header">
+                            <span class="update-item-title"><i class="fas fa-code-branch" style="color: var(--primary-color);"></i> 本地未提交变更</span>
+                            <span class="update-item-type">Git</span>
                         </div>
-                    `).join('')}
+                        <div class="update-item-desc">
+                            检测到 ${localStatus.changes} 个文件有变更，需要运行 deploy.bat 推送到 GitHub
+                        </div>
+                        <div class="update-item-meta">
+                            <span><i class="fas fa-folder"></i> D:\PhotoMonster</span>
+                            <span><i class="fas fa-clock"></i> ${new Date(localStatus.lastCheck).toLocaleString('zh-CN')}</span>
+                        </div>
+                        ${localStatus.files && localStatus.files.length > 0 ? `
+                        <div style="margin: 15px 0; padding: 10px; background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">变更文件:</div>
+                            ${localStatus.files.map(f => `
+                                <div style="font-size: 0.8rem; padding: 4px 0; font-family: monospace;"><i class="fas fa-file-code" style="margin-right: 5px; opacity: 0.5;"></i>${f}</div>
+                            `).join('')}
+                        </div>
+                        ` : ''}
+                    </div>
                 </div>
             `;
             
@@ -1370,6 +1399,22 @@
         function showSuccessToast(message) { showToast('success', '成功', message); }
         function showErrorToast(message) { showToast('error', '错误', message); }
         function showInfoToast(message) { showToast('info', '提示', message); }
+
+        // 打开项目文件夹
+        function openDeployFolder() {
+            window.open('file:///D:/PhotoMonster', '_blank');
+            showSuccessToast('已打开项目文件夹');
+        }
+
+        // 打开GitHub仓库
+        function openGitHubRepo() {
+            window.open('https://github.com/sx-fun/photo-monster', '_blank');
+        }
+
+        // 打开GitHub Pages
+        function openGitHubPages() {
+            window.open('https://sx-fun.github.io/photo-monster/', '_blank');
+        }
 
         // 加载状态
         function showLoading(text) {
