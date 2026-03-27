@@ -431,6 +431,14 @@
                     <span id="lastUpdated">--</span>
                 </div>
                 <div class="version-item">
+                    <label>部署状态</label>
+                    <span id="deployStatus"><i class="fas fa-globe"></i> 检查中...</span>
+                </div>
+                <div class="version-item">
+                    <label>本地待提交</label>
+                    <span id="localChanges">--</span>
+                </div>
+                <div class="version-item">
                     <label>待审核更新</label>
                     <span id="pendingCount">0</span>
                 </div>
@@ -882,6 +890,65 @@
             document.getElementById('lastUpdated').textContent = new Date(stats.lastUpdate).toLocaleString('zh-CN');
             document.getElementById('pendingCount').textContent = stats.pendingCount;
             document.getElementById('updateBadge').textContent = stats.pendingCount;
+            
+            // 检查部署状态
+            checkDeployStatus();
+        }
+
+        // 检查部署状态
+        async function checkDeployStatus() {
+            const deployStatusEl = document.getElementById('deployStatus');
+            const localChangesEl = document.getElementById('localChanges');
+            
+            try {
+                // 检查线上版本
+                const response = await fetch('https://sx-fun.github.io/photo-monster/data/update-config.json', { 
+                    method: 'HEAD',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    deployStatusEl.innerHTML = '<i class="fas fa-check-circle" style="color: #22c55e;"></i> 线上正常';
+                } else {
+                    deployStatusEl.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i> 检查失败';
+                }
+            } catch (e) {
+                deployStatusEl.innerHTML = '<i class="fas fa-question-circle" style="color: #9ca3af;"></i> 无法连接';
+            }
+            
+            // 检查本地 Git 状态
+            try {
+                const result = await checkLocalGitStatus();
+                if (result.changes === -1) {
+                    localChangesEl.textContent = '未配置';
+                    localChangesEl.style.color = '#9ca3af';
+                } else if (result.changes === 0) {
+                    localChangesEl.textContent = '无变更';
+                    localChangesEl.style.color = '#22c55e';
+                } else {
+                    localChangesEl.textContent = `${result.changes} 个文件`;
+                    localChangesEl.style.color = '#f59e0b';
+                }
+            } catch (e) {
+                localChangesEl.textContent = '未知';
+                localChangesEl.style.color = '#9ca3af';
+            }
+        }
+
+        // 检查本地 Git 状态
+        async function checkLocalGitStatus() {
+            try {
+                // 尝试读取 WorkBuddy 生成的状态文件
+                const response = await fetch('../data/local-git-status.json?nocache=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    return { changes: data.uncommitted || 0 };
+                }
+            } catch (e) {
+                // 状态文件不存在，返回未知
+                console.log('[Admin] 本地状态文件未找到');
+            }
+            return { changes: -1 }; // -1 表示未知
         }
 
         // 检查更新

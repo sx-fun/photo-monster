@@ -93,6 +93,12 @@ class AutoUpdateManager {
             const notification = reporter.generateWorkBuddyNotification(report.report);
             this.saveWorkBuddyNotification(notification);
             
+            // 更新Git状态文件
+            this.updateLocalGitStatus();
+            
+            // 生成桌面提醒
+            this.generateDesktopReminder(report.report);
+            
             console.log('\n📢 WorkBuddy 通知内容:');
             console.log('─────────────────────────────────');
             console.log(notification);
@@ -122,6 +128,78 @@ class AutoUpdateManager {
         
         fs.writeFileSync(notifyPath, notification, 'utf-8');
         console.log(`\n📢 WorkBuddy 通知已保存: ${notifyPath}`);
+    }
+
+    // 更新本地Git状态文件（供admin-update.html读取）
+    updateLocalGitStatus() {
+        const fs = require('fs');
+        const path = require('path');
+        const { execSync } = require('child_process');
+        
+        try {
+            // 获取未提交文件数量
+            const statusOutput = execSync('git status --short', { 
+                cwd: 'D:\\PhotoMonster',
+                encoding: 'utf-8' 
+            });
+            const uncommitted = statusOutput.trim().split('\n').filter(line => line.trim()).length;
+            
+            // 获取当前分支
+            const branchOutput = execSync('git branch --show-current', {
+                cwd: 'D:\\PhotoMonster',
+                encoding: 'utf-8'
+            });
+            const branch = branchOutput.trim();
+            
+            // 获取未提交文件列表
+            const files = statusOutput.trim().split('\n')
+                .filter(line => line.trim())
+                .map(line => line.substring(3).trim());
+            
+            const statusData = {
+                uncommitted,
+                lastCheck: new Date().toISOString(),
+                branch,
+                files: files.slice(0, 10) // 最多显示10个文件
+            };
+            
+            const statusPath = path.join('D:\\PhotoMonster', 'data', 'local-git-status.json');
+            fs.writeFileSync(statusPath, JSON.stringify(statusData, null, 2), 'utf-8');
+            console.log(`\n📝 本地Git状态已更新: ${uncommitted} 个未提交文件`);
+            
+        } catch (error) {
+            console.log('\n⚠️  更新Git状态失败:', error.message);
+        }
+    }
+
+    // 生成桌面提醒文件
+    generateDesktopReminder(report) {
+        const fs = require('fs');
+        const path = require('path');
+        
+        const desktopPath = 'D:\\HuaweiMoveData\\Users\\HUAWEI\\Desktop';
+        const reminderPath = path.join(desktopPath, 'PhotoMonster-待部署提醒.txt');
+        
+        const content = `📸 Photo Monster 部署提醒
+═══════════════════════════════
+⏰ 生成时间: ${new Date().toLocaleString('zh-CN')}
+📦 待更新内容: ${report.totalChanges || '若干'} 项变更
+
+操作步骤:
+1. 运行 D:\PhotoMonster\deploy.bat
+2. 等待 1-2 分钟
+3. 访问 https://sx-fun.github.io/photo-monster/ 查看
+
+详细报告:
+- 审核页面: D:\PhotoMonster\pages\admin-update.html
+- 抓取结果: D:\PhotoMonster\tools\reviews\
+
+═══════════════════════════════
+此文件可安全删除
+`;
+        
+        fs.writeFileSync(reminderPath, content, 'utf-8');
+        console.log(`\n🖥️  桌面提醒已创建: ${reminderPath}`);
     }
 }
 

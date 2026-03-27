@@ -1,7 +1,7 @@
 // Photo Monster - Service Worker
 // 实现离线缓存功能 - Network First 策略
 
-const CACHE_VERSION = 'v39';  // 修改版本号可强制更新缓存 - ai-config 修复安全提示显示
+const CACHE_VERSION = 'v41';  // 修改版本号可强制更新缓存 - deploy.bat优化+Git状态检测
 const CACHE_NAME = `photo-monster-${CACHE_VERSION}`;
 
 // 静态资源列表
