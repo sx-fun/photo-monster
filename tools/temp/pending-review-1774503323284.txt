@@ -1,0 +1,44 @@
+===============================================
+📸 Photo Monster 内容更新审核报告
+===============================================
+生成时间: 2026/3/26 13:35:23
+抓取时间: 2026/3/26 13:35:23
+
+📊 统计摘要
+-----------------------------------------------
+📷 新增相机: 1 款
+🔍 新增镜头: 0 款
+📰 相关新闻: 3 条
+⚠️  抓取错误: 0 个
+
+📷 新增相机列表
+-----------------------------------------------
+[1] SONY A7V
+    类型: mirrorless | 画幅: fullframe
+    像素: 42MP | 卡口: FE
+    来源: DPReview | 日期: 2026-03-20
+
+📰 最新新闻
+-----------------------------------------------
+[1] Sony announces A7V with 42MP sensor and improved AF
+    Sony has announced the A7V featuring a new 42MP sensor, improved autofocus system with AI subject de...
+    来源: DPReview
+
+[2] Canon EOS R6 Mark III rumored for Q2 2026
+    According to sources, Canon is preparing the EOS R6 Mark III with stacked sensor technology....
+    来源: DPReview
+
+[3] Nikon Z7 III specifications leaked
+    Detailed specs of the upcoming Nikon Z7 III have appeared online, suggesting 60MP sensor....
+    来源: DPReview
+
+===============================================
+📝 审核操作说明
+-----------------------------------------------
+1. 请检查上述内容是否准确
+2. 如需修改，编辑 pending-review-xxx.json 文件
+3. 确认无误后，执行以下任一操作:
+   a) 重命名: pending-review-xxx.json → approved-xxx.json
+   b) 运行: node update-db.js
+4. 如需拒绝，删除 pending-review-xxx.json
+===============================================

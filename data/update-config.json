@@ -1,0 +1,116 @@
+{
+  "_comment": "Photo Monster 内容更新配置文件",
+  "version": "2026-03-27-0001",
+  "lastUpdated": "2026-03-27T01:19:00.000Z",
+  "updateSources": [
+    {
+      "id": "camera-database",
+      "name": "相机数据库更新",
+      "type": "auto",
+      "file": "js/app.js",
+      "description": "从7个数据源自动抓取新品相机",
+      "sources": [
+        "dpreview",
+        "sony",
+        "canon",
+        "nikon",
+        "fujifilm",
+        "leica",
+        "hasselblad"
+      ],
+      "schedule": "每14天"
+    },
+    {
+      "id": "lens-database",
+      "name": "镜头数据库更新",
+      "type": "auto",
+      "file": "js/rule-engine.js",
+      "description": "从7个数据源自动抓取新品镜头",
+      "sources": [
+        "dpreview",
+        "sony",
+        "canon",
+        "nikon",
+        "fujifilm",
+        "leica",
+        "hasselblad"
+      ],
+      "schedule": "每14天"
+    },
+    {
+      "id": "knowledge-base",
+      "name": "知识库更新",
+      "type": "manual",
+      "file": "js/knowledge-base.js",
+      "description": "新增摄影教程和技巧"
+    },
+    {
+      "id": "shooting-plans",
+      "name": "拍摄方案更新",
+      "type": "manual",
+      "file": "js/rule-engine.js",
+      "description": "新增场景拍摄方案"
+    }
+  ],
+  "pendingChanges": [],
+  "updateHistory": [
+    {
+      "version": "2026-03-27-0001",
+      "date": "2026-03-27T01:19:00.000Z",
+      "changes": [
+        "自动检测: knowledge-base.js 内容已变更（哈希变化）",
+        "SW缓存版本升级至 v37"
+      ],
+      "status": "published"
+    },
+    {
+      "version": "2026-03-26-1355",
+      "date": "2026-03-26T05:55:39.381Z",
+      "changes": [
+        "自动更新: 添加 1 款新器材"
+      ],
+      "status": "published"
+    },
+    {
+      "version": "2026-03-26-003",
+      "date": "2026-03-26T13:35:00Z",
+      "changes": [
+        "新增自动内容抓取系统",
+        "集成7个数据源（DPReview/索尼/佳能/尼康/富士/徕卡/哈苏）",
+        "新增审核机制（人工确认后更新）",
+        "新增WorkBuddy通知功能",
+        "新增自动备份机制"
+      ],
+      "status": "published"
+    },
+    {
+      "version": "2026-03-26-002",
+      "date": "2026-03-26T12:20:00Z",
+      "changes": [
+        "改进自动更新检测机制（基于文件哈希）",
+        "添加全局更新通知功能",
+        "优化更新管理页面初始化"
+      ],
+      "status": "published"
+    },
+    {
+      "version": "2026-03-26-001",
+      "date": "2026-03-26T10:00:00Z",
+      "changes": [
+        "新增照片分析直方图功能",
+        "新增构图辅助线功能",
+        "新增产品/运动/野生动物拍摄方案"
+      ],
+      "status": "published"
+    }
+  ],
+  "autoUpdate": {
+    "enabled": true,
+    "schedule": "每14天 9:00",
+    "lastRun": "2026-03-26T13:35:00Z",
+    "nextRun": "2026-04-09T09:00:00Z",
+    "toolPath": "tools/auto-update.js",
+    "tempPath": "tools/temp",
+    "backupPath": "tools/backups"
+  }
+}

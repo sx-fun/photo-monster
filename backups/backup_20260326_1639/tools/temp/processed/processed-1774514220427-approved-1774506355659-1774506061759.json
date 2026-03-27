@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "generatedAt": "2026-03-26T06:21:01.759Z",
+    "sourceFile": "scrape-results-1774506061702.json",
+    "scrapeTimestamp": "2026-03-26T06:20:50.529Z"
+  },
+  "summary": {
+    "newCameras": 1,
+    "newLenses": 0,
+    "newsCount": 3,
+    "errors": 0
+  },
+  "items": {
+    "cameras": [
+      {
+        "brand": "sony",
+        "model": "A7V",
+        "type": "mirrorless",
+        "sensor": "fullframe",
+        "mp": 42,
+        "mount": "FE",
+        "source": "DPReview",
+        "publishDate": "2026-03-20",
+        "needsReview": true
+      }
+    ],
+    "lenses": []
+  },
+  "news": [
+    {
+      "title": "Sony announces A7V with 42MP sensor and improved AF",
+      "summary": "Sony has announced the A7V featuring a new 42MP sensor, improved autofocus system with AI subject detection.",
+      "url": "https://www.dpreview.com/news/sony-a7v",
+      "date": "2026-03-20",
+      "source": "DPReview"
+    },
+    {
+      "title": "Canon EOS R6 Mark III rumored for Q2 2026",
+      "summary": "According to sources, Canon is preparing the EOS R6 Mark III with stacked sensor technology.",
+      "url": "https://www.dpreview.com/news/canon-r6iii-rumor",
+      "date": "2026-03-18",
+      "source": "DPReview"
+    },
+    {
+      "title": "Nikon Z7 III specifications leaked",
+      "summary": "Detailed specs of the upcoming Nikon Z7 III have appeared online, suggesting 60MP sensor.",
+      "url": "https://www.dpreview.com/news/nikon-z7iii",
+      "date": "2026-03-15",
+      "source": "DPReview"
+    }
+  ],
+  "errors": []
+}

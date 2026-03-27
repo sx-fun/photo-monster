@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>照片分析 - Photo Monster</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">
+                <i class="fas fa-camera-retro"></i>
+                <span>Photo Monster</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="photo-analysis.html" class="nav-link active"><i class="fas fa-camera"></i> 照片分析</a></li>
+                <li><a href="gear-guide.html" class="nav-link"><i class="fas fa-sliders-h"></i> 套装推荐</a></li>
+                <li><a href="planner.html" class="nav-link"><i class="fas fa-clipboard-list"></i> 方案规划</a></li>
+                <li><a href="knowledge.html" class="nav-link"><i class="fas fa-graduation-cap"></i> 知识库</a></li>
+                <li class="nav-separator"></li>
+                <li><a href="ai-config.html" class="nav-link"><i class="fas fa-robot"></i> AI配置</a></li>
+                <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> 关于</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <section class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-camera"></i> 照片分析</h1>
+            <p>上传照片，获取专业点评和EXIF信息分析</p>
+        </div>
+    </section>
+
+    <!-- 上传区域 -->
+    <section class="upload-section">
+        <div class="container">
+            <div class="upload-area" id="dropZone">
+                <div class="upload-content">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">拖拽照片到此处，或点击上传</p>
+                    <p class="upload-hint">支持 JPG/PNG/HEIC/HEIF 格式，建议文件小于 10MB。RAW 格式将尝试解析 EXIF</p>
+                    <input type="file" id="fileInput" accept="image/*,.heic,.heif,.raw,.cr2,.nef,.arw,.dng,.orf,.rw2" multiple hidden>
+                    <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">
+                        选择文件
+                    </button>
+                </div>
+            </div>
+
+            <!-- 压缩设置（可折叠） -->
+            <div class="compression-settings collapsible" id="compressionSettings">
+                <h3 class="collapsible-header" id="compressionToggle" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+                    <span><i class="fas fa-sliders-h"></i> 压缩设置</span>
+                    <i class="fas fa-chevron-down collapsible-icon" style="transition: transform 0.3s ease; font-size:0.9rem;"></i>
+                </h3>
+                <div class="collapsible-body" id="compressionBody">
+                    <div class="settings-grid">
+                    <div class="setting-item">
+                        <label>最大文件大小</label>
+                        <select id="maxSize">
+                            <option value="1">1 MB</option>
+                            <option value="2" selected>2 MB</option>
+                            <option value="5">5 MB</option>
+                            <option value="10">10 MB</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>最大边长</label>
+                        <select id="maxDimension">
+                            <option value="1280">1280 px</option>
+                            <option value="1920" selected>1920 px</option>
+                            <option value="2048">2048 px</option>
+                            <option value="original">原始尺寸</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>图片质量</label>
+                        <input type="range" id="quality" min="0.6" max="1" step="0.1" value="0.85">
+                        <span id="qualityValue">85%</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- 预览区域 -->
+            <div class="preview-section" id="previewSection" style="display: none;">
+                <h3>预览</h3>
+                <div class="preview-grid" id="previewGrid"></div>
+                <div class="preview-actions">
+                <button class="btn btn-primary" id="analyzeBtn">
+                    <i class="fas fa-magic"></i> AI 分析
+                </button>
+                <button class="btn btn-primary" id="batchAnalyzeBtn" style="display: none;">
+                    <i class="fas fa-images"></i> 批量分析
+                </button>
+                    <button class="btn btn-primary" id="equipmentAnalysisBtn">
+                        <i class="fas fa-info-circle"></i> EXIF 信息
+                    </button>
+                    <button class="btn btn-primary" id="clearBtn">
+                        <i class="fas fa-trash"></i> 清除
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 图像分析工具栏 -->
+    <section id="analysis-tools" class="analysis-tools-section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-tools"></i>
+                图像分析工具
+            </h2>
+            <div class="analysis-tools-bar">
+                <button class="tool-btn" id="histogramBtn" title="显示直方图">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>直方图</span>
+                </button>
+                <button class="tool-btn" id="ruleOfThirdsBtn" title="三分法辅助线">
+                    <i class="fas fa-th"></i>
+                    <span>三分法</span>
+                </button>
+                <button class="tool-btn" id="goldenRatioBtn" title="黄金分割辅助线">
+                    <i class="fas fa-gem"></i>
+                    <span>黄金分割</span>
+                </button>
+                <button class="tool-btn" id="centerBtn" title="中心构图辅助线">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>中心构图</span>
+                </button>
+                <button class="tool-btn" id="clearOverlayBtn" title="清除辅助线">
+                    <i class="fas fa-eraser"></i>
+                    <span>清除</span>
+                </button>
+            </div>
+            
+            <!-- 直方图显示区域 -->
+            <div class="histogram-container" id="histogramContainer" style="display: none;">
+                <div class="histogram-header">
+                    <span><i class="fas fa-chart-bar"></i> 亮度直方图</span>
+                    <button class="btn-close-histogram" id="closeHistogram"><i class="fas fa-times"></i></button>
+                </div>
+                <canvas id="histogramCanvas" width="300" height="150"></canvas>
+                <div class="histogram-info">
+                    <span class="hist-label shadows"><i class="fas fa-square"></i> 阴影</span>
+                    <span class="hist-label midtones"><i class="fas fa-square"></i> 中间调</span>
+                    <span class="hist-label highlights"><i class="fas fa-square"></i> 高光</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXIF 信息展示 -->
+    <section id="exif" class="exif-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                EXIF 信息
+            </h2>
+            <div class="exif-container" id="exifContainer">
+                <div class="exif-placeholder">
+                    <i class="fas fa-image"></i>
+                    <p>上传照片后查看 EXIF 信息</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI 点评结果 -->
+    <section id="analysis" class="analysis-section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title" id="analysisTitle">
+                <i class="fas fa-star"></i>
+                <span id="analysisTitleText">AI 点评</span>
+                <span class="analysis-type-badge" id="analysisTypeBadge" style="display: none;"></span>
+            </h2>
+            <div class="analysis-content" id="analysisContent">
+                <!-- 动态生成点评内容 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 分析历史记录 -->
+    <section id="history" class="history-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                分析历史
+            </h2>
+            <div class="history-controls">
+                <button class="btn btn-secondary" id="clearHistoryBtn">
+                    <i class="fas fa-trash"></i> 清空历史
+                </button>
+            </div>
+            <div class="history-grid" id="historyGrid">
+                <!-- 动态生成历史记录 -->
+            </div>
+            <div class="history-empty" id="historyEmpty" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <p>暂无分析历史记录</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Photo Monster. All rights reserved.</p>
+            <p><a href="privacy.html">隐私政策</a> · <a href="terms.html">使用条款</a> · <a href="admin-update.html" style="opacity: 0.6; font-size: 0.85em;">管理</a></p>
+        </div>
+    </footer>
+
+    <!-- Toast 通知容器 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- 加载状态遮罩 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p id="loadingText">正在处理...</p>
+            <div class="loading-progress">
+                <div class="loading-progress-bar" id="loadingProgressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.3/heic2any.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <script src="../js/knowledge-base.js"></script>
+    <script src="../js/rule-engine.js"></script>
+    <script src="../js/robust.js"></script>
+    <!-- AI 分析模块 -->
+    <script src="../js/ai-config.js"></script>
+    <script src="../js/mcp-client.js"></script>
+    <script src="../js/ai-manager.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 压缩设置折叠交互
+            const compressionToggle = document.getElementById('compressionToggle');
+            const compressionBody = document.getElementById('compressionBody');
+            if (compressionToggle && compressionBody) {
+                compressionToggle.addEventListener('click', function() {
+                    compressionBody.classList.toggle('open');
+                    const icon = this.querySelector('.collapsible-icon');
+                    if (icon) icon.classList.toggle('rotated');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

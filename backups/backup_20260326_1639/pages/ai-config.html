@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI配置 - Photo Monster</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">
+                <i class="fas fa-camera-retro"></i>
+                <span>Photo Monster</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="photo-analysis.html" class="nav-link"><i class="fas fa-camera"></i> 照片分析</a></li>
+                <li><a href="gear-guide.html" class="nav-link"><i class="fas fa-sliders-h"></i> 套装推荐</a></li>
+                <li><a href="planner.html" class="nav-link"><i class="fas fa-clipboard-list"></i> 方案规划</a></li>
+                <li><a href="knowledge.html" class="nav-link"><i class="fas fa-graduation-cap"></i> 知识库</a></li>
+                <li class="nav-separator"></li>
+                <li><a href="ai-config.html" class="nav-link active"><i class="fas fa-robot"></i> AI配置</a></li>
+                <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> 关于</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <section class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> AI配置</h1>
+            <p>配置AI分析引擎，支持本地大模型和云端API</p>
+        </div>
+    </section>
+
+    <!-- AI配置区域 -->
+    <section id="ai-config" class="ai-config-section">
+        <div class="container">
+            <div class="ai-config-panel">
+                <div class="config-header">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI分析引擎配置</h3>
+                    <p>选择适合你的AI分析方式，支持本地部署和云端服务</p>
+                </div>
+
+                <div class="config-form">
+                    <!-- 提供商选择 -->
+                    <div class="form-group">
+                        <label>AI提供商</label>
+                        <select id="aiProvider" class="form-select">
+                            <option value="qwen">通义千问 (阿里云百炼)</option>
+                            <option value="mcp">MCP (WorkBuddy本地调用)</option>
+                            <option value="workbuddy">WorkBuddy API</option>
+                            <option value="openai">OpenAI (GPT-4 Vision)</option>
+                            <option value="ollama">Ollama (本地模型)</option>
+                            <option value="lmstudio">LM Studio (本地模型)</option>
+                            <option value="custom">自定义API</option>
+                            <option value="ruleengine">规则引擎 (本地免费)</option>
+                        </select>
+                        <span class="form-hint">MCP优先调用，失败自动回退到规则引擎</span>
+                    </div>
+
+                    <!-- 通义千问配置 -->
+                    <div class="provider-config" id="qwenConfig" style="display: none;">
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="password" id="qwenApiKey" class="form-input" placeholder="请输入阿里云百炼 API Key">
+                            <span class="form-hint">在阿里云百炼平台获取: https://bailian.console.aliyun.com/</span>
+                        </div>
+                        <div class="form-group">
+                            <label>文本模型</label>
+                            <select id="qwenModel" class="form-select">
+                                <option value="qwen-plus">qwen-plus (推荐)</option>
+                                <option value="qwen-turbo">qwen-turbo (快速)</option>
+                                <option value="qwen-max">qwen-max (最强)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>视觉模型</label>
+                            <select id="qwenVisionModel" class="form-select">
+                                <option value="qwen-vl-plus">qwen-vl-plus (推荐)</option>
+                                <option value="qwen-vl-max">qwen-vl-max (更强)</option>
+                            </select>
+                            <span class="form-hint">用于直接分析图片内容，AI能"看到"你的照片</span>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="qwenEnabled" checked>
+                                启用通义千问 AI 分析
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="qwenVisionEnabled" checked>
+                                启用视觉分析（AI直接看图）
+                            </label>
+                            <span class="form-hint">关闭后将只使用EXIF数据进行分析</span>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 10px;">
+                            <i class="fas fa-info-circle"></i> 
+                            通义千问是阿里云提供的免费 AI 服务，新用户有免费额度。视觉分析让AI能直接观察照片构图、光影、色彩。如不可用会自动切换到规则引擎。
+                        </p>
+                    </div>
+
+                    <!-- OpenAI配置 -->
+                    <div class="provider-config" id="openaiConfig" style="display: none;">
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="password" id="openaiKey" class="form-input" placeholder="sk-...">
+                            <span class="form-hint">你的OpenAI API密钥</span>
+                        </div>
+                        <div class="form-group">
+                            <label>模型</label>
+                            <select id="openaiModel" class="form-select">
+                                <option value="gpt-4-vision-preview">GPT-4 Vision</option>
+                                <option value="gpt-4o">GPT-4o</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- MCP 配置 -->
+                    <div class="provider-config" id="mcpConfig" style="display: none;">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="mcpEnabled" checked>
+                                启用 MCP 调用
+                            </label>
+                            <span class="form-hint">通过 MCP 协议调用本地 WorkBuddy</span>
+                        </div>
+                        <div class="form-group">
+                            <label>启动命令</label>
+                            <input type="text" id="mcpCommand" class="form-input" value="npx" placeholder="npx">
+                            <span class="form-hint">MCP Server 启动命令</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Server 参数</label>
+                            <input type="text" id="mcpArgs" class="form-input" value="-y @workbuddy/mcp-server" placeholder="-y @workbuddy/mcp-server">
+                            <span class="form-hint">MCP Server 包名</span>
+                        </div>
+                        <div class="form-group">
+                            <label>HTTP 端点 (可选)</label>
+                            <input type="text" id="mcpHttpEndpoint" class="form-input" placeholder="http://localhost:3000/mcp">
+                            <span class="form-hint">如果 MCP Server 提供 HTTP 接口</span>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 10px;">
+                            <i class="fas fa-info-circle"></i> 
+                            MCP 调用需要本地运行 WorkBuddy。如 MCP 不可用，会自动回退到规则引擎。
+                        </p>
+                    </div>
+
+                    <!-- WorkBuddy 配置 -->
+                    <div class="provider-config" id="workbuddyConfig" style="display: none;">
+                        <div class="form-group">
+                            <label>API 地址</label>
+                            <input type="text" id="workbuddyEndpoint" class="form-input" placeholder="https://api.workbuddy.cn/v1/chat/completions">
+                            <span class="form-hint">WorkBuddy API 端点地址</span>
+                        </div>
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="password" id="workbuddyApiKey" class="form-input" placeholder="请输入您的 API Key">
+                            <span class="form-hint">你的 WorkBuddy API 密钥</span>
+                        </div>
+                        <div class="form-group">
+                            <label>使用模型</label>
+                            <select id="workbuddyModel" class="form-select">
+                                <option value="gpt-4o">GPT-4o (推荐)</option>
+                                <option value="gpt-4o-mini">GPT-4o Mini (快速)</option>
+                                <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="workbuddyEnabled" checked>
+                                启用 WorkBuddy AI 分析
+                            </label>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 10px;">
+                            <i class="fas fa-info-circle"></i> 
+                            WorkBuddy 会调用背后的顶级AI模型进行照片智能分析，如API不可用会自动切换到规则引擎。
+                        </p>
+                    </div>
+
+                    <!-- Ollama配置 -->
+                    <div class="provider-config" id="ollamaConfig" style="display: none;">
+                        <div class="form-group">
+                            <label>服务地址</label>
+                            <input type="text" id="ollamaUrl" class="form-input" value="http://localhost:11434">
+                            <span class="form-hint">Ollama服务地址，默认端口11434</span>
+                        </div>
+                        <div class="form-group">
+                            <label>模型名称</label>
+                            <input type="text" id="ollamaModel" class="form-input" value="llava" placeholder="llava, llava-phi3, bakllava">
+                            <span class="form-hint">支持多模态的模型名称</span>
+                        </div>
+                        <button class="btn btn-secondary" id="testOllamaBtn">
+                            <i class="fas fa-plug"></i> 测试连接
+                        </button>
+                        <span class="status-text" id="ollamaStatus"></span>
+                    </div>
+
+                    <!-- LM Studio配置 -->
+                    <div class="provider-config" id="lmstudioConfig" style="display: none;">
+                        <div class="form-group">
+                            <label>服务地址</label>
+                            <input type="text" id="lmstudioUrl" class="form-input" value="http://localhost:1234">
+                            <span class="form-hint">LM Studio服务地址，默认端口1234</span>
+                        </div>
+                        <div class="form-group">
+                            <label>模型名称</label>
+                            <input type="text" id="lmstudioModel" class="form-input" value="local-model" placeholder="local-model">
+                        </div>
+                        <button class="btn btn-secondary" id="testLMStudioBtn">
+                            <i class="fas fa-plug"></i> 测试连接
+                        </button>
+                        <span class="status-text" id="lmstudioStatus"></span>
+                    </div>
+
+                    <!-- 自定义API配置 -->
+                    <div class="provider-config" id="customConfig" style="display: none;">
+                        <div class="form-group">
+                            <label>API地址</label>
+                            <input type="text" id="customUrl" class="form-input" placeholder="http://localhost:8000/v1/chat/completions">
+                            <span class="form-hint">兼容OpenAI格式的API地址</span>
+                        </div>
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="password" id="customKey" class="form-input" placeholder="可选">
+                        </div>
+                        <div class="form-group">
+                            <label>模型名称</label>
+                            <input type="text" id="customModel" class="form-input" placeholder="模型名称">
+                        </div>
+                    </div>
+
+                    <!-- 高级选项 -->
+                    <div class="advanced-options">
+                        <h4><i class="fas fa-sliders-h"></i> 高级选项</h4>
+                        <div class="form-group">
+                            <label>温度 (Temperature)</label>
+                            <input type="range" id="aiTemperature" min="0" max="1" step="0.1" value="0.7">
+                            <span class="range-value" id="temperatureValue">0.7</span>
+                            <span class="form-hint">值越高回答越创造性，越低越保守</span>
+                        </div>
+                    </div>
+
+                    <!-- 操作按钮 -->
+                    <div class="config-actions">
+                        <button class="btn btn-primary" id="saveAIConfigBtn">
+                            <i class="fas fa-save"></i> 保存配置
+                        </button>
+                        <button class="btn btn-secondary" id="resetAIConfigBtn">
+                            <i class="fas fa-undo"></i> 重置
+                        </button>
+                    </div>
+
+                    <div class="config-status" id="aiConfigStatus"></div>
+                </div>
+
+                <!-- 使用说明 -->
+                <div class="config-help">
+                    <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+                    <div class="help-grid">
+                        <div class="help-item">
+                            <h5><i class="fas fa-robot"></i> WorkBuddy AI</h5>
+                            <p>调用顶级AI模型进行智能照片分析，支持构图、光影、色彩等多维度点评。如API不可用会自动切换到本地规则引擎。</p>
+                        </div>
+                        <div class="help-item">
+                            <h5><i class="fas fa-cloud"></i> OpenAI</h5>
+                            <p>使用GPT-4 Vision进行照片分析，需要API Key，按使用量计费。</p>
+                        </div>
+                        <div class="help-item">
+                            <h5><i class="fas fa-desktop"></i> Ollama</h5>
+                            <p>本地运行开源多模态模型，免费且保护隐私，需要下载安装Ollama。</p>
+                        </div>
+                        <div class="help-item">
+                            <h5><i class="fas fa-laptop"></i> LM Studio</h5>
+                            <p>图形化本地模型管理工具，支持多种开源模型，适合新手使用。</p>
+                        </div>
+                        <div class="help-item">
+                            <h5><i class="fas fa-code"></i> 自定义API</h5>
+                            <p>连接其他兼容OpenAI格式的API服务，如Azure、Claude等。</p>
+                        </div>
+                        <div class="help-item">
+                            <h5><i class="fas fa-magic"></i> 规则引擎</h5>
+                            <p>使用本地内置规则进行分析，完全免费，无需网络连接，作为AI分析的备用方案。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Photo Monster. All rights reserved.</p>
+            <p><a href="privacy.html">隐私政策</a> · <a href="terms.html">使用条款</a> · <a href="admin-update.html" style="opacity: 0.6; font-size: 0.85em;">管理</a></p>
+        </div>
+    </footer>
+
+    <!-- 加载脚本 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <script src="../js/knowledge-base.js"></script>
+    <script src="../js/rule-engine.js"></script>
+    <script src="../js/robust.js"></script>
+    <!-- AI 分析模块 -->
+    <script src="../js/ai-config.js"></script>
+    <script src="../js/ai-manager.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化 AI 配置页面
+            initAIConfigPage();
+        });
+
+        // AI 配置页面初始化
+        function initAIConfigPage() {
+            // 加载已有配置
+            loadAIConfig();
+            
+            // 提供商切换事件
+            const providerSelect = document.getElementById('aiProvider');
+            if (providerSelect) {
+                providerSelect.addEventListener('change', function() {
+                    toggleProviderConfig(this.value);
+                });
+                // 初始化显示
+                toggleProviderConfig(providerSelect.value);
+            }
+            
+            // 保存按钮
+            const saveBtn = document.getElementById('saveAIConfigBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', saveAIConfig);
+            }
+            
+            // 重置按钮
+            const resetBtn = document.getElementById('resetAIConfigBtn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', resetAIConfig);
+            }
+        }
+
+        // 切换提供商配置显示
+        function toggleProviderConfig(provider) {
+            const configs = ['qwenConfig', 'mcpConfig', 'openaiConfig', 'workbuddyConfig', 'ollamaConfig', 'lmstudioConfig', 'customConfig'];
+            configs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.display = (id === provider + 'Config') ? 'block' : 'none';
+                }
+            });
+        }
+
+        // 加载 AI 配置
+        function loadAIConfig() {
+            const config = window.AIConfig?.getConfig();
+            if (!config) return;
+            
+            // 设置提供商
+            const providerSelect = document.getElementById('aiProvider');
+            if (providerSelect) {
+                providerSelect.value = config.provider || 'ruleengine';
+                toggleProviderConfig(config.provider || 'ruleengine');
+            }
+            
+            // 加载通义千问配置
+            if (config.qwen) {
+                document.getElementById('qwenApiKey').value = config.qwen.apiKey || '';
+                document.getElementById('qwenModel').value = config.qwen.model || 'qwen-plus';
+                document.getElementById('qwenVisionModel').value = config.qwen.visionModel || 'qwen-vl-plus';
+                const enabledCheckbox = document.getElementById('qwenEnabled');
+                if (enabledCheckbox) {
+                    enabledCheckbox.checked = config.qwen.enabled !== false;
+                }
+                const visionEnabledCheckbox = document.getElementById('qwenVisionEnabled');
+                if (visionEnabledCheckbox) {
+                    visionEnabledCheckbox.checked = config.qwen.enableVision !== false;
+                }
+            }
+            
+            // 加载 MCP 配置
+            if (config.mcp) {
+                const mcpEnabled = document.getElementById('mcpEnabled');
+                if (mcpEnabled) mcpEnabled.checked = config.mcp.enabled !== false;
+                document.getElementById('mcpCommand').value = config.mcp.command || 'npx';
+                document.getElementById('mcpArgs').value = config.mcp.args?.join(' ') || '-y @workbuddy/mcp-server';
+                document.getElementById('mcpHttpEndpoint').value = config.mcp.httpEndpoint || '';
+            }
+            
+            // 加载 WorkBuddy 配置
+            if (config.workbuddy) {
+                document.getElementById('workbuddyEndpoint').value = config.workbuddy.endpoint || '';
+                document.getElementById('workbuddyApiKey').value = config.workbuddy.apiKey || '';
+                document.getElementById('workbuddyModel').value = config.workbuddy.model || 'gpt-4o';
+                const enabledCheckbox = document.getElementById('workbuddyEnabled');
+                if (enabledCheckbox) {
+                    enabledCheckbox.checked = config.workbuddy.enabled !== false;
+                }
+            }
+            
+            // 加载 OpenAI 配置
+            if (config.openai) {
+                document.getElementById('openaiKey').value = config.openai.apiKey || '';
+                document.getElementById('openaiModel').value = config.openai.model || 'gpt-4o';
+            }
+            
+            // 加载 Ollama 配置
+            if (config.ollama) {
+                document.getElementById('ollamaUrl').value = config.ollama.endpoint || 'http://localhost:11434';
+                document.getElementById('ollamaModel').value = config.ollama.model || 'llava';
+            }
+            
+            // 显示当前状态
+            showConfigStatus('配置已加载', 'success');
+        }
+
+        // 保存 AI 配置
+        function saveAIConfig() {
+            const provider = document.getElementById('aiProvider').value;
+            
+            const config = {
+                provider: provider,
+                qwen: {
+                    enabled: document.getElementById('qwenEnabled')?.checked || false,
+                    endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+                    apiKey: document.getElementById('qwenApiKey').value,
+                    model: document.getElementById('qwenModel').value,
+                    visionModel: document.getElementById('qwenVisionModel')?.value || 'qwen-vl-plus',
+                    enableVision: document.getElementById('qwenVisionEnabled')?.checked !== false
+                },
+                mcp: {
+                    enabled: document.getElementById('mcpEnabled')?.checked || false,
+                    command: document.getElementById('mcpCommand').value || 'npx',
+                    args: (document.getElementById('mcpArgs').value || '-y @workbuddy/mcp-server').split(' '),
+                    httpEndpoint: document.getElementById('mcpHttpEndpoint').value || '',
+                    timeout: 30000
+                },
+                workbuddy: {
+                    enabled: document.getElementById('workbuddyEnabled')?.checked || false,
+                    endpoint: document.getElementById('workbuddyEndpoint').value,
+                    apiKey: document.getElementById('workbuddyApiKey').value,
+                    model: document.getElementById('workbuddyModel').value
+                },
+                openai: {
+                    apiKey: document.getElementById('openaiKey').value,
+                    model: document.getElementById('openaiModel').value
+                },
+                ollama: {
+                    endpoint: document.getElementById('ollamaUrl').value,
+                    model: document.getElementById('ollamaModel').value
+                },
+                ruleEngine: {
+                    enabled: provider === 'ruleengine'
+                },
+                settings: {
+                    timeout: 25000,
+                    maxRetries: 2
+                }
+            };
+            
+            // 保存到 localStorage
+            const success = window.AIConfig?.updateConfig(config);
+            
+            if (success) {
+                showConfigStatus('配置已保存', 'success');
+                
+                // 重新初始化 AI 管理器
+                if (window.aiManager) {
+                    window.aiManager.reloadConfig();
+                }
+                
+                alert('AI 配置已保存！\n当前使用: ' + getProviderName(provider));
+            } else {
+                showConfigStatus('保存失败', 'error');
+            }
+        }
+
+        // 获取提供商显示名称
+        function getProviderName(provider) {
+            const names = {
+                'qwen': '通义千问 AI',
+                'mcp': 'MCP (WorkBuddy本地)',
+                'workbuddy': 'WorkBuddy AI',
+                'openai': 'OpenAI',
+                'ollama': 'Ollama',
+                'lmstudio': 'LM Studio',
+                'custom': '自定义API',
+                'ruleengine': '规则引擎'
+            };
+            return names[provider] || provider;
+        }
+
+        // 重置配置
+        function resetAIConfig() {
+            if (confirm('确定要重置所有 AI 配置吗？')) {
+                window.AIConfig?.resetConfig();
+                loadAIConfig();
+                showConfigStatus('配置已重置', 'success');
+            }
+        }
+
+        // 显示配置状态
+        function showConfigStatus(message, type) {
+            const statusEl = document.getElementById('aiConfigStatus');
+            if (statusEl) {
+                statusEl.textContent = message;
+                statusEl.className = 'config-status ' + type;
+                statusEl.style.display = 'block';
+                
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>

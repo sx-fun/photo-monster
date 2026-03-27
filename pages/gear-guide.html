@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>套装推荐 - Photo Monster</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">
+                <i class="fas fa-camera-retro"></i>
+                <span>Photo Monster</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="photo-analysis.html" class="nav-link"><i class="fas fa-camera"></i> 照片分析</a></li>
+                <li><a href="gear-guide.html" class="nav-link active"><i class="fas fa-sliders-h"></i> 套装推荐</a></li>
+                <li><a href="planner.html" class="nav-link"><i class="fas fa-clipboard-list"></i> 方案规划</a></li>
+                <li><a href="knowledge.html" class="nav-link"><i class="fas fa-graduation-cap"></i> 知识库</a></li>
+                <li class="nav-separator"></li>
+                <li><a href="ai-config.html" class="nav-link"><i class="fas fa-robot"></i> AI配置</a></li>
+                <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> 关于</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <section class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-sliders-h"></i> 套装推荐</h1>
+            <p>选择相机机身和镜头，生成专属摄影套装方案</p>
+        </div>
+    </section>
+
+    <!-- 套装推荐 -->
+    <section id="gear-guide" class="equipment-section">
+        <div class="container">
+            <div class="equipment-analyzer">
+                <div class="equipment-input-area">
+                    <!-- 套装推荐 - 递进式模式 -->
+                    <div class="tab-content active" id="comboTab">
+                        <div class="tab-description">
+                            <p><i class="fas fa-info-circle"></i> 递进式套装推荐：先选择相机机身，再选择镜头，最后生成完整套装方案。</p>
+                        </div>
+                        
+                        <!-- 步骤指示器 -->
+                        <div class="step-indicator">
+                            <div class="step active" data-step="1">
+                                <div class="step-number">1</div>
+                                <div class="step-label">选择机身</div>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step" data-step="2">
+                                <div class="step-number">2</div>
+                                <div class="step-label">选择镜头</div>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step" data-step="3">
+                                <div class="step-number">3</div>
+                                <div class="step-label">生成套装</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 步骤1：选择相机机身 -->
+                        <div class="combo-step" id="comboStep1">
+                            <h4 class="step-title"><i class="fas fa-camera"></i> 第一步：选择相机机身</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>相机品牌</label>
+                                    <select id="comboCameraBrand" class="form-select">
+                                        <option value="">选择品牌</option>
+                                        <option value="canon">佳能 Canon</option>
+                                        <option value="sony">索尼 Sony</option>
+                                        <option value="nikon">尼康 Nikon</option>
+                                        <option value="fujifilm">富士 Fujifilm</option>
+                                        <option value="panasonic">松下 Panasonic</option>
+                                        <option value="olympus">奥林巴斯 Olympus</option>
+                                        <option value="leica">徕卡 Leica</option>
+                                        <option value="hasselblad">哈苏 Hasselblad</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>相机型号</label>
+                                    <select id="comboCameraModel" class="form-select">
+                                        <option value="">先选择品牌</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>预算范围</label>
+                                    <select id="comboBudget" class="form-select">
+                                        <option value="budget">经济型 (&lt;¥10000)</option>
+                                        <option value="mid" selected>中端 (¥10000-20000)</option>
+                                        <option value="high">高端 (¥20000-40000)</option>
+                                        <option value="pro">专业级 (¥40000+)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>拍摄主题</label>
+                                    <select id="comboSubject" class="form-select">
+                                        <option value="">选择主题（可选）</option>
+                                        <option value="portrait">人像写真</option>
+                                        <option value="landscape">风光摄影</option>
+                                        <option value="street">街头纪实</option>
+                                        <option value="wedding">婚礼摄影</option>
+                                        <option value="sports">体育/野生动物</option>
+                                        <option value="macro">微距摄影</option>
+                                        <option value="astro">星空摄影</option>
+                                        <option value="travel">旅行摄影</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" id="comboStep1Next">
+                                <i class="fas fa-arrow-right"></i> 下一步：选择镜头
+                            </button>
+                        </div>
+                        
+                        <!-- 步骤2：选择镜头 -->
+                        <div class="combo-step" id="comboStep2" style="display: none;">
+                            <h4 class="step-title"><i class="fas fa-search-plus"></i> 第二步：选择镜头</h4>
+                            <div class="selected-camera-info" id="selectedCameraInfo">
+                                <!-- 显示已选相机信息 -->
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>镜头类型</label>
+                                    <select id="comboLensType" class="form-select">
+                                        <option value="">选择类型</option>
+                                        <option value="prime">定焦镜头</option>
+                                        <option value="zoom">变焦镜头</option>
+                                        <option value="macro">微距镜头</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>焦段范围</label>
+                                    <select id="comboLensFocal" class="form-select">
+                                        <option value="">选择焦段</option>
+                                        <option value="wide">广角 (&lt;35mm)</option>
+                                        <option value="standard">标准 (35-70mm)</option>
+                                        <option value="portrait">人像 (85-135mm)</option>
+                                        <option value="telephoto">长焦 (&gt;135mm)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- 推荐镜头列表 -->
+                            <div class="recommended-lenses-section" id="recommendedLensesSection">
+                                <h5><i class="fas fa-star"></i> 推荐镜头</h5>
+                                <div class="recommended-lenses-grid" id="recommendedLensesGrid">
+                                    <!-- 动态生成推荐镜头 -->
+                                </div>
+                            </div>
+                            
+                            <div class="step-actions">
+                                <button class="btn btn-secondary" id="comboStep2Back">
+                                    <i class="fas fa-arrow-left"></i> 上一步
+                                </button>
+                                <button class="btn btn-primary" id="comboStep2Next">
+                                    <i class="fas fa-arrow-right"></i> 下一步：生成套装
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 步骤3：生成套装方案 -->
+                        <div class="combo-step" id="comboStep3" style="display: none;">
+                            <h4 class="step-title"><i class="fas fa-check-circle"></i> 第三步：套装方案</h4>
+                            <div class="combo-summary" id="comboSummary">
+                                <!-- 显示套装汇总 -->
+                            </div>
+                            <div class="step-actions">
+                                <button class="btn btn-secondary" id="comboResetBtn">
+                                    <i class="fas fa-redo"></i> 重新开始
+                                </button>
+                                <button class="btn btn-secondary" id="comboStep3Back">
+                                    <i class="fas fa-arrow-left"></i> 上一步
+                                </button>
+                                <button class="btn btn-primary" id="recommendComboBtn">
+                                    <i class="fas fa-magic"></i> 查看详细推荐
+                                </button>
+                                <button class="btn btn-ai" id="aiComboBtn">
+                                    <i class="fas fa-robot"></i> AI分析
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分析结果 -->
+                <div class="equipment-result" id="equipmentResult" style="display: none;">
+                    <!-- 动态生成分析结果 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Photo Monster. All rights reserved.</p>
+            <p><a href="privacy.html">隐私政策</a> · <a href="terms.html">使用条款</a> · <a href="admin-update.html" style="opacity: 0.6; font-size: 0.85em;">管理</a></p>
+        </div>
+    </footer>
+
+    <!-- 加载脚本 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <script src="../js/ai-config.js"></script>
+    <script src="../js/ai-manager.js"></script>
+    <script src="../js/knowledge-base.js"></script>
+    <script src="../js/rule-engine.js"></script>
+    <script src="../js/robust.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // AI套装分析 - 使用统一方法
+            const aiComboBtn = document.getElementById('aiComboBtn');
+            if (aiComboBtn) {
+                aiComboBtn.addEventListener('click', async function() {
+                    const comboSummary = document.getElementById('comboSummary');
+                    if (!comboSummary || !comboSummary.innerHTML.trim()) {
+                        alert('请先生成套装方案');
+                        return;
+                    }
+                    
+                    const summaryText = comboSummary.innerText || comboSummary.textContent;
+                    
+                    const prompt = `我有一个相机镜头套装方案，请帮我分析一下：
+
+${summaryText}
+
+请从以下几个方面给出专业分析：
+1. 这套设备的优缺点
+2. 兼容性分析
+3. 性价比评估
+4. 适合的拍摄场景
+5. 是否有更好的替代方案`;
+                    
+                    const resultDiv = document.getElementById('equipmentResult');
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> AI 思考中...</div>';
+                    
+                    try {
+                        const result = await window.aiManager.chat(
+                            '你是一位专业摄影器材顾问，擅长分析相机镜头套装。请用中文详细回答。',
+                            prompt
+                        );
+                        
+                        if (result && result.success) {
+                            resultDiv.innerHTML = `<div class="ai-result-container">
+                                <div class="ai-result-header"><i class="fas fa-robot"></i> AI 套装分析</div>
+                                <div class="ai-result-content">${result.content.replace(/\n/g, '<br>')}</div>
+                            </div>`;
+                        } else {
+                            resultDiv.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> 请先在 AI 配置页面启用并设置通义千问 API Key</div>';
+                        }
+                    } catch (error) {
+                        resultDiv.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-circle"></i> ${error.message}</div>`;
+                    }
+                });
+            }
+
+            // 重新开始按钮 - 一键回到步骤1
+            const comboResetBtn = document.getElementById('comboResetBtn');
+            if (comboResetBtn) {
+                comboResetBtn.addEventListener('click', function() {
+                    if (typeof goToComboStep === 'function') {
+                        goToComboStep(1);
+                    }
+                });
+            }
+            
+        });
+    </script>
+</body>
+</html>
