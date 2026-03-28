@@ -1,7 +1,7 @@
 // Photo Monster - Service Worker
 // 实现离线缓存功能 - Network First 策略
 
-const CACHE_VERSION = 'v44';  // 修改版本号可强制更新缓存 - 修复管理页面初始化问题
+const CACHE_VERSION = 'v45';  // v45: 新增昵称设置功能，优化投诉页面，功能联动性测试通过
 const CACHE_NAME = `photo-monster-${CACHE_VERSION}`;
 
 // 静态资源列表
@@ -45,7 +45,7 @@ self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
 
-// 激活时清理旧缓存
+// 激活时清理旧缓存并通知客户端刷新
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
@@ -57,6 +57,14 @@ self.addEventListener('activate', (event) => {
                         return caches.delete(name);
                     })
             );
+        }).then(() => {
+            // 通知所有客户端刷新页面
+            console.log('[SW] 已激活，通知客户端刷新');
+            return self.clients.matchAll().then((clients) => {
+                clients.forEach((client) => {
+                    client.postMessage('reload');
+                });
+            });
         })
     );
     self.clients.claim();
