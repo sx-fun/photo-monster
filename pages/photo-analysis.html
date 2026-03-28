@@ -5,34 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>照片分析 - Photo Monster</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav-component.css">
     <link rel="stylesheet" href="../css/pages.css">
+    <link rel="stylesheet" href="../css/photo-analysis-enhanced.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <script>
+        // Compressor 加载失败时的备用处理
+        window.addEventListener('error', function(e) {
+            if (e.target.src && e.target.src.includes('compressor')) {
+                console.warn('Compressor CDN 加载失败，将使用原生图片处理');
+                window.Compressor = null; // 标记为不可用
+            }
+        }, true);
+    </script>
 </head>
 <body>
     <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="../index.html" class="nav-logo">
-                <i class="fas fa-camera-retro"></i>
-                <span>Photo Monster</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="photo-analysis.html" class="nav-link active"><i class="fas fa-camera"></i> 照片分析</a></li>
-                <li><a href="gear-guide.html" class="nav-link"><i class="fas fa-sliders-h"></i> 套装推荐</a></li>
-                <li><a href="planner.html" class="nav-link"><i class="fas fa-clipboard-list"></i> 方案规划</a></li>
-                <li><a href="knowledge.html" class="nav-link"><i class="fas fa-graduation-cap"></i> 知识库</a></li>
-                <li class="nav-separator"></li>
-                <li><a href="ai-config.html" class="nav-link"><i class="fas fa-robot"></i> AI配置</a></li>
-                <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> 关于</a></li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
+    <nav class="navbar" id="main-nav"></nav>
 
     <!-- 页面标题 -->
     <section class="page-header">
@@ -190,6 +182,63 @@
         </div>
     </section>
 
+    <!-- 深度技术分析 -->
+    <section id="depth-analysis" class="analysis-section" style="display: none;">
+        <div class="container">
+            <div class="analysis-depth-panel">
+                <h3><i class="fas fa-microscope"></i> 深度技术分析</h3>
+                
+                <!-- 综合评分 -->
+                <div class="overall-score-section" id="overallScoreSection">
+                    <div class="overall-score-number" id="overallScore">0</div>
+                    <div class="overall-score-label">综合评分</div>
+                    <div class="overall-score-badge" id="overallScoreBadge">待分析</div>
+                </div>
+                
+                <!-- 雷达图 -->
+                <div class="radar-chart-container">
+                    <canvas id="radarChart" width="400" height="400"></canvas>
+                </div>
+                
+                <!-- 详细指标 -->
+                <div class="analysis-metrics-grid" id="analysisMetricsGrid">
+                    <!-- 动态生成指标卡片 -->
+                </div>
+                
+                <!-- 改进建议 -->
+                <div class="suggestions-section" id="suggestionsSection">
+                    <h4><i class="fas fa-lightbulb"></i> 改进建议</h4>
+                    <ul class="suggestions-list" id="suggestionsList">
+                        <!-- 动态生成建议 -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 分析进度 -->
+    <section id="analysis-progress" class="analysis-progress-section" style="display: none;">
+        <div class="container">
+            <div class="analysis-progress-container">
+                <div class="analysis-progress-header">
+                    <span class="analysis-progress-title"><i class="fas fa-cog fa-spin"></i> 正在分析...</span>
+                    <span class="analysis-progress-percent" id="analysisProgressPercent">0%</span>
+                </div>
+                <div class="analysis-progress-bar">
+                    <div class="analysis-progress-fill" id="analysisProgressFill" style="width: 0%"></div>
+                </div>
+                <div class="analysis-progress-steps" id="analysisProgressSteps">
+                    <span class="progress-step" data-step="histogram"><i class="fas fa-chart-bar"></i> 直方图</span>
+                    <span class="progress-step" data-step="exposure"><i class="fas fa-sun"></i> 曝光</span>
+                    <span class="progress-step" data-step="color"><i class="fas fa-palette"></i> 色彩</span>
+                    <span class="progress-step" data-step="sharpness"><i class="fas fa-eye"></i> 清晰度</span>
+                    <span class="progress-step" data-step="noise"><i class="fas fa-grain"></i> 噪点</span>
+                    <span class="progress-step" data-step="contrast"><i class="fas fa-adjust"></i> 对比度</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 分析历史记录 -->
     <section id="history" class="history-section">
         <div class="container">
@@ -235,16 +284,11 @@
     </div>
 
     <!-- 加载脚本 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.3/heic2any.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <script src="../js/nav-component.js"></script>
     <script src="../js/knowledge-base.js"></script>
     <script src="../js/rule-engine.js"></script>
-    <script src="../js/robust.js"></script>
-    <!-- AI 分析模块 -->
-    <script src="../js/ai-config.js"></script>
-    <script src="../js/mcp-client.js"></script>
-    <script src="../js/ai-manager.js"></script>
+    <script src="../js/photo-analyzer-enhanced.js"></script>
+    <script src="../js/photo-analysis-integration.js"></script>
     <script src="../js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -258,7 +302,53 @@
                     if (icon) icon.classList.toggle('rotated');
                 });
             }
+            
+            // 处理从历史页面跳转过来的详情查看
+            const urlParams = new URLSearchParams(window.location.search);
+            const historyId = urlParams.get('id');
+            const fromHistory = urlParams.get('history');
+            
+            if (fromHistory === '1' && historyId) {
+                loadHistoryDetail(historyId);
+            }
         });
+        
+        // 加载历史记录详情
+        function loadHistoryDetail(id) {
+            try {
+                const history = JSON.parse(localStorage.getItem('photoMonster_analysis_history') || '[]');
+                const item = history.find(h => h.id == id);
+                
+                if (!item) {
+                    console.warn('未找到历史记录:', id);
+                    return;
+                }
+                
+                console.log('加载历史记录详情:', item);
+                
+                // 显示历史记录详情
+                displayHistoryDetail(item);
+            } catch (err) {
+                console.error('加载历史详情失败:', err);
+            }
+        }
+        
+        // 显示历史记录详情
+        function displayHistoryDetail(item) {
+            // 滚动到分析结果区域
+            const resultsSection = document.getElementById('analysis-results');
+            if (resultsSection) {
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // 显示提示
+            if (typeof showNotification === 'function') {
+                showNotification(`正在查看: ${item.filename}`, 'info');
+            }
+            
+            // TODO: 在这里添加更多详情展示逻辑
+            // 例如：显示评分、EXIF信息、分析建议等
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-03-28T02-29-07-036Z",
+  "duration": "4ms",
+  "summary": {
+    "totalErrors": 0,
+    "totalWarnings": 0,
+    "canDeploy": true
+  },
+  "errors": [],
+  "warnings": [],
+  "checklist": {
+    "coreFeatures": [
+      {
+        "name": "照片上传功能",
+        "test": "上传图片，检查是否正常加载"
+      },
+      {
+        "name": "EXIF读取功能",
+        "test": "上传带EXIF的照片，检查参数显示"
+      },
+      {
+        "name": "AI分析功能",
+        "test": "点击分析按钮，检查是否返回结果"
+      },
+      {
+        "name": "LocalStorage存储",
+        "test": "刷新页面，检查历史记录是否保留"
+      },
+      {
+        "name": "响应式布局",
+        "test": "调整浏览器窗口大小，检查适配"
+      }
+    ],
+    "navigation": [
+      {
+        "name": "首页链接",
+        "test": "点击Logo返回首页"
+      },
+      {
+        "name": "导航菜单",
+        "test": "所有导航链接可正常跳转"
+      },
+      {
+        "name": "移动端菜单",
+        "test": "小屏幕下汉堡菜单正常展开"
+      }
+    ],
+    "crossPage": [
+      {
+        "name": "样式一致性",
+        "test": "各页面风格统一"
+      },
+      {
+        "name": "页脚信息",
+        "test": "隐私政策、使用条款链接有效"
+      }
+    ]
+  }
+}

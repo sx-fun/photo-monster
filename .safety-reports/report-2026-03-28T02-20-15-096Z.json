@@ -1,0 +1,583 @@
+{
+  "timestamp": "2026-03-28T02-20-15-096Z",
+  "duration": "148ms",
+  "summary": {
+    "totalErrors": 15,
+    "totalWarnings": 72,
+    "canDeploy": false
+  },
+  "errors": [
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\index.html",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\js\\ai-helper.js",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\js\\ai-manager.js",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\js\\nav-component.js",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\js\\photo-analysis-integration.js",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\js\\progress-tracker.js",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\js\\theme-manager.js",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\js\\update-manager.js",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "敏感信息",
+      "file": "D:\\PhotoMonster\\pages\\admin-update.html",
+      "issue": "发现 硬编码密码: Password = '234625'...",
+      "severity": "CRITICAL"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\pages\\admin-update.html",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\pages\\gear-guide.html",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\pages\\knowledge.html",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\pages\\planner.html",
+      "issue": "发现 innerHTML直接赋值，请确保输入已转义",
+      "severity": "HIGH"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\tools\\update-db-secure.js",
+      "issue": "发现 Function构造函数，请确保输入已转义",
+      "severity": "CRITICAL"
+    },
+    {
+      "type": "XSS漏洞",
+      "file": "D:\\PhotoMonster\\tools\\update-db.js",
+      "issue": "发现 eval使用，请确保输入已转义",
+      "severity": "CRITICAL"
+    }
+  ],
+  "warnings": [
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\ai-config.js",
+      "issue": "发现 75 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\ai-helper.js",
+      "issue": "发现 129 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\ai-manager.js",
+      "issue": "发现 17 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 78 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "变量 \"mountMap\" 可能未使用",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "变量 \"prompt\" 可能未使用",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 66 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 54 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 58 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 52 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 73 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 77 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 77 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 136 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 103 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 100 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 80 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 63 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 100 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 175 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 110 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 127 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 61 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 89 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 193 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 118 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 67 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 104 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 68 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 62 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 54 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 120 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 62 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 52 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 100 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 172 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 105 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 126 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 67 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 68 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 58 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 89 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\app.js",
+      "issue": "发现 62 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\local-analyzer.js",
+      "issue": "变量 \"afPoint\" 可能未使用",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\photo-analysis-integration.js",
+      "issue": "发现 82 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\photo-analysis-integration.js",
+      "issue": "发现 96 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\robust.js",
+      "issue": "发现 216 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "敏感信息",
+      "file": "D:\\PhotoMonster\\js\\rule-engine.js",
+      "issue": "注释中可能包含API Key相关信息",
+      "severity": "WARNING"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\js\\update-manager.js",
+      "issue": "发现 11 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\pages\\admin-update.html",
+      "issue": "发现 16 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\sw.js",
+      "issue": "发现 6 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\approve.js",
+      "issue": "发现 19 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\approve.js",
+      "issue": "发现 82 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\auto-update.js",
+      "issue": "发现 23 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\auto-update.js",
+      "issue": "变量 \"results\" 可能未使用",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\check-mount.js",
+      "issue": "发现 13 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\cleanup.js",
+      "issue": "发现 43 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\interactive-review.js",
+      "issue": "发现 45 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\pre-edit-backup.js",
+      "issue": "发现 18 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\reject.js",
+      "issue": "发现 12 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\review-report.js",
+      "issue": "发现 7 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\safe-mode.js",
+      "issue": "发现 32 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "敏感信息",
+      "file": "D:\\PhotoMonster\\tools\\safety-check.js",
+      "issue": "注释中可能包含API Key相关信息",
+      "severity": "WARNING"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\safety-check.js",
+      "issue": "发现 32 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\safety-check.js",
+      "issue": "变量 \"issues\" 可能未使用",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\scraper.js",
+      "issue": "发现 12 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\update-db-secure.js",
+      "issue": "发现 24 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\update-db.js",
+      "issue": "发现 20 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\update-nav.js",
+      "issue": "发现 10 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\update-nav.js",
+      "issue": "变量 \"oldNavPatterns\" 可能未使用",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\verify-backup.js",
+      "issue": "发现 52 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "D:\\PhotoMonster\\tools\\workflow.js",
+      "issue": "发现 34 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    }
+  ],
+  "checklist": {
+    "coreFeatures": [
+      {
+        "name": "照片上传功能",
+        "test": "上传图片，检查是否正常加载"
+      },
+      {
+        "name": "EXIF读取功能",
+        "test": "上传带EXIF的照片，检查参数显示"
+      },
+      {
+        "name": "AI分析功能",
+        "test": "点击分析按钮，检查是否返回结果"
+      },
+      {
+        "name": "LocalStorage存储",
+        "test": "刷新页面，检查历史记录是否保留"
+      },
+      {
+        "name": "响应式布局",
+        "test": "调整浏览器窗口大小，检查适配"
+      }
+    ],
+    "navigation": [
+      {
+        "name": "首页链接",
+        "test": "点击Logo返回首页"
+      },
+      {
+        "name": "导航菜单",
+        "test": "所有导航链接可正常跳转"
+      },
+      {
+        "name": "移动端菜单",
+        "test": "小屏幕下汉堡菜单正常展开"
+      }
+    ],
+    "crossPage": [
+      {
+        "name": "样式一致性",
+        "test": "各页面风格统一"
+      },
+      {
+        "name": "页脚信息",
+        "test": "隐私政策、使用条款链接有效"
+      }
+    ]
+  }
+}

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习路径 - Photo Monster</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav-component.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 学习路径专用样式 */
+        .path-selection {
+            padding: 40px 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+        }
+        
+        .path-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+        
+        .path-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .path-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .path-card.active {
+            border-color: currentColor;
+        }
+        
+        .path-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: currentColor;
+        }
+        
+        .path-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .path-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a2e;
+        }
+        
+        .path-description {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .path-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: #888;
+        }
+        
+        .path-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .path-progress {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+            text-align: right;
+        }
+        
+        /* 学习路径详情 */
+        .path-detail {
+            padding: 40px 0;
+            display: none;
+        }
+        
+        .path-detail.active {
+            display: block;
+        }
+        
+        .path-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .path-header h2 {
+            font-size: 28px;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .back-btn {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        /* 时间线 */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -33px;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #ddd;
+            z-index: 1;
+        }
+        
+        .timeline-item.completed .timeline-dot {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+        
+        .timeline-item.current .timeline-dot {
+            background: #2196F3;
+            border-color: #2196F3;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(33, 150, 243, 0); }
+        }
+        
+        .topic-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+        
+        .topic-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .topic-card.locked {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .topic-order {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .topic-info h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+            color: #1a1a2e;
+        }
+        
+        .topic-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: #888;
+        }
+        
+        .difficulty-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .difficulty-beginner {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .difficulty-intermediate {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .difficulty-advanced {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+        
+        .topic-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .topic-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .skill-tag {
+            padding: 4px 10px;
+            background: #f5f5f5;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .topic-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-study {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-study.primary {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-study.primary:hover {
+            background: #1976D2;
+        }
+        
+        .btn-study.secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .btn-study.secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        /* 里程碑 */
+        .milestones {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            color: white;
+        }
+        
+        .milestones h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .milestone-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .milestone-item {
+            background: rgba(255,255,255,0.15);
+            padding: 16px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .milestone-item.locked {
+            opacity: 0.5;
+        }
+        
+        .milestone-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .milestone-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .milestone-desc {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .path-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline {
+                padding-left: 30px;
+            }
+            
+            .timeline::before {
+                left: 10px;
+            }
+            
+            .timeline-dot {
+                left: -26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar" id="main-nav"></nav>
+
+    <!-- 页面标题 -->
+    <section class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-route"></i> 学习路径</h1>
+            <p>选择适合你的学习路线，从入门到精通系统成长</p>
+        </div>
+    </section>
+
+    <!-- 路径选择 -->
+    <section class="path-selection" id="pathSelection">
+        <div class="container">
+            <h2>选择你的学习路径</h2>
+            <div class="path-cards" id="pathCards">
+                <!-- 动态生成路径卡片 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 路径详情 -->
+    <section class="path-detail" id="pathDetail">
+        <div class="container">
+            <div class="path-header">
+                <h2 id="detailTitle">
+                    <i class="fas fa-route"></i>
+                    <span>路径名称</span>
+                </h2>
+                <button class="back-btn" id="backBtn">
+                    <i class="fas fa-arrow-left"></i> 返回路径选择
+                </button>
+            </div>
+            
+            <div class="timeline" id="pathTimeline">
+                <!-- 动态生成时间线 -->
+            </div>
+            
+            <div class="milestones" id="pathMilestones">
+                <h3><i class="fas fa-trophy"></i> 学习里程碑</h3>
+                <div class="milestone-list" id="milestoneList">
+                    <!-- 动态生成里程碑 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="privacy.html">隐私政策</a>
+                    <a href="terms.html">使用条款</a>
+                    <a href="about.html">关于我们</a>
+                </div>
+                <p class="copyright">&copy; 2024 Photo Monster. 保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script src="../js/knowledge-base-meta.js"></script>
+    <script src="../js/learning-path.js"></script>
+    <script src="../js/nav-component.js"></script>
+    <script>
+        // 初始化导航
+        document.addEventListener('DOMContentLoaded', () => {
+            new NavComponent();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+/**
+ * Photo Monster - 照片分析增强功能样式
+ */
+
+/* ========== 图像预览增强 ========== */
+.preview-image-container {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.preview-image-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.preview-image-container .overlay-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* ========== 分析工具栏 ========== */
+.analysis-tools-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 15px;
+    background: var(--card-bg, #f8f9fa);
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 12px 20px;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 80px;
+}
+
+.tool-btn:hover {
+    border-color: #4ecdc4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
+}
+
+.tool-btn.active {
+    background: #4ecdc4;
+    border-color: #4ecdc4;
+    color: #fff;
+}
+
+.tool-btn i {
+    font-size: 1.3rem;
+}
+
+.tool-btn span {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* ========== 直方图容器 ========== */
+.histogram-container {
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.histogram-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.histogram-header span {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.histogram-header i {
+    color: #4ecdc4;
+    margin-right: 8px;
+}
+
+.btn-close-histogram {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-close-histogram:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+#histogramCanvas {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.histogram-info {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.hist-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.8);
+}
+
+.hist-label i {
+    font-size: 0.7rem;
+}
+
+.hist-label.shadows i { color: #666; }
+.hist-label.midtones i { color: #aaa; }
+.hist-label.highlights i { color: #fff; }
+
+/* ========== 深度分析面板 ========== */
+.analysis-depth-panel {
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px;
+    margin-top: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.analysis-depth-panel h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.analysis-depth-panel h3 i {
+    color: #4ecdc4;
+}
+
+/* 雷达图容器 */
+.radar-chart-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#radarChart {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+/* 分析指标网格 */
+.analysis-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.metric-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    border-left: 4px solid #4ecdc4;
+}
+
+.metric-card.exposure { border-left-color: #ff6b6b; }
+.metric-card.color { border-left-color: #4ecdc4; }
+.metric-card.sharpness { border-left-color: #45b7d1; }
+.metric-card.noise { border-left-color: #96ceb4; }
+.metric-card.contrast { border-left-color: #feca57; }
+.metric-card.dynamic { border-left-color: #ff9ff3; }
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.metric-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.metric-score {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #4ecdc4;
+}
+
+.metric-score.low { color: #ff6b6b; }
+.metric-score.medium { color: #feca57; }
+.metric-score.high { color: #1dd1a1; }
+
+.metric-value {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.metric-bar {
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.metric-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ecdc4, #44a08d);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.metric-bar-fill.low { background: linear-gradient(90deg, #ff6b6b, #ee5a24); }
+.metric-bar-fill.medium { background: linear-gradient(90deg, #feca57, #f39c12); }
+.metric-bar-fill.high { background: linear-gradient(90deg, #1dd1a1, #10ac84); }
+
+/* ========== 综合评分 ========== */
+.overall-score-section {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    color: #fff;
+    margin-bottom: 25px;
+}
+
+.overall-score-number {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.overall-score-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.overall-score-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* ========== 建议列表 ========== */
+.suggestions-section {
+    background: #fff9e6;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.suggestions-section h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #856404;
+    margin-bottom: 15px;
+}
+
+.suggestions-section h4 i {
+    color: #ffc107;
+}
+
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: #856404;
+}
+
+.suggestions-list li:last-child {
+    border-bottom: none;
+}
+
+.suggestions-list li i {
+    color: #ffc107;
+    margin-top: 3px;
+}
+
+/* ========== 放大镜 ========== */
+.magnifier-container {
+    position: absolute;
+    pointer-events: none;
+    z-index: 100;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* ========== 分析进度 ========== */
+.analysis-progress-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    margin: 20px 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.analysis-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.analysis-progress-title {
+    font-weight: 600;
+    color: #333;
+}
+
+.analysis-progress-percent {
+    font-weight: 700;
+    color: #4ecdc4;
+}
+
+.analysis-progress-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.analysis-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ecdc4, #44a08d);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.analysis-progress-steps {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.progress-step.active {
+    color: #4ecdc4;
+    font-weight: 500;
+}
+
+.progress-step.completed {
+    color: #1dd1a1;
+}
+
+.progress-step i {
+    font-size: 0.9rem;
+}
+
+/* ========== 对比功能 ========== */
+.comparison-container {
+    position: relative;
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.comparison-item {
+    flex: 1;
+    text-align: center;
+}
+
+.comparison-item h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.comparison-item img {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* 滑动对比 */
+.before-after-slider {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.before-after-slider img {
+    width: 100%;
+    display: block;
+}
+
+.before-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    overflow: hidden;
+}
+
+.slider-handle {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 100%;
+    background: #fff;
+    cursor: ew-resize;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.slider-handle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.slider-handle::after {
+    content: '◀ ▶';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    color: #333;
+    letter-spacing: 2px;
+}
+
+/* ========== 批量分析 ========== */
+.batch-analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.batch-item {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+}
+
+.batch-item:hover {
+    transform: translateY(-4px);
+}
+
+.batch-item-image {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+}
+
+.batch-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.batch-item-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.batch-item-status.pending {
+    background: #e0e0e0;
+    color: #666;
+}
+
+.batch-item-status.analyzing {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.batch-item-status.completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.batch-item-status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.batch-item-info {
+    padding: 12px;
+}
+
+.batch-item-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.batch-item-score {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #4ecdc4;
+    margin-top: 5px;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+    .analysis-tools-bar {
+        justify-content: center;
+    }
+    
+    .tool-btn {
+        min-width: 70px;
+        padding: 10px 15px;
+    }
+    
+    .tool-btn span {
+        font-size: 0.75rem;
+    }
+    
+    .analysis-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .comparison-container {
+        flex-direction: column;
+    }
+    
+    .overall-score-number {
+        font-size: 3rem;
+    }
+}
+
+/* ========== 深色模式 ========== */
+[data-theme="dark"] .analysis-tools-bar {
+    background: #2a2a3e;
+}
+
+[data-theme="dark"] .tool-btn {
+    background: #3a3a4e;
+    border-color: #4a4a5e;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .tool-btn:hover {
+    border-color: #4ecdc4;
+}
+
+[data-theme="dark"] .analysis-depth-panel,
+[data-theme="dark"] .analysis-progress-container {
+    background: #2a2a3e;
+}
+
+[data-theme="dark"] .metric-card {
+    background: #3a3a4e;
+}
+
+[data-theme="dark"] .metric-title {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .suggestions-section {
+    background: #3d3d2e;
+}
+
+[data-theme="dark"] .batch-item {
+    background: #2a2a3e;
+}
+
+[data-theme="dark"] .batch-item-name {
+    color: #e0e0e0;
+}

@@ -6,6 +6,7 @@
     <title>使用条款 - Photo Monster</title>
     <meta name="description" content="Photo Monster 使用条款 - 了解使用本应用的权利和义务">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav-component.css">
     <link rel="stylesheet" href="../css/pages.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -60,28 +61,7 @@
 </head>
 <body>
     <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="../index.html" class="nav-logo">
-                <i class="fas fa-camera-retro"></i>
-                <span>Photo Monster</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="photo-analysis.html" class="nav-link"><i class="fas fa-camera"></i> 照片分析</a></li>
-                <li><a href="gear-guide.html" class="nav-link"><i class="fas fa-sliders-h"></i> 套装推荐</a></li>
-                <li><a href="planner.html" class="nav-link"><i class="fas fa-clipboard-list"></i> 方案规划</a></li>
-                <li><a href="knowledge.html" class="nav-link"><i class="fas fa-graduation-cap"></i> 知识库</a></li>
-                <li class="nav-separator"></li>
-                <li><a href="ai-config.html" class="nav-link"><i class="fas fa-robot"></i> AI配置</a></li>
-                <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> 关于</a></li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
+    <nav class="navbar" id="main-nav"></nav>
 
     <!-- 页面标题 -->
     <section class="page-header">
@@ -130,7 +110,27 @@
                 <h2>7. 条款变更</h2>
                 <p>我们保留随时修改本条款的权利。修改后的条款将在本页面发布，继续使用本应用即表示接受修改后的条款。</p>
 
-                <p class="last-updated">最后更新：2026年3月25日</p>
+                <h2>8. 用户生成内容（UGC）条款</h2>
+                <p>当您使用照片墙等涉及内容上传的功能时，须遵守以下条款：</p>
+                <ul>
+                    <li><span class="highlight">内容责任：</span>您须确保上传内容为您原创或已获得合法授权，不侵犯任何第三方的著作权、肖像权、隐私权或其他合法权益。</li>
+                    <li><span class="highlight">禁止内容：</span>严禁上传以下内容：
+                        <ul>
+                            <li>色情、淫秽或性暗示内容</li>
+                            <li>暴力、血腥或令人不适的内容</li>
+                            <li>仇恨言论、歧视或骚扰内容</li>
+                            <li>侵犯他人知识产权的内容（盗图、未经授权使用等）</li>
+                            <li>虚假、误导性或欺诈性内容</li>
+                            <li>违反法律法规的任何内容</li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">授权许可：</span>上传内容即表示您授予本平台非独占、免版税、全球性的许可，允许我们展示、存储、复制该内容以运营照片墙服务。</li>
+                    <li><span class="highlight">平台权利：</span>我们保留权利，在不事先通知的情况下，审核、拒绝发布或删除任何我们认为违反本条款的内容，并视情节轻重暂停或终止违规用户的上传权限。</li>
+                    <li><span class="highlight">侵权投诉：</span>如您认为照片墙中的内容侵犯了您的合法权益，请通过 GitHub 仓库提交 Issue，提供您的联系方式、侵权内容链接及权利证明，我们将在48小时内响应，7个工作日内处理。</li>
+                    <li><span class="highlight">免责声明：</span>用户上传内容仅代表上传者观点，不代表本平台立场。平台不对UGC的准确性、合法性或质量作出任何保证，也不承担由此产生的任何责任。</li>
+                </ul>
+
+                <p class="last-updated">最后更新：2026年3月28日</p>
             </div>
         </div>
     </section>
@@ -140,7 +140,7 @@
         <div class="container">
             <p>&copy; 2026 Photo Monster. All rights reserved.</p>
             <p>
-                <a href="privacy.html">隐私政策</a> · <a href="terms.html">使用条款</a> · <a href="admin-update.html" style="opacity: 0.6; font-size: 0.85em;">管理</a>
+                <a href="privacy.html">隐私政策</a> · <a href="terms.html">使用条款</a> · <a href="content-complaint.html">侵权投诉</a> · <a href="admin-update.html" style="opacity: 0.6; font-size: 0.85em;">管理</a>
             </p>
         </div>
     </footer>

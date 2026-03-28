@@ -1,0 +1,19 @@
+{
+  "status": "idle",
+  "history": [
+    {
+      "startTime": "2026-03-28T02:00:58.838Z",
+      "description": "导航栏统合重构 - 分层菜单架构",
+      "backupPath": "D:\\PhotoMonster\\backups\\auto\\backup-2026-03-28T02-00-58",
+      "endTime": "2026-03-28T02:04:34.650Z",
+      "report": {
+        "canDeploy": false,
+        "errors": 14,
+        "warnings": 70,
+        "reportPath": ".safety-reports/report-2026-03-28T02-04-34-488Z.json"
+      },
+      "status": "failed"
+    }
+  ],
+  "currentEdit": null
+}

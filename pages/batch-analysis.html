@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量照片分析 - Photo Monster</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav-component.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <style>
+        .batch-upload-section {
+            padding: 2rem 0;
+        }
+        
+        .batch-upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .batch-upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(0, 200, 200, 0.05);
+        }
+        
+        .batch-upload-area.drag-over {
+            border-color: var(--primary-color);
+            background: rgba(0, 200, 200, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .batch-upload-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .batch-upload-text {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .batch-upload-hint {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .batch-upload-limit {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        
+        .batch-preview-section {
+            padding: 2rem 0;
+            display: none;
+        }
+        
+        .batch-preview-section.active {
+            display: block;
+        }
+        
+        .batch-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .batch-preview-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .batch-preview-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .batch-preview-item.analyzing {
+            border: 2px solid var(--primary-color);
+        }
+        
+        .batch-preview-item.completed {
+            border: 2px solid #10b981;
+        }
+        
+        .batch-preview-item.error {
+            border: 2px solid #ef4444;
+        }
+        
+        .batch-preview-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .batch-preview-info {
+            padding: 1rem;
+        }
+        
+        .batch-preview-name {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.5rem;
+        }
+        
+        .batch-preview-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .batch-preview-status i {
+            font-size: 1rem;
+        }
+        
+        .batch-preview-status.analyzing i {
+            color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+        
+        .batch-preview-status.completed i {
+            color: #10b981;
+        }
+        
+        .batch-preview-status.error i {
+            color: #ef4444;
+        }
+        
+        .batch-preview-remove {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            opacity: 0;
+        }
+        
+        .batch-preview-item:hover .batch-preview-remove {
+            opacity: 1;
+        }
+        
+        .batch-preview-remove:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+        
+        .batch-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .batch-progress-section {
+            padding: 2rem 0;
+            display: none;
+        }
+        
+        .batch-progress-section.active {
+            display: block;
+        }
+        
+        .batch-progress-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .batch-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .batch-progress-title {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .batch-progress-stats {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .batch-progress-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .batch-progress-bar {
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .batch-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #00a0a0);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        
+        .batch-results-section {
+            padding: 2rem 0;
+            display: none;
+        }
+        
+        .batch-results-section.active {
+            display: block;
+        }
+        
+        .batch-results-summary {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .batch-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .batch-result-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .batch-result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .batch-result-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .batch-result-content {
+            padding: 1.5rem;
+        }
+        
+        .batch-result-title {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .batch-result-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .batch-result-score-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .batch-result-score-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .batch-result-highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .batch-result-highlight {
+            background: rgba(0, 200, 200, 0.1);
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .batch-result-highlight.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        .batch-result-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .batch-result-actions .btn {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .batch-empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .batch-empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .batch-preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .batch-results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .batch-progress-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar" id="main-nav"></nav>
+
+    <!-- 页面标题 -->
+    <section class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-images"></i> 批量照片分析</h1>
+            <p>一次上传多张照片，批量获取专业点评（最多6张）</p>
+        </div>
+    </section>
+
+    <!-- 批量上传区域 -->
+    <section class="batch-upload-section">
+        <div class="container">
+            <div class="batch-upload-area" id="batchDropZone">
+                <div class="batch-upload-content">
+                    <i class="fas fa-cloud-upload-alt batch-upload-icon"></i>
+                    <p class="batch-upload-text">拖拽照片到此处，或点击选择</p>
+                    <p class="batch-upload-hint">支持 JPG/PNG/HEIC 格式</p>
+                    <span class="batch-upload-limit"><i class="fas fa-layer-group"></i> 最多 6 张</span>
+                </div>
+                <input type="file" id="batchFileInput" accept="image/*" multiple hidden>
+            </div>
+        </div>
+    </section>
+
+    <!-- 预览区域 -->
+    <section class="batch-preview-section" id="previewSection">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-eye"></i>
+                已选择 <span id="selectedCount">0</span> 张照片
+            </h2>
+            <div class="batch-preview-grid" id="previewGrid">
+                <!-- 动态生成预览 -->
+            </div>
+            <div class="batch-actions">
+                <button class="btn btn-secondary" id="clearAllBtn">
+                    <i class="fas fa-trash"></i> 清空全部
+                </button>
+                <button class="btn btn-primary btn-large" id="startAnalysisBtn">
+                    <i class="fas fa-play"></i> 开始批量分析
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 进度区域 -->
+    <section class="batch-progress-section" id="progressSection">
+        <div class="container">
+            <div class="batch-progress-container">
+                <div class="batch-progress-header">
+                    <h3 class="batch-progress-title">
+                        <i class="fas fa-cog fa-spin"></i>
+                        正在分析...
+                    </h3>
+                    <div class="batch-progress-stats">
+                        <span class="batch-progress-stat">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <span id="completedCount">0</span> 完成
+                        </span>
+                        <span class="batch-progress-stat">
+                            <i class="fas fa-clock" style="color: var(--primary-color);"></i>
+                            <span id="remainingCount">0</span> 待处理
+                        </span>
+                    </div>
+                </div>
+                <div class="batch-progress-bar">
+                    <div class="batch-progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="batch-preview-grid" id="analysisGrid">
+                    <!-- 动态显示分析状态 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 结果区域 -->
+    <section class="batch-results-section" id="resultsSection">
+        <div class="container">
+            <div class="batch-results-summary">
+                <h2 class="section-title" style="margin-bottom: 1rem;">
+                    <i class="fas fa-chart-bar"></i>
+                    分析完成
+                </h2>
+                <p style="color: var(--text-secondary);">
+                    共分析 <strong id="totalAnalyzed">0</strong> 张照片，
+                    平均评分 <strong id="averageScore" style="color: var(--primary-color);">0</strong> 分
+                </p>
+            </div>
+            <div class="batch-results-grid" id="resultsGrid">
+                <!-- 动态生成结果卡片 -->
+            </div>
+            <div class="batch-actions" style="margin-top: 2rem;">
+                <button class="btn btn-secondary" id="newBatchBtn">
+                    <i class="fas fa-plus"></i> 新建批量分析
+                </button>
+                <button class="btn btn-primary" id="exportResultsBtn">
+                    <i class="fas fa-download"></i> 导出报告
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 加载脚本 -->
+    <script src="../js/nav-component.js"></script>
+    <script src="../js/knowledge-base.js"></script>
+    <script src="../js/rule-engine.js"></script>
+    <script src="../js/photo-analyzer-enhanced.js"></script>
+    <script src="../js/batch-analysis.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+</html>

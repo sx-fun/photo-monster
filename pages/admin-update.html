@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>内容更新管理 - Photo Monster</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav-component.css">
     <link rel="stylesheet" href="../css/pages.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -412,23 +413,7 @@
 </head>
 <body>
     <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="../index.html" class="nav-logo">
-                <i class="fas fa-camera-retro"></i>
-                <span>Photo Monster</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="photo-analysis.html" class="nav-link"><i class="fas fa-camera"></i> 照片分析</a></li>
-                <li><a href="gear-guide.html" class="nav-link"><i class="fas fa-sliders-h"></i> 套装推荐</a></li>
-                <li><a href="planner.html" class="nav-link"><i class="fas fa-clipboard-list"></i> 方案规划</a></li>
-                <li><a href="knowledge.html" class="nav-link"><i class="fas fa-graduation-cap"></i> 知识库</a></li>
-                <li class="nav-separator"></li>
-                <li><a href="ai-config.html" class="nav-link"><i class="fas fa-robot"></i> AI配置</a></li>
-                <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> 关于</a></li>
-            </ul>
-        </div>
-    </nav>
+    <nav class="navbar" id="main-nav"></nav>
 
     <div class="admin-container">
         <!-- 页面头部 -->
@@ -911,11 +896,11 @@
                 if (versionMatch && currentVersionEl) {
                     currentVersionEl.textContent = versionMatch[1];
                 } else if (currentVersionEl) {
-                    currentVersionEl.textContent = 'v43';
+                    currentVersionEl.textContent = 'v45';
                 }
             } catch (e) {
                 console.log('[Admin] 读取版本失败:', e);
-                if (currentVersionEl) currentVersionEl.textContent = 'v43';
+                if (currentVersionEl) currentVersionEl.textContent = 'v45';
             }
             
             // 尝试读取部署时间（从Git状态文件）
@@ -1501,8 +1486,8 @@
             });
             
             if (currentVersionEl) {
-                currentVersionEl.textContent = 'v44';
-                console.log('[Admin] 设置版本: v44');
+                currentVersionEl.textContent = 'v45';
+                console.log('[Admin] 设置版本: v45');
             }
             if (lastUpdatedEl) {
                 lastUpdatedEl.textContent = new Date().toLocaleString('zh-CN');
@@ -1533,7 +1518,7 @@
             
             // 如果值还是默认值或空，重新设置
             if (currentVersionEl && (currentVersionEl.textContent === '--' || !currentVersionEl.textContent)) {
-                currentVersionEl.textContent = 'v44';
+                currentVersionEl.textContent = 'v45';
             }
             if (lastUpdatedEl && (lastUpdatedEl.textContent === '--' || !lastUpdatedEl.textContent)) {
                 lastUpdatedEl.textContent = new Date().toLocaleString('zh-CN');

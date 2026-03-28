@@ -5,34 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>方案规划 - Photo Monster</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav-component.css">
     <link rel="stylesheet" href="../css/pages.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="../index.html" class="nav-logo">
-                <i class="fas fa-camera-retro"></i>
-                <span>Photo Monster</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="photo-analysis.html" class="nav-link"><i class="fas fa-camera"></i> 照片分析</a></li>
-                <li><a href="gear-guide.html" class="nav-link"><i class="fas fa-sliders-h"></i> 套装推荐</a></li>
-                <li><a href="planner.html" class="nav-link active"><i class="fas fa-clipboard-list"></i> 方案规划</a></li>
-                <li><a href="knowledge.html" class="nav-link"><i class="fas fa-graduation-cap"></i> 知识库</a></li>
-                <li class="nav-separator"></li>
-                <li><a href="ai-config.html" class="nav-link"><i class="fas fa-robot"></i> AI配置</a></li>
-                <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> 关于</a></li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
+    <nav class="navbar" id="main-nav"></nav>
 
     <!-- 页面标题 -->
     <section class="page-header">
@@ -45,27 +25,56 @@
     <!-- 拍摄方案规划 -->
     <section id="planner" class="planner-section">
         <div class="container">
+            <!-- 方案输入区域（包含自定义方案和模板库） -->
             <div class="planner-input-area">
-                <div class="input-group">
-                    <input type="text" id="plannerInput" placeholder="例如：汉服古风人像、城市夜景、星空银河、婚礼跟拍..." class="planner-input">
-                    <button class="btn btn-primary" id="generatePlanBtn">
-                        <i class="fas fa-magic"></i> 生成方案
-                    </button>
-                    <button class="btn btn-ai" id="aiPlanBtn" title="AI智能生成更详细的方案">
-                        <i class="fas fa-robot"></i> AI增强
-                    </button>
+                <!-- 自定义输入区域 -->
+                <div class="input-section">
+                    <div class="input-header">
+                        <h3><i class="fas fa-pen-fancy"></i> 自定义方案</h3>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="plannerInput" placeholder="例如：汉服古风人像、城市夜景、星空银河、婚礼跟拍..." class="planner-input">
+                        <button class="btn btn-primary" id="generatePlanBtn">
+                            <i class="fas fa-magic"></i> 生成方案
+                        </button>
+                        <button class="btn btn-ai" id="aiPlanBtn" title="AI智能生成更详细的方案">
+                            <i class="fas fa-robot"></i> AI增强
+                        </button>
+                    </div>
+                    <div class="quick-tags">
+                        <span class="quick-tag" data-scenario="portrait">人像写真</span>
+                        <span class="quick-tag" data-scenario="landscape">风光摄影</span>
+                        <span class="quick-tag" data-scenario="hanfu">汉服古风</span>
+                        <span class="quick-tag" data-scenario="astro">星空银河</span>
+                        <span class="quick-tag" data-scenario="street">街头摄影</span>
+                        <span class="quick-tag" data-scenario="wedding">婚礼摄影</span>
+                        <span class="quick-tag" data-scenario="macro">微距摄影</span>
+                        <span class="quick-tag" data-scenario="product">产品静物</span>
+                        <span class="quick-tag" data-scenario="sports">运动赛事</span>
+                        <span class="quick-tag" data-scenario="wildlife">野生动物</span>
+                    </div>
                 </div>
-                <div class="quick-tags">
-                    <span class="quick-tag" data-scenario="portrait">人像写真</span>
-                    <span class="quick-tag" data-scenario="landscape">风光摄影</span>
-                    <span class="quick-tag" data-scenario="hanfu">汉服古风</span>
-                    <span class="quick-tag" data-scenario="astro">星空银河</span>
-                    <span class="quick-tag" data-scenario="street">街头摄影</span>
-                    <span class="quick-tag" data-scenario="wedding">婚礼摄影</span>
-                    <span class="quick-tag" data-scenario="macro">微距摄影</span>
-                    <span class="quick-tag" data-scenario="product">产品静物</span>
-                    <span class="quick-tag" data-scenario="sports">运动赛事</span>
-                    <span class="quick-tag" data-scenario="wildlife">野生动物</span>
+
+                <!-- 分隔线 -->
+                <div class="template-divider">
+                    <span>或选择预设模板</span>
+                </div>
+
+                <!-- 方案模板库 -->
+                <div class="template-library" id="templateLibrary">
+                    <div class="template-header">
+                        <h3><i class="fas fa-th-large"></i> 方案模板库</h3>
+                    </div>
+                    <div class="template-categories">
+                        <button class="template-cat-btn active" data-category="all">全部</button>
+                        <button class="template-cat-btn" data-category="portrait">人像</button>
+                        <button class="template-cat-btn" data-category="landscape">风光</button>
+                        <button class="template-cat-btn" data-category="event">活动</button>
+                        <button class="template-cat-btn" data-category="creative">创意</button>
+                    </div>
+                    <div class="template-grid" id="templateGrid">
+                        <!-- 模板卡片动态生成 -->
+                    </div>
                 </div>
             </div>
             
@@ -83,13 +92,16 @@
                 </div>
             </div>
             
-            <!-- 方案导出按钮 -->
+            <!-- 方案操作按钮 -->
             <div class="planner-export" id="plannerExport" style="display: none; margin-top: 20px; text-align: center;">
                 <button class="btn btn-secondary" id="exportPlanBtn">
                     <i class="fas fa-download"></i> 导出方案
                 </button>
                 <button class="btn btn-secondary" id="printPlanBtn">
                     <i class="fas fa-print"></i> 打印方案
+                </button>
+                <button class="btn btn-secondary" id="favoritePlanBtn" onclick="favoriteCurrentPlan()">
+                    <i class="far fa-star"></i> 收藏方案
                 </button>
             </div>
         </div>
@@ -99,18 +111,12 @@
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 Photo Monster. All rights reserved.</p>
-            <p><a href="privacy.html">隐私政策</a> · <a href="terms.html">使用条款</a> · <a href="admin-update.html" style="opacity: 0.6; font-size: 0.85em;">管理</a></p>
+            <p><a href="privacy.html">隐私政策</a> · <a href="terms.html">使用条款</a> · <a href="content-complaint.html">侵权投诉</a> · <a href="admin-update.html" style="opacity: 0.6; font-size: 0.85em;">管理</a></p>
         </div>
     </footer>
 
     <!-- 加载脚本 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
-    <script src="../js/ai-config.js"></script>
-    <script src="../js/ai-manager.js"></script>
-    <script src="../js/knowledge-base.js"></script>
-    <script src="../js/rule-engine.js"></script>
-    <script src="../js/robust.js"></script>
+    <script src="../js/nav-component.js"></script>
     <script src="../js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -241,6 +247,620 @@
                 });
             });
         });
+
+        // 收藏当前方案
+        let currentPlanData = null;
+
+        function favoriteCurrentPlan() {
+            const plannerResult = document.getElementById('plannerResult');
+            const plannerInput = document.getElementById('plannerInput');
+            
+            if (!plannerResult || plannerResult.style.display === 'none') {
+                alert('请先生成方案');
+                return;
+            }
+
+            const title = plannerInput.value.trim() || '拍摄方案';
+            const content = plannerResult.innerHTML;
+            
+            // 构建收藏数据
+            const planData = {
+                type: 'plan',
+                id: 'plan_' + Date.now(),
+                title: title,
+                scenario: title,
+                description: title,
+                content: content,
+                createdAt: new Date().toISOString()
+            };
+
+            // 调用收藏API
+            const result = addToFavorites(planData);
+            if (result.success) {
+                // 更新按钮状态
+                const btn = document.getElementById('favoritePlanBtn');
+                btn.innerHTML = '<i class="fas fa-star"></i> 已收藏';
+                btn.disabled = true;
+                alert('收藏成功！');
+            } else {
+                alert(result.message || '收藏失败');
+            }
+        }
+
+        // 添加到收藏（兼容模式，不依赖 favorites.js 加载）
+        function addToFavorites(item) {
+            try {
+                // 从 localStorage 读取现有收藏
+                let favorites = JSON.parse(localStorage.getItem('photoMonster_favorites') || '[]');
+                
+                // 检查是否已存在
+                const exists = favorites.some(f => 
+                    f.type === item.type && f.title === item.title
+                );
+                
+                if (exists) {
+                    return { success: false, message: '该方案已在收藏中' };
+                }
+                
+                // 添加新收藏
+                favorites.push(item);
+                localStorage.setItem('photoMonster_favorites', JSON.stringify(favorites));
+                
+                return { success: true, message: '收藏成功' };
+            } catch (e) {
+                console.error('收藏失败:', e);
+                return { success: false, message: '收藏失败：' + e.message };
+            }
+        }
+
+        // 检查当前方案是否已收藏（页面加载时调用）
+        function checkFavoriteStatus() {
+            const plannerInput = document.getElementById('plannerInput');
+            const btn = document.getElementById('favoritePlanBtn');
+            if (!plannerInput || !btn) return;
+
+            const title = plannerInput.value.trim();
+            if (!title) return;
+
+            try {
+                const favorites = JSON.parse(localStorage.getItem('photoMonster_favorites') || '[]');
+                const isFavorited = favorites.some(f => f.type === 'plan' && f.title === title);
+                
+                if (isFavorited) {
+                    btn.innerHTML = '<i class="fas fa-star"></i> 已收藏';
+                    btn.disabled = true;
+                }
+            } catch (e) {
+                console.error('检查收藏状态失败:', e);
+            }
+        }
+
+        // 监听输入变化，重置收藏按钮
+        document.addEventListener('DOMContentLoaded', function() {
+            const plannerInput = document.getElementById('plannerInput');
+            const btn = document.getElementById('favoritePlanBtn');
+            
+            if (plannerInput && btn) {
+                plannerInput.addEventListener('input', function() {
+                    btn.innerHTML = '<i class="far fa-star"></i> 收藏方案';
+                    btn.disabled = false;
+                });
+            }
+        });
+
+        // ==================== 模板库功能 ====================
+
+        // 方案模板数据
+        const planTemplates = [
+            {
+                id: 'hanfu-portrait',
+                category: 'portrait',
+                title: '汉服古风人像',
+                icon: 'fa-user-circle',
+                description: '适合古风场景的人像拍摄方案',
+                equipment: '85mm定焦镜头、反光板、柔光伞',
+                settings: '光圈f/1.8-f/2.8，ISO 100-400',
+                tips: '选择古建筑、园林等场景，注意服装与环境的协调'
+            },
+            {
+                id: 'city-night',
+                category: 'landscape',
+                title: '城市夜景',
+                icon: 'fa-city',
+                description: '城市灯光夜景拍摄方案',
+                equipment: '广角镜头、三脚架、快门线',
+                settings: '光圈f/8-f/11，ISO 100-400，长曝光',
+                tips: '蓝调时刻拍摄最佳，注意高光过曝控制'
+            },
+            {
+                id: 'milky-way',
+                category: 'landscape',
+                title: '星空银河',
+                icon: 'fa-star',
+                description: '银河星空拍摄方案',
+                equipment: '大光圈广角镜头、稳固三脚架、头灯',
+                settings: '最大光圈，ISO 3200-6400，15-25秒曝光',
+                tips: '选择无光害地点，月相为新月或残月时最佳'
+            },
+            {
+                id: 'wedding-day',
+                category: 'event',
+                title: '婚礼跟拍',
+                icon: 'fa-heart',
+                description: '全天婚礼记录拍摄方案',
+                equipment: '双机身、24-70mm、85mm定焦、闪光灯',
+                settings: '室内ISO 800-3200，抓拍快门1/250s以上',
+                tips: '提前踩点，准备备用电池和存储卡'
+            },
+            {
+                id: 'street-photo',
+                category: 'creative',
+                title: '街头纪实',
+                icon: 'fa-walking',
+                description: '城市街头人文纪实拍摄',
+                equipment: '35mm定焦或标准变焦镜头',
+                settings: '光圈优先f/5.6-f/8，ISO自动',
+                tips: '保持低调，预判场景，尊重被摄者'
+            },
+            {
+                id: 'macro-nature',
+                category: 'creative',
+                title: '微距花卉',
+                icon: 'fa-leaf',
+                description: '花卉昆虫微距拍摄方案',
+                equipment: '微距镜头、环形闪光灯、反光板',
+                settings: '光圈f/8-f/16，使用三脚架或防抖',
+                tips: '清晨或傍晚光线柔和，注意景深控制'
+            },
+            {
+                id: 'sports-action',
+                category: 'event',
+                title: '运动赛事',
+                icon: 'fa-running',
+                description: '体育竞技类拍摄方案',
+                equipment: '70-200mm或更长焦段、高速连拍机身',
+                settings: '快门优先1/1000s以上，连续对焦',
+                tips: '预判动作，提前对焦，注意背景虚化'
+            },
+            {
+                id: 'product-studio',
+                category: 'creative',
+                title: '产品静物',
+                icon: 'fa-box',
+                description: '电商产品静物拍摄方案',
+                equipment: '标准变焦镜头、柔光箱、反光板',
+                settings: '光圈f/8-f/11，ISO 100，三脚架',
+                tips: '布光均匀，注意消除反光，白平衡准确'
+            },
+            {
+                id: 'golden-hour',
+                category: 'portrait',
+                title: '黄金时刻人像',
+                icon: 'fa-sun',
+                description: '日出日落黄金时刻人像',
+                equipment: '85mm或135mm定焦、反光板',
+                settings: '光圈f/1.8-f/2.8，ISO 100-400',
+                tips: '利用逆光轮廓光，注意补光平衡光比'
+            },
+            {
+                id: 'long-exposure-water',
+                category: 'landscape',
+                title: '慢门流水',
+                icon: 'fa-water',
+                description: '丝绢流水效果拍摄方案',
+                equipment: '广角镜头、ND减光镜、三脚架',
+                settings: '光圈f/11-f/16，ISO 100，1-30秒曝光',
+                tips: 'ND镜根据光线选择，注意防抖和构图'
+            },
+            {
+                id: 'food-photo',
+                category: 'creative',
+                title: '美食摄影',
+                icon: 'fa-utensils',
+                description: '餐厅美食拍摄方案',
+                equipment: '50mm或微距镜头、小型LED灯',
+                settings: '光圈f/2.8-f/5.6，ISO 400-1600',
+                tips: '侧光或侧逆光，注意色彩搭配和摆盘'
+            },
+            {
+                id: 'concert-live',
+                category: 'event',
+                title: '演唱会现场',
+                icon: 'fa-music',
+                description: '演唱会和现场演出拍摄',
+                equipment: '70-200mm f/2.8、高感机身',
+                settings: '光圈最大，ISO 3200-12800，快门1/250s以上',
+                tips: '注意舞台灯光变化，避免直射激光'
+            }
+        ];
+
+        // 初始化模板库
+        function initTemplateLibrary() {
+            renderTemplates('all');
+            bindTemplateEvents();
+        }
+
+        // 渲染模板
+        function renderTemplates(category) {
+            const grid = document.getElementById('templateGrid');
+            if (!grid) return;
+
+            const templates = category === 'all' 
+                ? planTemplates 
+                : planTemplates.filter(t => t.category === category);
+
+            grid.innerHTML = templates.map(template => `
+                <div class="template-card" data-id="${template.id}" onclick="useTemplate('${template.id}')">
+                    <div class="template-icon">
+                        <i class="fas ${template.icon}"></i>
+                    </div>
+                    <div class="template-info">
+                        <h4>${template.title}</h4>
+                        <p>${template.description}</p>
+                    </div>
+                    <div class="template-action">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 绑定分类按钮事件
+        function bindTemplateEvents() {
+            document.querySelectorAll('.template-cat-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.template-cat-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    renderTemplates(this.dataset.category);
+                });
+            });
+        }
+
+        // 使用模板
+        function useTemplate(templateId) {
+            const template = planTemplates.find(t => t.id === templateId);
+            if (!template) return;
+
+            // 填充输入框
+            document.getElementById('plannerInput').value = template.title;
+
+            // 自动生成方案
+            generatePlanFromTemplate(template);
+
+            // 滚动到结果区域
+            setTimeout(() => {
+                document.getElementById('plannerResult').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // 从模板生成方案
+        function generatePlanFromTemplate(template) {
+            const plannerResult = document.getElementById('plannerResult');
+            const plannerExport = document.getElementById('plannerExport');
+
+            plannerResult.innerHTML = `
+                <div class="plan-header">
+                    <h2><i class="fas ${template.icon}"></i> ${template.title}</h2>
+                    <p class="plan-description">${template.description}</p>
+                </div>
+                
+                <div class="plan-section">
+                    <h3><i class="fas fa-camera"></i> 推荐器材</h3>
+                    <p>${template.equipment}</p>
+                </div>
+                
+                <div class="plan-section">
+                    <h3><i class="fas fa-sliders-h"></i> 相机设置</h3>
+                    <p>${template.settings}</p>
+                </div>
+                
+                <div class="plan-section">
+                    <h3><i class="fas fa-lightbulb"></i> 拍摄技巧</h3>
+                    <p>${template.tips}</p>
+                </div>
+
+                <div class="plan-section">
+                    <h3><i class="fas fa-list-check"></i> 检查清单</h3>
+                    <ul class="checklist">
+                        <li><i class="far fa-square"></i> 检查电池电量</li>
+                        <li><i class="far fa-square"></i> 准备足够的存储卡</li>
+                        <li><i class="far fa-square"></i> 清洁镜头</li>
+                        <li><i class="far fa-square"></i> 查看天气预报</li>
+                        <li><i class="far fa-square"></i> 确认拍摄地点</li>
+                    </ul>
+                </div>
+            `;
+
+            plannerResult.style.display = 'block';
+            plannerExport.style.display = 'block';
+
+            // 保存到历史记录
+            savePlanToHistory(template.title, plannerResult.innerHTML);
+        }
+
+        // ==================== 导出功能增强 ====================
+
+        // 导出方案
+        function exportPlan() {
+            const plannerResult = document.getElementById('plannerResult');
+            const plannerInput = document.getElementById('plannerInput');
+            
+            if (plannerResult.style.display === 'none') {
+                alert('请先生成方案');
+                return;
+            }
+            
+            const title = plannerInput.value.trim() || '拍摄方案';
+            showExportOptions(title);
+        }
+
+        // 显示导出选项
+        function showExportOptions(title) {
+            // 移除已存在的弹窗
+            const existingModal = document.getElementById('exportModal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'exportModal';
+            modal.className = 'modal';
+            modal.style.cssText = 'display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;';
+            modal.innerHTML = `
+                <div class="modal-content" style="background: white; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                    <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0; color: #333;"><i class="fas fa-download"></i> 导出方案</h3>
+                        <button onclick="closeExportModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+                    </div>
+                    <div class="modal-body" style="padding: 20px;">
+                        <p style="margin-bottom: 20px; color: #666;">选择导出格式：</p>
+                        <div class="export-options" style="display: flex; flex-direction: column; gap: 12px;">
+                            <button onclick="exportAsHTML('${title.replace(/'/g, "\\'")}')" style="padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px;">
+                                <i class="fas fa-file-code" style="font-size: 24px; color: #667eea;"></i>
+                                <div>
+                                    <div style="font-weight: 500; color: #333;">HTML 文件</div>
+                                    <div style="font-size: 12px; color: #999;">可在浏览器中查看</div>
+                                </div>
+                            </button>
+                            <button onclick="exportAsText('${title.replace(/'/g, "\\'")}')" style="padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px;">
+                                <i class="fas fa-file-alt" style="font-size: 24px; color: #667eea;"></i>
+                                <div>
+                                    <div style="font-weight: 500; color: #333;">文本文件</div>
+                                    <div style="font-size: 12px; color: #999;">纯文本格式</div>
+                                </div>
+                            </button>
+                            <button onclick="exportAsMarkdown('${title.replace(/'/g, "\\'")}')" style="padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px;">
+                                <i class="fab fa-markdown" style="font-size: 24px; color: #667eea;"></i>
+                                <div>
+                                    <div style="font-weight: 500; color: #333;">Markdown</div>
+                                    <div style="font-size: 12px; color: #999;">适合文档编辑</div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+        }
+
+        // 关闭导出弹窗
+        function closeExportModal() {
+            const modal = document.getElementById('exportModal');
+            if (modal) modal.remove();
+        }
+
+        // 导出为 HTML
+        function exportAsHTML(title) {
+            const plannerResult = document.getElementById('plannerResult');
+            const content = plannerResult.innerHTML;
+            const date = new Date().toLocaleDateString('zh-CN');
+
+            const htmlContent = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title} - 拍摄方案</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif; 
+            padding: 40px; 
+            background: #f5f5f5;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            color: #333; 
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .date { 
+            color: #999; 
+            font-size: 14px; 
+            margin-bottom: 30px;
+        }
+        .plan-section { 
+            margin-bottom: 30px; 
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .plan-section:last-child { border-bottom: none; }
+        .plan-section h3 { 
+            color: #667eea; 
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .plan-section p, .plan-section li {
+            color: #555;
+            line-height: 1.8;
+        }
+        .plan-section ul {
+            padding-left: 20px;
+        }
+        .plan-section li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>${title}</h1>
+        <div class="date">生成日期：${date}</div>
+        ${content}
+        <div class="footer">
+            由 Photo Monster 生成
+        </div>
+    </div>
+</body>
+</html>`;
+
+            downloadFile(`${title}_拍摄方案.html`, htmlContent, 'text/html');
+            closeExportModal();
+        }
+
+        // 导出为文本
+        function exportAsText(title) {
+            const plannerResult = document.getElementById('plannerResult');
+            const date = new Date().toLocaleDateString('zh-CN');
+            
+            let textContent = `${title}\n`;
+            textContent += `生成日期：${date}\n`;
+            textContent += `${'='.repeat(40)}\n\n`;
+
+            const sections = plannerResult.querySelectorAll('.plan-section');
+            sections.forEach(section => {
+                const heading = section.querySelector('h3');
+                const content = section.querySelector('p, ul');
+                
+                if (heading) {
+                    textContent += `${heading.textContent.trim()}\n`;
+                    textContent += `${'-'.repeat(30)}\n`;
+                }
+                
+                if (content) {
+                    if (content.tagName === 'UL') {
+                        const items = content.querySelectorAll('li');
+                        items.forEach(item => {
+                            textContent += `[ ] ${item.textContent.trim()}\n`;
+                        });
+                    } else {
+                        textContent += `${content.textContent.trim()}\n`;
+                    }
+                }
+                textContent += '\n';
+            });
+
+            textContent += `${'='.repeat(40)}\n`;
+            textContent += `由 Photo Monster 生成\n`;
+
+            downloadFile(`${title}_拍摄方案.txt`, textContent, 'text/plain');
+            closeExportModal();
+        }
+
+        // 导出为 Markdown
+        function exportAsMarkdown(title) {
+            const plannerResult = document.getElementById('plannerResult');
+            const date = new Date().toLocaleDateString('zh-CN');
+            
+            let mdContent = `# ${title}\n\n`;
+            mdContent += `> 生成日期：${date}\n\n`;
+            mdContent += `---\n\n`;
+
+            const sections = plannerResult.querySelectorAll('.plan-section');
+            sections.forEach(section => {
+                const heading = section.querySelector('h3');
+                const content = section.querySelector('p, ul');
+                
+                if (heading) {
+                    mdContent += `## ${heading.textContent.trim()}\n\n`;
+                }
+                
+                if (content) {
+                    if (content.tagName === 'UL') {
+                        const items = content.querySelectorAll('li');
+                        items.forEach(item => {
+                            mdContent += `- [ ] ${item.textContent.trim()}\n`;
+                        });
+                    } else {
+                        mdContent += `${content.textContent.trim()}\n`;
+                    }
+                }
+                mdContent += '\n';
+            });
+
+            mdContent += `---\n\n`;
+            mdContent += `*由 Photo Monster 生成*\n`;
+
+            downloadFile(`${title}_拍摄方案.md`, mdContent, 'text/markdown');
+            closeExportModal();
+        }
+
+        // 下载文件
+        function downloadFile(filename, content, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ==================== 历史记录功能 ====================
+
+        // 保存方案到历史记录
+        function savePlanToHistory(title, content) {
+            try {
+                let history = JSON.parse(localStorage.getItem('photoMonster_plan_history') || '[]');
+                
+                // 添加新记录到开头
+                history.unshift({
+                    id: 'plan_' + Date.now(),
+                    title: title,
+                    content: content,
+                    createdAt: new Date().toISOString()
+                });
+                
+                // 最多保留20条
+                if (history.length > 20) {
+                    history = history.slice(0, 20);
+                }
+                
+                localStorage.setItem('photoMonster_plan_history', JSON.stringify(history));
+            } catch (e) {
+                console.error('保存历史记录失败:', e);
+            }
+        }
+
+        // 获取历史记录
+        function getPlanHistory() {
+            try {
+                return JSON.parse(localStorage.getItem('photoMonster_plan_history') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,312 @@
+{
+  "timestamp": "2026-03-28T02-27-01-729Z",
+  "duration": "83ms",
+  "summary": {
+    "totalErrors": 0,
+    "totalWarnings": 42,
+    "canDeploy": true
+  },
+  "errors": [],
+  "warnings": [
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 78 处 console.log，建议清理或改为条件输出",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "变量 \"mountMap\" 可能未使用",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "变量 \"prompt\" 可能未使用",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 66 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 54 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 58 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 52 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 73 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 77 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 77 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 136 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 103 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 100 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 80 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 63 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 100 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 175 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 110 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 127 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 61 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 89 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 193 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 118 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 67 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 104 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 68 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 62 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 54 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 120 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 62 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 52 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 100 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 172 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 105 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 126 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 67 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 68 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 58 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 89 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/app.js",
+      "issue": "发现 62 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/photo-analysis-integration.js",
+      "issue": "发现 82 行的长函数，建议拆分",
+      "severity": "LOW"
+    },
+    {
+      "type": "代码规范",
+      "file": "./js/photo-analysis-integration.js",
+      "issue": "发现 96 行的长函数，建议拆分",
+      "severity": "LOW"
+    }
+  ],
+  "checklist": {
+    "coreFeatures": [
+      {
+        "name": "照片上传功能",
+        "test": "上传图片，检查是否正常加载"
+      },
+      {
+        "name": "EXIF读取功能",
+        "test": "上传带EXIF的照片，检查参数显示"
+      },
+      {
+        "name": "AI分析功能",
+        "test": "点击分析按钮，检查是否返回结果"
+      },
+      {
+        "name": "LocalStorage存储",
+        "test": "刷新页面，检查历史记录是否保留"
+      },
+      {
+        "name": "响应式布局",
+        "test": "调整浏览器窗口大小，检查适配"
+      }
+    ],
+    "navigation": [
+      {
+        "name": "首页链接",
+        "test": "点击Logo返回首页"
+      },
+      {
+        "name": "导航菜单",
+        "test": "所有导航链接可正常跳转"
+      },
+      {
+        "name": "移动端菜单",
+        "test": "小屏幕下汉堡菜单正常展开"
+      }
+    ],
+    "crossPage": [
+      {
+        "name": "样式一致性",
+        "test": "各页面风格统一"
+      },
+      {
+        "name": "页脚信息",
+        "test": "隐私政策、使用条款链接有效"
+      }
+    ]
+  }
+}

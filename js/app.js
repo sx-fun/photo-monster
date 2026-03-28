@@ -1482,9 +1482,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('KnowledgeBase 主题列表:', Object.keys(KnowledgeBase));
         } else {
             console.error('KnowledgeBase 未加载，请检查 knowledge-base.js 文件');
-            // 尝试手动加载
+            // 尝试手动加载（根据当前路径调整）
             const script = document.createElement('script');
-            script.src = 'js/knowledge-base.js';
+            const isInPages = window.location.pathname.includes('/pages/');
+            script.src = isInPages ? '../js/knowledge-base.js' : 'js/knowledge-base.js';
             script.onload = () => console.log('手动加载 knowledge-base.js 成功');
             script.onerror = () => console.error('手动加载 knowledge-base.js 失败');
             document.head.appendChild(script);
@@ -2402,6 +2403,49 @@ async function handleFiles(files) {
 // 压缩图片
 function compressImage(file, options) {
     return new Promise((resolve, reject) => {
+        // 检查 Compressor 是否可用
+        if (typeof Compressor === 'undefined' || Compressor === null) {
+            console.warn('Compressor 未加载，使用原生图片压缩');
+            // 使用原生 Canvas 压缩作为备用
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const maxWidth = options.maxWidth || 1920;
+                    const maxHeight = options.maxHeight || 1920;
+                    const quality = options.quality || 0.8;
+                    
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > maxWidth || height > maxHeight) {
+                        if (width / height > maxWidth / maxHeight) {
+                            height = Math.round(height * (maxWidth / width));
+                            width = maxWidth;
+                        } else {
+                            width = Math.round(width * (maxHeight / height));
+                            height = maxHeight;
+                        }
+                    }
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    canvas.toBlob(function(blob) {
+                        resolve(blob);
+                    }, 'image/jpeg', quality);
+                };
+                img.onerror = reject;
+                img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+            return;
+        }
+        
         new Compressor(file, {
             ...options,
             success(result) {
@@ -4701,6 +4745,29 @@ function displayComboSummary() {
     
     const cameraPriceStr = '¥' + cameraPriceNum.toLocaleString();
     
+    // 生成套装ID用于对比功能
+    const comboId = `combo_${comboSelection.cameraBrand}_${camera.replace(/\s+/g, '_')}_${lens?.id || 'fixed'}_${Date.now()}`;
+    
+    // 获取二手价格信息
+    const usedPriceInfo = getUsedPriceInfo(comboSelection.cameraBrand, camera);
+    const usedPriceHtml = usedPriceInfo ? `
+        <div class="used-price-info">
+            <div class="used-price-header">
+                <i class="fas fa-recycle"></i> 二手市场参考
+            </div>
+            <div class="used-price-content">
+                <div class="used-price-item">
+                    <span class="used-label">二手价格</span>
+                    <span class="used-price">¥${usedPriceInfo.usedPrice.toLocaleString()}</span>
+                    <span class="used-condition">${usedPriceInfo.condition}</span>
+                </div>
+                <div class="used-depreciation">
+                    比全新省 <strong>${usedPriceInfo.depreciation}%</strong>
+                </div>
+            </div>
+        </div>
+    ` : '';
+    
     container.innerHTML = `
         <div class="combo-summary-header">
             <h5><i class="fas fa-layer-group"></i> 套装配置汇总</h5>
@@ -4725,11 +4792,173 @@ function displayComboSummary() {
             </div>
             <div class="total-price">${totalPriceStr}</div>
         </div>
+        ${usedPriceHtml}
+        <div class="combo-actions-bar">
+            <button class="btn btn-compare" onclick="addComboToCompare('${comboId}')" id="compareBtn_${comboId}">
+                <i class="fas fa-balance-scale"></i> 加入对比
+            </button>
+            <button class="btn btn-favorite" onclick="favoriteCurrentCombo()">
+                <i class="far fa-star"></i> 收藏套装
+            </button>
+        </div>
         <div class="combo-hint">
             <i class="fas fa-info-circle"></i>
             点击"查看详细推荐"获取完整的套装评价和使用指导
         </div>
     `;
+    
+    // 保存当前套装数据到全局变量，供对比功能使用
+    window.currentComboData = {
+        id: comboId,
+        camera: { brand: comboSelection.cameraBrand, model: camera, data: cameraData, price: cameraPriceNum },
+        lens: lens,
+        totalPrice: isFixedLens ? cameraPriceNum : (cameraPriceNum + (lens?.priceNum || 3000)),
+        isFixedLens: isFixedLens,
+        createdAt: new Date().toISOString()
+    };
+}
+
+// ==================== 套装对比联动功能 ====================
+
+// 添加当前套装到对比
+function addComboToCompare(comboId) {
+    if (!window.currentComboData) {
+        alert('请先生成套装方案');
+        return;
+    }
+    
+    // 获取已有的对比列表
+    let compareList = JSON.parse(localStorage.getItem('gearCompareList') || '[]');
+    
+    // 检查是否已存在
+    const exists = compareList.some(item => 
+        item.type === 'combo' && 
+        item.camera?.model === window.currentComboData.camera.model &&
+        item.lens?.id === window.currentComboData.lens?.id
+    );
+    
+    if (exists) {
+        alert('该套装已在对比列表中');
+        return;
+    }
+    
+    // 检查对比数量限制
+    if (compareList.length >= 4) {
+        alert('对比列表最多支持4个物品，请先移除一些');
+        return;
+    }
+    
+    // 构建套装对比数据
+    const comboData = {
+        type: 'combo',
+        id: comboId,
+        name: `${window.currentComboData.camera.data?.brand || window.currentComboData.camera.brand} ${window.currentComboData.camera.model} 套装`,
+        camera: window.currentComboData.camera,
+        lens: window.currentComboData.lens,
+        totalPrice: window.currentComboData.totalPrice,
+        isFixedLens: window.currentComboData.isFixedLens,
+        addedAt: new Date().toISOString()
+    };
+    
+    // 添加到对比列表
+    compareList.push(comboData);
+    localStorage.setItem('gearCompareList', JSON.stringify(compareList));
+    
+    // 更新按钮状态
+    const btn = document.getElementById(`compareBtn_${comboId}`);
+    if (btn) {
+        btn.innerHTML = '<i class="fas fa-check"></i> 已加入对比';
+        btn.disabled = true;
+        btn.classList.add('btn-disabled');
+    }
+    
+    // 显示提示
+    showComboNotification('套装已加入对比列表，前往"器材对比"页面查看');
+}
+
+// 收藏当前套装
+function favoriteCurrentCombo() {
+    if (!window.currentComboData) {
+        alert('请先生成套装方案');
+        return;
+    }
+    
+    const data = window.currentComboData;
+    const comboName = `${data.camera.data?.brand || data.camera.brand} ${data.camera.model}${data.isFixedLens ? '' : ' + ' + (data.lens?.name || '镜头')}套装`;
+    
+    const favoriteItem = {
+        id: 'combo_' + Date.now(),
+        type: 'combo',
+        name: comboName,
+        camera: data.camera,
+        lens: data.lens,
+        totalPrice: data.totalPrice,
+        isFixedLens: data.isFixedLens,
+        createdAt: new Date().toISOString()
+    };
+    
+    // 保存到收藏
+    let favorites = JSON.parse(localStorage.getItem('photoMonster_favorites') || '[]');
+    
+    // 检查是否已收藏
+    const exists = favorites.some(f => 
+        f.type === 'combo' && 
+        f.camera?.model === data.camera.model &&
+        f.lens?.id === data.lens?.id
+    );
+    
+    if (exists) {
+        alert('该套装已在收藏列表中');
+        return;
+    }
+    
+    favorites.unshift(favoriteItem);
+    
+    // 最多保留50条
+    if (favorites.length > 50) {
+        favorites = favorites.slice(0, 50);
+    }
+    
+    localStorage.setItem('photoMonster_favorites', JSON.stringify(favorites));
+    
+    showComboNotification('套装已收藏，前往"我的收藏"页面查看');
+}
+
+// 显示套装操作提示
+function showComboNotification(message) {
+    // 移除已存在的提示
+    const existing = document.getElementById('comboNotification');
+    if (existing) existing.remove();
+    
+    const notification = document.createElement('div');
+    notification.id = 'comboNotification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: #10b981;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        max-width: 300px;
+    `;
+    notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-check-circle"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // 3秒后自动消失
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 // 获取固定镜头相机信息
@@ -4749,6 +4978,133 @@ function getFixedLensInfo(cameraData, brandName, model) {
         aperture: '', 
         desc: '该相机配备固定镜头，不可更换' 
     };
+}
+
+// 二手市场价格数据（约为全新价格的60-85%，根据成色和热门程度）
+const usedPriceDatabase = {
+    // 佳能
+    'canon': {
+        'EOS R5': { usedPrice: 18000, condition: '95新', depreciation: 25 },
+        'EOS R6 II': { usedPrice: 12000, condition: '95新', depreciation: 25 },
+        'EOS R6': { usedPrice: 10000, condition: '95新', depreciation: 29 },
+        'EOS R8': { usedPrice: 7500, condition: '95新', depreciation: 21 },
+        'EOS RP': { usedPrice: 4500, condition: '95新', depreciation: 36 },
+        'EOS 5D IV': { usedPrice: 12000, condition: '90新', depreciation: 33 },
+        'EOS 5D III': { usedPrice: 4000, condition: '90新', depreciation: 33 },
+        'EOS 5D II': { usedPrice: 2500, condition: '85新', depreciation: 29 },
+        'EOS 6D II': { usedPrice: 5500, condition: '95新', depreciation: 35 },
+        'EOS 6D': { usedPrice: 3200, condition: '90新', depreciation: 36 },
+        'EOS 90D': { usedPrice: 6000, condition: '95新', depreciation: 33 },
+        'EOS 850D': { usedPrice: 3800, condition: '95新', depreciation: 37 },
+        'EOS M50 II': { usedPrice: 3200, condition: '95新', depreciation: 36 },
+        'EOS M6 II': { usedPrice: 4500, condition: '95新', depreciation: 40 }
+    },
+    // 索尼
+    'sony': {
+        'A1': { usedPrice: 38000, condition: '95新', depreciation: 21 },
+        'A9 III': { usedPrice: 38000, condition: '95新', depreciation: 17 },
+        'A9 II': { usedPrice: 22000, condition: '95新', depreciation: 27 },
+        'A7R V': { usedPrice: 20000, condition: '95新', depreciation: 23 },
+        'A7R IV': { usedPrice: 16000, condition: '95新', depreciation: 30 },
+        'A7R III': { usedPrice: 11000, condition: '95新', depreciation: 35 },
+        'A7 IV': { usedPrice: 13000, condition: '95新', depreciation: 24 },
+        'A7 III': { usedPrice: 9000, condition: '95新', depreciation: 36 },
+        'A7C': { usedPrice: 9000, condition: '95新', depreciation: 25 },
+        'A7C II': { usedPrice: 12000, condition: '95新', depreciation: 20 },
+        'A6700': { usedPrice: 8000, condition: '95新', depreciation: 27 },
+        'A6600': { usedPrice: 6500, condition: '95新', depreciation: 35 },
+        'A6400': { usedPrice: 4800, condition: '95新', depreciation: 37 },
+        'ZV-E10': { usedPrice: 3500, condition: '95新', depreciation: 36 },
+        'ZV-E1': { usedPrice: 12000, condition: '95新', depreciation: 20 },
+        'FX3': { usedPrice: 22000, condition: '95新', depreciation: 15 },
+        'FX30': { usedPrice: 11000, condition: '95新', depreciation: 21 }
+    },
+    // 尼康
+    'nikon': {
+        'Z9': { usedPrice: 32000, condition: '95新', depreciation: 20 },
+        'Z8': { usedPrice: 22000, condition: '95新', depreciation: 21 },
+        'Z7 II': { usedPrice: 14000, condition: '95新', depreciation: 30 },
+        'Z7': { usedPrice: 10000, condition: '95新', depreciation: 41 },
+        'Z6 III': { usedPrice: 15000, condition: '95新', depreciation: 17 },
+        'Z6 II': { usedPrice: 9500, condition: '95新', depreciation: 32 },
+        'Z6': { usedPrice: 7000, condition: '95新', depreciation: 36 },
+        'Z5': { usedPrice: 5500, condition: '95新', depreciation: 31 },
+        'Zf': { usedPrice: 11000, condition: '95新', depreciation: 21 },
+        'Zfc': { usedPrice: 5000, condition: '95新', depreciation: 29 },
+        'Z50': { usedPrice: 4500, condition: '95新', depreciation: 36 },
+        'Z30': { usedPrice: 3800, condition: '95新', depreciation: 37 },
+        'D850': { usedPrice: 15000, condition: '90新', depreciation: 40 },
+        'D780': { usedPrice: 11000, condition: '95新', depreciation: 27 },
+        'D750': { usedPrice: 5500, condition: '90新', depreciation: 39 }
+    },
+    // 富士
+    'fujifilm': {
+        'X100VI': { usedPrice: 11000, condition: '99新', depreciation: 8 },
+        'X100V': { usedPrice: 9500, condition: '95新', depreciation: 17 },
+        'X100F': { usedPrice: 5500, condition: '90新', depreciation: 35 },
+        'X-T5': { usedPrice: 10000, condition: '95新', depreciation: 23 },
+        'X-T4': { usedPrice: 7500, condition: '95新', depreciation: 37 },
+        'X-T3': { usedPrice: 5500, condition: '90新', depreciation: 45 },
+        'X-T30 II': { usedPrice: 5500, condition: '95新', depreciation: 31 },
+        'X-T30': { usedPrice: 4000, condition: '90新', depreciation: 43 },
+        'X-S20': { usedPrice: 7500, condition: '95新', depreciation: 25 },
+        'X-S10': { usedPrice: 5500, condition: '95新', depreciation: 35 },
+        'X-H2S': { usedPrice: 14000, condition: '95新', depreciation: 22 },
+        'X-H2': { usedPrice: 12000, condition: '95新', depreciation: 20 },
+        'X-E4': { usedPrice: 5500, condition: '95新', depreciation: 31 },
+        'GFX 100S': { usedPrice: 28000, condition: '95新', depreciation: 30 },
+        'GFX 50S II': { usedPrice: 20000, condition: '95新', depreciation: 33 },
+        'GFX 50R': { usedPrice: 18000, condition: '90新', depreciation: 40 }
+    },
+    // 松下
+    'panasonic': {
+        'S5 II': { usedPrice: 10000, condition: '95新', depreciation: 23 },
+        'S5': { usedPrice: 7500, condition: '95新', depreciation: 32 },
+        'S1R': { usedPrice: 15000, condition: '95新', depreciation: 35 },
+        'S1H': { usedPrice: 16000, condition: '95新', depreciation: 30 },
+        'GH6': { usedPrice: 9500, condition: '95新', depreciation: 27 },
+        'GH5 II': { usedPrice: 7000, condition: '95新', depreciation: 36 },
+        'GH5': { usedPrice: 4500, condition: '90新', depreciation: 50 },
+        'G9 II': { usedPrice: 9500, condition: '95新', depreciation: 21 },
+        'G9': { usedPrice: 5000, condition: '95新', depreciation: 44 },
+        'G95': { usedPrice: 3800, condition: '95新', depreciation: 37 },
+        'GX9': { usedPrice: 3200, condition: '95新', depreciation: 43 }
+    },
+    // 奥林巴斯
+    'olympus': {
+        'OM-1': { usedPrice: 8500, condition: '95新', depreciation: 29 },
+        'OM-5': { usedPrice: 5500, condition: '95新', depreciation: 31 },
+        'E-M1 III': { usedPrice: 7500, condition: '95新', depreciation: 38 },
+        'E-M1 II': { usedPrice: 4500, condition: '90新', depreciation: 50 },
+        'E-M5 III': { usedPrice: 4500, condition: '95新', depreciation: 40 },
+        'E-M10 IV': { usedPrice: 3500, condition: '95新', depreciation: 36 },
+        'PEN-E-P7': { usedPrice: 3800, condition: '95新', depreciation: 37 }
+    },
+    // 徕卡
+    'leica': {
+        'M11': { usedPrice: 55000, condition: '95新', depreciation: 15 },
+        'M10-R': { usedPrice: 48000, condition: '95新', depreciation: 20 },
+        'M10': { usedPrice: 38000, condition: '90新', depreciation: 30 },
+        'Q3': { usedPrice: 42000, condition: '95新', depreciation: 16 },
+        'Q2': { usedPrice: 32000, condition: '95新', depreciation: 27 },
+        'SL2-S': { usedPrice: 28000, condition: '95新', depreciation: 30 },
+        'SL2': { usedPrice: 38000, condition: '95新', depreciation: 30 },
+        'D-Lux 8': { usedPrice: 9500, condition: '95新', depreciation: 17 }
+    },
+    // 哈苏
+    'hasselblad': {
+        'X2D 100C': { usedPrice: 48000, condition: '95新', depreciation: 20 },
+        'X1D II 50C': { usedPrice: 28000, condition: '95新', depreciation: 36 },
+        '907X 100C': { usedPrice: 52000, condition: '95新', depreciation: 14 }
+    }
+};
+
+// 获取二手价格信息
+function getUsedPriceInfo(brand, model) {
+    const brandData = usedPriceDatabase[brand];
+    if (!brandData) return null;
+    
+    return brandData[model] || null;
 }
 
 // 获取相机参考价格
@@ -6430,10 +6786,111 @@ function displayEquipmentResult(result) {
             <h4><i class="fas fa-star"></i> 综合评价</h4>
             <p>${result.recommendation}</p>
         </div>
+        <div class="result-actions" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; gap: 12px; justify-content: center;">
+            <button class="btn btn-secondary" onclick="favoriteComboFromResult()">
+                <i class="far fa-star"></i> 收藏套装
+            </button>
+            <button class="btn btn-secondary" onclick="shareComboResult()">
+                <i class="fas fa-share-alt"></i> 分享
+            </button>
+        </div>
     `;
     
     resultContainer.style.display = 'block';
     resultContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+// 收藏当前套装
+function favoriteComboFromResult() {
+    // 检查是否有选择数据
+    if (!comboSelection.cameraBrand || !comboSelection.cameraModel) {
+        alert('请先完成套装选择');
+        return;
+    }
+    
+    const brandName = cameraDatabase[comboSelection.cameraBrand]?.name || comboSelection.cameraBrand;
+    const camera = comboSelection.cameraModel;
+    const lens = comboSelection.lens;
+    
+    // 计算总价
+    const cameraPrice = getCameraPrice(comboSelection.cameraBrand, camera);
+    const lensPrice = lens?.priceNum || 3000;
+    const totalPrice = cameraPrice + lensPrice;
+    
+    // 构建收藏数据
+    const comboData = {
+        type: 'combo',
+        id: 'combo_' + Date.now(),
+        title: `${brandName} ${camera} 套装`,
+        camera: `${brandName} ${camera}`,
+        lens: lens?.name || '固定镜头',
+        totalPrice: totalPrice,
+        createdAt: new Date().toISOString()
+    };
+    
+    // 调用收藏API
+    const result = addComboToFavorites(comboData);
+    if (result.success) {
+        alert('套装收藏成功！');
+    } else {
+        alert(result.message || '收藏失败');
+    }
+}
+
+// 添加到收藏（套装）
+function addComboToFavorites(item) {
+    try {
+        // 从 localStorage 读取现有收藏
+        let favorites = JSON.parse(localStorage.getItem('photoMonster_favorites') || '[]');
+        
+        // 检查是否已存在
+        const exists = favorites.some(f => 
+            f.type === 'combo' && f.camera === item.camera && f.lens === item.lens
+        );
+        
+        if (exists) {
+            return { success: false, message: '该套装已在收藏中' };
+        }
+        
+        // 添加新收藏
+        favorites.push(item);
+        localStorage.setItem('photoMonster_favorites', JSON.stringify(favorites));
+        
+        return { success: true, message: '收藏成功' };
+    } catch (e) {
+        console.error('收藏失败:', e);
+        return { success: false, message: '收藏失败：' + e.message };
+    }
+}
+
+// 分享套装结果
+function shareComboResult() {
+    // 检查是否有选择数据
+    if (!comboSelection.cameraBrand || !comboSelection.cameraModel) {
+        alert('请先完成套装选择');
+        return;
+    }
+    
+    const brandName = cameraDatabase[comboSelection.cameraBrand]?.name || comboSelection.cameraBrand;
+    const camera = comboSelection.cameraModel;
+    const lens = comboSelection.lens;
+    
+    const shareText = `我在 Photo Monster 发现了一套不错的摄影装备：${brandName} ${camera} + ${lens?.name || '固定镜头'}，快来看看吧！`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Photo Monster 套装推荐',
+            text: shareText,
+            url: window.location.href
+        }).catch(err => console.log('分享失败:', err));
+    } else {
+        // 复制到剪贴板
+        navigator.clipboard.writeText(shareText).then(() => {
+            alert('分享内容已复制到剪贴板');
+        }).catch(() => {
+            alert('分享内容：' + shareText);
+        });
+    }
 }
 
 // ==================== 分析历史记录 ====================
