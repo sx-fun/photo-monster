@@ -3795,6 +3795,8 @@ function generateBasicAnalysis() {
 function clearImages() {
     compressedImages = [];
     currentExifData = null;
+    window.currentImageData = null;
+    window.currentImageElement = null;
     currentImageData = null;
     currentImageElement = null;
     if (previewGrid) previewGrid.innerHTML = '';
@@ -7416,9 +7418,13 @@ async function withAsyncErrorHandling(promise, errorMessage = '操作失败') {
 
 // ==================== 图像分析工具：直方图与构图辅助线 ====================
 
-// 当前显示的图像数据
-let currentImageData = null;
-let currentImageElement = null;
+// 当前显示的图像数据 (全局变量，供其他模块访问)
+window.currentImageData = null;
+window.currentImageElement = null;
+
+// 本地引用（保持向后兼容）
+let currentImageData = window.currentImageData;
+let currentImageElement = window.currentImageElement;
 
 // 初始化图像分析工具
 function initImageAnalysisTools() {
@@ -7449,7 +7455,8 @@ function initImageAnalysisTools() {
 
 // 设置当前分析的图片
 function setCurrentAnalysisImage(imgElement) {
-    currentImageElement = imgElement;
+    window.currentImageElement = imgElement;
+    currentImageElement = imgElement; // 同步本地引用
     if (imgElement && imgElement.complete) {
         extractImageData(imgElement);
     }
@@ -7478,10 +7485,12 @@ function extractImageData(imgElement) {
         canvas.height = height;
         ctx.drawImage(imgElement, 0, 0, width, height);
         
-        currentImageData = ctx.getImageData(0, 0, width, height);
+        window.currentImageData = ctx.getImageData(0, 0, width, height);
+        currentImageData = window.currentImageData; // 同步本地引用
         console.log('图像数据提取完成:', width, 'x', height);
     } catch (error) {
         console.error('提取图像数据失败:', error);
+        window.currentImageData = null;
         currentImageData = null;
     }
 }
