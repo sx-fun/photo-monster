@@ -2124,6 +2124,24 @@ body {
         width: 100%;
         justify-content: center;
     }
+    
+    /* 方案规划页面输入区域移动端适配 */
+    .input-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .input-group .planner-input {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 1rem;
+    }
+    
+    .input-group .btn {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 1rem;
+    }
 }
 
 /* 滚动条美化 */

@@ -1,6 +1,37 @@
 {
-  "uncommitted": 0,
-  "lastCheck": "2026-03-27T14:07:00+08:00",
+  "isGitRepo": true,
+  "changes": 101,
+  "files": [
+    "[修改] .codebuddy/automations/photo-monster-4/memory.md",
+    "[修改] .workbuddy/photomonster/state.json",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/backup-info.json",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/css/pages.css",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/css/style.css",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/data/local-git-status.json",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/data/update-config.json",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/index.html",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/ai-config.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/ai-helper.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/ai-manager.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/app.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/knowledge-base.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/lazy-load.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/local-analyzer.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/mcp-client.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/progress-tracker.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/robust.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/rule-engine.js",
+    "[修改] backups/auto/backup-2026-03-28T02-00-58/js/theme-manager.js"
+  ],
+  "fileCount": {
+    "modified": 70,
+    "staged": 0,
+    "untracked": 82,
+    "total": 101
+  },
   "branch": "main",
-  "files": []
+  "lastCommit": "b71f9d8 - v45: 完整功能更新 - 昵称设置、学习路径、每日一练等 (2 days ago)",
+  "hasUncommittedChanges": true,
+  "lastCheck": "2026-03-30T02:57:29.493Z",
+  "checkTimeFormatted": "2026/3/30 10:57:29"
 }

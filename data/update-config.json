@@ -1,7 +1,9 @@
 {
-  "_comment": "Photo Monster 内容更新配置文件",
-  "version": "2026-03-27-0001",
-  "lastUpdated": "2026-03-27T01:19:00.000Z",
+  "_comment": "Photo Monster 统一版本配置文件 - 格式: v{SW版本}.{YYYYMMDD}.{序号}",
+  "version": "v48.20260330.001",
+  "swVersion": "v48",
+  "lastUpdated": "2026-03-30T09:30:00.000Z",
+  "swCacheVersion": "v48",
   "updateSources": [
     {
       "id": "camera-database",
@@ -54,6 +56,18 @@
   ],
   "pendingChanges": [],
   "updateHistory": [
+    {
+      "version": "v48.20260330.001",
+      "date": "2026-03-30T09:30:00.000Z",
+      "changes": [
+        "统一版本管理系统: 融合SW版本和内容版本",
+        "新增统一版本号格式: v{SW版本}.{YYYYMMDD}.{序号}",
+        "补全所有缺失的CSS/JS/页面到SW缓存列表",
+        "修复Service Worker缓存回退逻辑",
+        "新增版本一致性检查和同步功能"
+      ],
+      "status": "published"
+    },
     {
       "version": "2026-03-27-0001",
       "date": "2026-03-27T01:19:00.000Z",

@@ -196,6 +196,205 @@
     <!-- 加载脚本 -->
     <script src="../js/nav-component.js"></script>
     <script src="../js/app.js"></script>
+    <script src="../js/data-merger.js"></script>
+    <script src="../js/combo-recommendation-engine.js"></script>
+    
+    <!-- 动态加载新器材数据 -->
+    <script>
+        // 全局变量存储新器材数据
+        let newGearDataLoaded = false;
+        
+        // 动态加载并合并新器材数据到 cameraDatabase
+        async function loadNewGearData() {
+            if (newGearDataLoaded) return;
+            
+            try {
+                console.log('[新器材] 开始加载数据...');
+                const response = await fetch('../data/new-gear-data.json');
+                if (!response.ok) {
+                    console.log('[新器材] 数据文件不存在，使用默认数据库');
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('[新器材] 加载成功:', data);
+                
+                // 合并相机数据
+                if (data.cameras && data.cameras.length > 0) {
+                    data.cameras.forEach(camera => {
+                        const brand = camera.brand.toLowerCase();
+                        const modelName = camera.model;
+                        
+                        // 确保品牌存在
+                        if (!cameraDatabase[brand]) {
+                            cameraDatabase[brand] = {
+                                name: camera.brand.toUpperCase(),
+                                models: {}
+                            };
+                        }
+                        
+                        // 添加新相机型号（如果不存在）
+                        if (!cameraDatabase[brand].models[modelName]) {
+                            cameraDatabase[brand].models[modelName] = {
+                                type: camera.type || 'mirrorless',
+                                sensor: camera.specs?.sensor || camera.sensor || 'fullframe',
+                                mp: camera.specs?.mp || camera.mp || 24,
+                                mount: camera.specs?.mount || camera.mount || 'FE',
+                                price: camera.priceTier || 'mid',
+                                isNew: true,
+                                expectedPrice: camera.expectedPrice,
+                                status: camera.status,
+                                releaseDate: camera.releaseDate,
+                                description: camera.description,
+                                specs: camera.specs
+                            };
+                            console.log(`[新器材] 添加相机: ${brand} ${modelName}`);
+                        }
+                    });
+                }
+                
+                // 合并镜头数据到 lensDatabase
+                if (data.lenses && data.lenses.length > 0 && typeof lensDatabase !== 'undefined') {
+                    data.lenses.forEach(lens => {
+                        const brand = lens.brand.toLowerCase();
+                        const lensKey = lens.model.toLowerCase().replace(/\s+/g, '-');
+                        
+                        if (!lensDatabase[brand]) {
+                            lensDatabase[brand] = {};
+                        }
+                        
+                        if (!lensDatabase[brand][lensKey]) {
+                            lensDatabase[brand][lensKey] = {
+                                name: lens.model,
+                                type: lens.type || 'zoom',
+                                focalLength: lens.focalLength,
+                                aperture: lens.aperture,
+                                mount: lens.mount,
+                                price: lens.priceTier || 'mid',
+                                isNew: true,
+                                expectedPrice: lens.expectedPrice,
+                                status: lens.status,
+                                releaseDate: lens.releaseDate
+                            };
+                            console.log(`[新器材] 添加镜头: ${brand} ${lens.model}`);
+                        }
+                    });
+                }
+                
+                newGearDataLoaded = true;
+                console.log('[新器材] 数据合并完成');
+                
+            } catch (error) {
+                console.error('[新器材] 加载失败:', error);
+            }
+        }
+        
+        // 页面加载时自动加载新器材数据
+        document.addEventListener('DOMContentLoaded', function() {
+            // 延迟加载，确保 app.js 已完全初始化
+            setTimeout(loadNewGearData, 500);
+            
+            // 监听品牌选择变化，更新型号列表
+            const comboCameraBrand = document.getElementById('comboCameraBrand');
+            if (comboCameraBrand) {
+                comboCameraBrand.addEventListener('change', function() {
+                    // 延迟执行，确保 app.js 的处理先完成
+                    setTimeout(updateCameraModelsWithNewGear, 100);
+                });
+            }
+            
+            // 监听预算选择变化
+            const comboBudget = document.getElementById('comboBudget');
+            if (comboBudget) {
+                comboBudget.addEventListener('change', function() {
+                    if (comboCameraBrand && comboCameraBrand.value) {
+                        setTimeout(updateCameraModelsWithNewGear, 100);
+                    }
+                });
+            }
+        });
+        
+        // 更新型号列表（带新器材标识）
+        function updateCameraModelsWithNewGear() {
+            const comboCameraBrand = document.getElementById('comboCameraBrand');
+            const comboCameraModel = document.getElementById('comboCameraModel');
+            const comboBudget = document.getElementById('comboBudget');
+            
+            const brand = comboCameraBrand?.value;
+            const budget = comboBudget?.value || 'mid';
+            
+            if (!comboCameraModel || !brand || !cameraDatabase[brand]) {
+                // 调用原始逻辑
+                if (typeof originalUpdateCameraModels === 'function') {
+                    originalUpdateCameraModels();
+                }
+                return;
+            }
+            
+            // 清空型号选择框
+            comboCameraModel.innerHTML = '<option value="">选择型号</option>';
+            
+            // 根据预算筛选相机
+            const models = cameraDatabase[brand].models;
+            const budgetPriceMap = {
+                'budget': ['entry'],
+                'mid': ['entry', 'mid'],
+                'high': ['mid', 'pro'],
+                'pro': ['pro', 'flagship']
+            };
+            const allowedPrices = budgetPriceMap[budget] || ['mid'];
+            
+            // 收集所有符合条件的机型
+            const allModels = [];
+            
+            Object.keys(models).forEach(model => {
+                const modelData = models[model];
+                if (allowedPrices.includes(modelData.price)) {
+                    allModels.push({ model, data: modelData });
+                }
+            });
+            
+            // 排序：新器材排在前面
+            allModels.sort((a, b) => {
+                if (a.data.isNew && !b.data.isNew) return -1;
+                if (!a.data.isNew && b.data.isNew) return 1;
+                return 0;
+            });
+            
+            // 添加到选择框（混合显示）
+            allModels.forEach(({ model, data }) => {
+                const option = document.createElement('option');
+                option.value = model;
+                const priceLabel = {
+                    'entry': '【入门】',
+                    'mid': '【中端】',
+                    'pro': '【专业】',
+                    'flagship': '【旗舰】'
+                }[data.price] || '';
+                
+                // 新器材添加标识
+                if (data.isNew) {
+                    const statusIcon = data.status === 'official' ? '✅' : data.status === 'announced' ? '📢' : '💬';
+                    option.textContent = `${statusIcon} ${priceLabel} ${model}`;
+                    option.style.color = '#e74c3c';
+                } else {
+                    option.textContent = `${priceLabel} ${model}`;
+                }
+                
+                comboCameraModel.appendChild(option);
+            });
+            
+            // 如果没有匹配的型号
+            if (comboCameraModel.options.length === 1 && comboCameraModel.getElementsByTagName('optgroup').length === 0) {
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "该预算下无可用型号";
+                option.disabled = true;
+                comboCameraModel.appendChild(option);
+            }
+        }
+    </script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // AI套装分析 - 使用统一方法
@@ -254,8 +453,129 @@ ${summaryText}
                     }
                 });
             }
-            
+
         });
     </script>
+    
+    <style>
+        /* 快速推荐提示 Toast */
+        .quick-recommendation-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 360px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .quick-recommendation-toast.fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        .toast-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border-left: 4px solid #667eea;
+        }
+        
+        .toast-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .toast-header i {
+            margin-right: 8px;
+        }
+        
+        .toast-title {
+            flex: 1;
+            font-weight: 600;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toast-body {
+            padding: 16px;
+        }
+        
+        .toast-body p {
+            margin: 4px 0;
+        }
+        
+        .toast-body .lens-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .toast-body .budget-info {
+            color: #667eea;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .toast-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        .toast-footer .score {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .toast-footer .auto-selected {
+            background: #d4edda;
+            color: #155724;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        /* 场景卡片选中状态 */
+        .preset-combo-card.selected {
+            background: rgba(255,255,255,0.35);
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+        }
+    </style>
 </body>
 </html>

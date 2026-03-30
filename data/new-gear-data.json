@@ -1,0 +1,322 @@
+{
+  "generatedAt": "2026-03-28T07:42:45.046Z",
+  "sourceFile": "unknown",
+  "cameras": [
+    {
+      "id": "sony-a7v-2026",
+      "brand": "sony",
+      "model": "A7V",
+      "type": "mirrorless",
+      "sensor": "fullframe",
+      "mp": 44,
+      "mount": "FE",
+      "status": "rumored",
+      "expectedPrice": 18999,
+      "referencePrice": 0,
+      "releaseDate": "2026-Q2",
+      "source": "SonyAlphaRumors",
+      "confidence": "medium",
+      "reliability": 2,
+      "description": "基于A7IV升级，AI对焦是主要卖点，可能搭载新处理器",
+      "specs": {
+        "mp": 44,
+        "sensor": "fullframe",
+        "sensorType": "BSI CMOS",
+        "mount": "FE",
+        "ibis": "8-stop",
+        "video": "8K30p / 4K120p",
+        "af": "AI主体识别",
+        "burst": "15fps机械 / 30fps电子"
+      }
+    },
+    {
+      "id": "canon-r6m3-2026",
+      "brand": "canon",
+      "model": "EOS R6 Mark III",
+      "type": "mirrorless",
+      "sensor": "fullframe",
+      "mp": 24,
+      "mount": "RF",
+      "status": "rumored",
+      "expectedPrice": 16999,
+      "referencePrice": 13999,
+      "releaseDate": "2026-Q2",
+      "source": "CanonRumors",
+      "confidence": "medium",
+      "reliability": 2,
+      "description": "对标索尼A7V，强调视频性能",
+      "specs": {
+        "mp": 24,
+        "sensor": "fullframe",
+        "sensorType": "堆栈式CMOS",
+        "mount": "RF",
+        "ibis": "8-stop",
+        "video": "8K60p RAW",
+        "af": "双核对焦V2",
+        "burst": "40fps电子"
+      }
+    },
+    {
+      "id": "fuji-xt50-2026",
+      "brand": "fujifilm",
+      "model": "X-T50",
+      "type": "mirrorless",
+      "sensor": "fullframe",
+      "mp": 40,
+      "mount": "X",
+      "status": "rumored",
+      "expectedPrice": 11999,
+      "referencePrice": 11999,
+      "releaseDate": "2026-04",
+      "source": "FujiRumors",
+      "confidence": "high",
+      "reliability": 3,
+      "description": "X-T系列40MP首机，4月发布可能性大",
+      "specs": {
+        "mp": 40,
+        "sensor": "APS-C",
+        "sensorType": "X-Trans V",
+        "mount": "X",
+        "ibis": "7-stop",
+        "video": "6.2K30p",
+        "af": "深度学习AF",
+        "burst": "20fps"
+      }
+    },
+    {
+      "id": "nikon-z7iii-2026",
+      "brand": "nikon",
+      "model": "Z7 III",
+      "type": "mirrorless",
+      "sensor": "fullframe",
+      "mp": 60,
+      "mount": "Z",
+      "status": "rumored",
+      "expectedPrice": 22999,
+      "referencePrice": 0,
+      "releaseDate": "2026-Q3",
+      "source": "NikonRumors",
+      "confidence": "low",
+      "reliability": 1,
+      "description": "传闻较少，可能推迟到下半年",
+      "specs": {
+        "mp": 60,
+        "sensor": "fullframe",
+        "sensorType": "BSI CMOS",
+        "mount": "Z",
+        "ibis": "6-stop",
+        "video": "8K30p",
+        "af": "3D追焦V2",
+        "burst": "12fps"
+      }
+    },
+    {
+      "id": "panasonic-s1ii-2026",
+      "brand": "panasonic",
+      "model": "Lumix S1 II",
+      "type": "mirrorless",
+      "sensor": "fullframe",
+      "mp": 36,
+      "mount": "L",
+      "status": "rumored",
+      "expectedPrice": 18999,
+      "referencePrice": 0,
+      "releaseDate": "2026-Q3",
+      "source": "43Rumors",
+      "confidence": "medium",
+      "reliability": 2,
+      "description": "S1系列时隔多年更新，视频功能仍是强项",
+      "specs": {
+        "mp": 36,
+        "sensor": "fullframe",
+        "sensorType": "BSI CMOS",
+        "mount": "L",
+        "ibis": "7.5-stop",
+        "video": "6K60p ProRes",
+        "af": "相位对焦V2",
+        "burst": "15fps"
+      }
+    }
+  ],
+  "lenses": [
+    {
+      "id": "sony-85gm2-2026",
+      "brand": "sony",
+      "model": "FE 85mm f/1.2 GM II",
+      "type": "prime",
+      "mount": "FE",
+      "focalLength": "85mm",
+      "aperture": "f/1.2",
+      "status": "rumored",
+      "expectedPrice": 15999,
+      "releaseDate": "2026-Q2",
+      "source": "SonyAlphaRumors",
+      "confidence": "medium"
+    },
+    {
+      "id": "canon-rf35-12-2026",
+      "brand": "canon",
+      "model": "RF 35mm f/1.2L USM",
+      "type": "prime",
+      "mount": "RF",
+      "focalLength": "35mm",
+      "aperture": "f/1.2",
+      "status": "rumored",
+      "expectedPrice": 13999,
+      "releaseDate": "2026-Q2",
+      "source": "CanonRumors",
+      "confidence": "medium"
+    },
+    {
+      "id": "nikon-z28-400-2026",
+      "brand": "nikon",
+      "model": "Z 28-400mm f/4-8 VR",
+      "type": "zoom",
+      "mount": "Z",
+      "focalLength": "28-400mm",
+      "aperture": "f/4-8",
+      "status": "announced",
+      "expectedPrice": 9999,
+      "releaseDate": "2026-04",
+      "source": "Nikon Official",
+      "confidence": "high"
+    },
+    {
+      "id": "fuji-xf400-2026",
+      "brand": "fujifilm",
+      "model": "XF 400mm f/5.6 R LM OIS WR",
+      "type": "prime",
+      "mount": "X",
+      "focalLength": "400mm",
+      "aperture": "f/5.6",
+      "status": "rumored",
+      "expectedPrice": 8999,
+      "releaseDate": "2026-Q3",
+      "source": "FujiRumors",
+      "confidence": "low"
+    }
+  ],
+  "news": [
+    {
+      "id": "news-001",
+      "title": "【传闻】Sony A7V 详细规格曝光：44MP + AI对焦",
+      "type": "rumor",
+      "date": "2026-03-26",
+      "summary": "据 SonyAlphaRumors 消息，A7V 将搭载4400万像素BSI传感器，配备全新AI主体识别对焦系统，支持8K30p视频录制，预计2026年Q2发布，售价约$2499。",
+      "source": "SonyAlphaRumors",
+      "url": "https://www.sonyalpharumors.com",
+      "tags": [
+        "sony",
+        "a7v",
+        "fullframe",
+        "rumor"
+      ],
+      "relatedGear": [
+        "sony-a7v-2026"
+      ],
+      "dataSource": "local",
+      "reliability": 3
+    },
+    {
+      "id": "news-002",
+      "title": "【传闻】Canon EOS R6 Mark III 规格泄露",
+      "type": "rumor",
+      "date": "2026-03-24",
+      "summary": "CanonRumors 泄露了 R6 III 的详细规格：2400万像素堆栈式传感器，40fps连拍，支持8K60p视频录制，预计售价$2299。",
+      "source": "CanonRumors",
+      "url": "https://www.canonrumors.com",
+      "tags": [
+        "canon",
+        "r6",
+        "fullframe",
+        "rumor"
+      ],
+      "relatedGear": [
+        "canon-r6m3-2026"
+      ],
+      "dataSource": "local",
+      "reliability": 3
+    },
+    {
+      "id": "news-003",
+      "title": "【官方】尼康发布 Z6 III 固件更新 v2.0",
+      "type": "official",
+      "date": "2026-03-23",
+      "summary": "尼康官方发布 Z6 III 固件2.0版本，新增鸟类检测AF、改进低光对焦性能，同时优化了视频录制时的散热表现。",
+      "source": "Nikon Official",
+      "url": "https://www.nikon.com",
+      "tags": [
+        "nikon",
+        "z6iii",
+        "firmware",
+        "official"
+      ],
+      "dataSource": "local",
+      "reliability": 5
+    },
+    {
+      "id": "news-004",
+      "title": "【传闻】Fujifilm X-T50 将于4月发布",
+      "type": "rumor",
+      "date": "2026-03-21",
+      "summary": "FujiRumors 称 X-T50 将在4月发布，搭载4000万像素X-Trans V传感器，7档IBIS防抖，预计售价$1499。",
+      "source": "FujiRumors",
+      "url": "https://www.fujirumors.com",
+      "tags": [
+        "fujifilm",
+        "xt50",
+        "aps-c",
+        "rumor"
+      ],
+      "relatedGear": [
+        "fuji-xt50-2026"
+      ],
+      "dataSource": "local",
+      "reliability": 3
+    },
+    {
+      "id": "news-005",
+      "title": "【官方】松下 Lumix S9 正式发布",
+      "type": "official",
+      "date": "2026-03-20",
+      "summary": "松下正式发布全画幅紧凑型相机 Lumix S9，2420万像素，仅重486g，支持实时LUT，售价$1499。",
+      "source": "Panasonic Official",
+      "url": "https://www.panasonic.com",
+      "tags": [
+        "panasonic",
+        "s9",
+        "fullframe",
+        "official"
+      ],
+      "dataSource": "local",
+      "reliability": 5
+    },
+    {
+      "id": "news-006",
+      "title": "【行业】2026年Q1相机市场报告：无反增长15%",
+      "type": "industry",
+      "date": "2026-03-18",
+      "summary": "CIPA发布最新数据：无反相机出货量同比增长15%，中国市场表现强劲，高端机型需求持续上升。",
+      "source": "CIPA",
+      "url": "https://www.cipa.jp",
+      "tags": [
+        "industry",
+        "market",
+        "cipa"
+      ],
+      "dataSource": "local",
+      "reliability": 3
+    },
+    {
+      "title": "Mint&#8217;s Sharpa Lens Promises to Dramatically Improve Polaroid SX-70 Photos",
+      "summary": "Mint Camera has announced the Sharpa Lens, a newly-designed replacement optic for the Polaroid SX-70 that it says is \"the sharpest lens ever made\" for the instant camera. [ Read More ]...",
+      "url": "https://petapixel.com/2026/03/27/mints-sharpa-lens-promises-to-dramatically-improve-polaroid-sx-70-photos/",
+      "date": "Fri, 27 Mar 2026 19:54:49 +0000",
+      "source": "PetaPixel",
+      "type": "news",
+      "credibility": "medium",
+      "dataSource": "rss",
+      "reliability": 2
+    }
+  ]
+}

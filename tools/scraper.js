@@ -1,10 +1,12 @@
 /**
- * Photo Monster 内容自动抓取系统
- * 免费数据源抓取 - 每14天执行
+ * Photo Monster 内容自动抓取系统 v2.0
+ * 混合数据源：本地结构化数据 + RSS + 可选网络抓取
+ * 确保数据稳定性和可用性
  */
 
 const fs = require('fs');
 const path = require('path');
+const DataManager = require('./sources/data-manager');
 
 class PhotoMonsterScraper {
     constructor() {
@@ -16,7 +18,11 @@ class PhotoMonsterScraper {
             newLenses: [],
             news: [],
             errors: [],
-            timestamp: new Date().toISOString()
+            meta: {
+                sourcesUsed: [],
+                dataQuality: 0,
+                fetchTime: new Date().toISOString()
+            }
         };
     }
 
@@ -25,68 +31,69 @@ class PhotoMonsterScraper {
         if (!fs.existsSync(this.tempDir)) {
             fs.mkdirSync(this.tempDir, { recursive: true });
         }
-        console.log('📸 Photo Monster 抓取系统初始化完成');
+        console.log('📸 Photo Monster 抓取系统 v2.0 初始化完成');
+        console.log('   模式: 本地数据 + RSS + 可选网络源');
     }
 
     async scrapeAll() {
-        console.log('\n🔍 开始抓取数据源...\n');
+        console.log('\n🔍 开始获取数据...\n');
         
-        const sources = [
-            { name: 'dpreview', file: 'dpreview.js', priority: 'P0' },
-            { name: 'sony', file: 'sony.js', priority: 'P0' },
-            { name: 'canon', file: 'canon.js', priority: 'P0' },
-            { name: 'nikon', file: 'nikon.js', priority: 'P0' },
-            { name: 'fujifilm', file: 'fujifilm.js', priority: 'P0' },
-            { name: 'leica', file: 'leica.js', priority: 'P1' },
-            { name: 'hasselblad', file: 'hasselblad.js', priority: 'P1' }
-        ];
-
-        for (const source of sources) {
-            try {
-                const sourcePath = path.join(this.sourcesDir, source.file);
-                if (fs.existsSync(sourcePath)) {
-                    console.log(`📡 [${source.priority}] 抓取 ${source.name}...`);
-                    const SourceScraper = require(sourcePath);
-                    const scraper = new SourceScraper();
-                    const data = await scraper.scrape();
-                    
-                    this.results.newCameras.push(...(data.cameras || []));
-                    this.results.newLenses.push(...(data.lenses || []));
-                    this.results.news.push(...(data.news || []));
-                    
-                    console.log(`  ✅ ${source.name}: ${data.cameras?.length || 0} 相机, ${data.lenses?.length || 0} 镜头`);
-                } else {
-                    console.log(`  ⏭️  ${source.name}: 源文件不存在，跳过`);
-                }
-            } catch (error) {
-                console.error(`  ❌ ${source.name}: ${error.message}`);
-                this.results.errors.push({ source: source.name, error: error.message });
-            }
+        // 使用新的 DataManager 获取数据（本地 + RSS）
+        try {
+            const dataManager = new DataManager();
+            const data = await dataManager.fetchAll();
+            
+            this.results.newCameras = data.cameras || [];
+            this.results.newLenses = data.lenses || [];
+            this.results.news = data.news || [];
+            this.results.meta = data.meta || {};
+            
+            console.log('\n📊 数据质量报告:');
+            console.log(`   平均可信度: ${this.results.meta.averageReliability}/5`);
+            console.log(`   数据源: ${this.results.meta.sourcesUsed?.join(', ')}`);
+            
+        } catch (error) {
+            console.error('❌ 数据获取失败:', error.message);
+            this.results.errors.push({ source: 'data-manager', error: error.message });
+            
+            // 降级：使用本地数据
+            console.log('\n⚠️ 降级到本地数据源...');
+            await this.fallbackToLocalData();
         }
-
-        // 去重
-        this.deduplicate();
         
         return this.results;
     }
-
-    deduplicate() {
-        // 根据型号去重
-        const seenCameras = new Set();
-        this.results.newCameras = this.results.newCameras.filter(c => {
-            const key = `${c.brand}-${c.model}`;
-            if (seenCameras.has(key)) return false;
-            seenCameras.add(key);
-            return true;
-        });
-
-        const seenLenses = new Set();
-        this.results.newLenses = this.results.newLenses.filter(l => {
-            const key = `${l.brand}-${l.model}`;
-            if (seenLenses.has(key)) return false;
-            seenLenses.add(key);
-            return true;
-        });
+    
+    async fallbackToLocalData() {
+        try {
+            const LOCAL_DATA = require('./sources/local-data');
+            
+            this.results.newCameras = LOCAL_DATA.cameras.map(c => ({
+                ...c,
+                dataSource: 'local-fallback',
+                reliability: 4
+            }));
+            
+            this.results.newLenses = LOCAL_DATA.lenses.map(l => ({
+                ...l,
+                dataSource: 'local-fallback',
+                reliability: 4
+            }));
+            
+            this.results.news = LOCAL_DATA.news.map(n => ({
+                ...n,
+                dataSource: 'local-fallback',
+                reliability: n.type === 'official' ? 5 : 3
+            }));
+            
+            this.results.meta.sourcesUsed = ['local-fallback'];
+            this.results.meta.averageReliability = '4.00';
+            
+            console.log('   ✅ 已加载本地备用数据');
+            
+        } catch (error) {
+            console.error('   ❌ 本地数据也失败了:', error.message);
+        }
     }
 
     saveResults() {
@@ -111,6 +118,7 @@ class PhotoMonsterScraper {
             errors: this.results.errors
         };
 
+        // 保存到 temp 目录
         const reportPath = path.join(this.tempDir, `review-report-${Date.now()}.json`);
         fs.writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf-8');
         
@@ -119,11 +127,18 @@ class PhotoMonsterScraper {
         const textPath = path.join(this.tempDir, `review-report-${Date.now()}.txt`);
         fs.writeFileSync(textPath, textReport, 'utf-8');
         
+        // 保存到桌面供用户查看
+        const desktopDir = 'D:\\HuaweiMoveData\\Users\\HUAWEI\\Desktop';
+        const dateStr = new Date().toISOString().split('T')[0];
+        const desktopPath = path.join(desktopDir, `PhotoMonster-抓取报告-${dateStr}.txt`);
+        fs.writeFileSync(desktopPath, textReport, 'utf-8');
+        
         console.log(`\n📋 审核报告已生成:`);
         console.log(`   JSON: ${reportPath}`);
         console.log(`   TXT:  ${textPath}`);
+        console.log(`   桌面: ${desktopPath}`);
         
-        return { json: reportPath, txt: textPath };
+        return { json: reportPath, txt: textPath, desktop: desktopPath };
     }
 
     generateTextReport(report) {
@@ -131,6 +146,8 @@ class PhotoMonsterScraper {
         text += `📸 Photo Monster 内容抓取审核报告\n`;
         text += `===============================================\n`;
         text += `生成时间: ${new Date().toLocaleString('zh-CN')}\n`;
+        text += `数据版本: ${this.results.meta.sourcesUsed?.join('+') || 'unknown'}\n`;
+        text += `数据质量: ${this.results.meta.averageReliability || 'N/A'}/5\n`;
         text += `\n`;
         
         text += `📊 统计摘要\n`;
@@ -141,24 +158,70 @@ class PhotoMonsterScraper {
         text += `抓取错误: ${report.summary.errors} 个\n`;
         text += `\n`;
 
+        // 按状态分组显示相机
         if (report.cameras.length > 0) {
-            text += `📷 新增相机列表 (需审核)\n`;
+            const byStatus = { official: [], announced: [], rumored: [] };
+            report.cameras.forEach(c => {
+                const status = c.status || 'unknown';
+                if (!byStatus[status]) byStatus[status] = [];
+                byStatus[status].push(c);
+            });
+            
+            text += `📷 新增相机列表 (按状态分组)\n`;
             text += `-----------------------------------------------\n`;
-            report.cameras.forEach((c, i) => {
-                text += `${i + 1}. [${c.brand}] ${c.model}\n`;
-                text += `   类型: ${c.type || '未知'} | 画幅: ${c.sensor || '未知'} | 像素: ${c.mp || '未知'}MP\n`;
-                text += `   来源: ${c.source}\n`;
+            
+            for (const [status, cameras] of Object.entries(byStatus)) {
+                if (cameras.length === 0) continue;
+                const statusIcon = status === 'official' ? '✅' : status === 'announced' ? '📢' : '💬';
+                text += `\n${statusIcon} ${status.toUpperCase()} (${cameras.length}款)\n`;
+                
+                cameras.forEach((c, i) => {
+                    const reliability = '⭐'.repeat(c.reliability || 3);
+                    text += `  ${i + 1}. [${c.brand}] ${c.model} ${reliability}\n`;
+                    text += `      状态: ${c.status} | 预计: ${c.expectedRelease || '未知'}\n`;
+                    
+                    // 价格信息
+                    const expectedPrice = c.expectedPrice?.cn;
+                    const refPrice = c.referencePrice?.price;
+                    if (expectedPrice && refPrice) {
+                        const diff = expectedPrice - refPrice;
+                        const diffPercent = ((diff / refPrice) * 100).toFixed(0);
+                        const diffSymbol = diff > 0 ? '↑' : diff < 0 ? '↓' : '=';
+                        text += `      预计价格: ¥${expectedPrice.toLocaleString()}\n`;
+                        text += `      参考价格: ¥${refPrice.toLocaleString()} (同品牌${c.referencePrice.tier}级)\n`;
+                        text += `      价格对比: ${diffSymbol}${Math.abs(diffPercent)}% ${diff > 0 ? '高于' : diff < 0 ? '低于' : '持平'}参考价\n`;
+                    } else if (expectedPrice) {
+                        text += `      预计价格: ¥${expectedPrice.toLocaleString()}\n`;
+                    } else if (refPrice) {
+                        text += `      参考价格: ¥${refPrice.toLocaleString()} (同品牌${c.referencePrice.tier}级)\n`;
+                    }
+                    
+                    text += `      来源: ${c.sources?.[0] || 'unknown'}\n`;
+                });
+            }
+            text += `\n`;
+        }
+
+        if (report.lenses.length > 0) {
+            text += `🔍 新增镜头列表\n`;
+            text += `-----------------------------------------------\n`;
+            report.lenses.forEach((l, i) => {
+                const reliability = '⭐'.repeat(l.reliability || 3);
+                text += `${i + 1}. [${l.brand}] ${l.model} ${reliability}\n`;
+                text += `   规格: ${l.focalLength} ${l.aperture} | 卡口: ${l.mount || '未知'}\n`;
+                text += `   状态: ${l.status} | 预计: ${l.expectedRelease || '未知'}\n`;
                 text += `\n`;
             });
         }
 
-        if (report.lenses.length > 0) {
-            text += `🔍 新增镜头列表 (需审核)\n`;
+        if (report.news.length > 0) {
+            text += `📰 最新新闻\n`;
             text += `-----------------------------------------------\n`;
-            report.lenses.forEach((l, i) => {
-                text += `${i + 1}. [${l.brand}] ${l.model}\n`;
-                text += `   类型: ${l.type || '未知'} | 卡口: ${l.mount || '未知'}\n`;
-                text += `   来源: ${l.source}\n`;
+            report.news.slice(0, 5).forEach((n, i) => {
+                const typeIcon = n.type === 'official' ? '✅' : n.type === 'rumor' ? '💬' : '📄';
+                text += `${i + 1}. ${typeIcon} ${n.title}\n`;
+                text += `   ${n.summary?.substring(0, 80)}...\n`;
+                text += `   来源: ${n.source} | 可信度: ${n.reliability}/5\n`;
                 text += `\n`;
             });
         }
@@ -175,10 +238,17 @@ class PhotoMonsterScraper {
         text += `===============================================\n`;
         text += `📝 审核说明\n`;
         text += `-----------------------------------------------\n`;
-        text += `1. 请检查上述内容是否准确\n`;
-        text += `2. 如需修改，请编辑对应的 JSON 文件\n`;
-        text += `3. 确认无误后，运行 update-db.js 更新数据库\n`;
-        text += `4. 或重命名文件: review-report-xxx.json → approved-report-xxx.json\n`;
+        text += `⭐ 可信度说明: ⭐⭐⭐⭐⭐ = 官方确认, ⭐⭐⭐ = 传闻\n`;
+        text += `\n`;
+        text += `数据来源层级:\n`;
+        text += `  1. 本地结构化数据 (100%可用, 手动维护)\n`;
+        text += `  2. RSS 新闻源 (绕过Cloudflare)\n`;
+        text += `  3. 网络抓取 (备用, 可能受防护限制)\n`;
+        text += `\n`;
+        text += `操作指南:\n`;
+        text += `  1. 检查上述内容准确性和可信度\n`;
+        text += `  2. 编辑 local-data.js 更新本地数据\n`;
+        text += `  3. 确认无误后运行 update-db.js 更新\n`;
         text += `===============================================\n`;
 
         return text;

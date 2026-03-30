@@ -422,8 +422,12 @@
             <p>管理 Photo Monster 网站版本和本地变更</p>
             <div class="version-info">
                 <div class="version-item">
-                    <label>网站版本</label>
+                    <label>统一版本号</label>
                     <span id="currentVersion">--</span>
+                </div>
+                <div class="version-item">
+                    <label>SW缓存版本</label>
+                    <span id="swVersion">--</span>
                 </div>
                 <div class="version-item">
                     <label>最后部署</label>
@@ -438,7 +442,7 @@
                     <span id="localChanges">--</span>
                 </div>
                 <div class="version-item">
-                    <label>WorkBuddy待处理</label>
+                    <label>待处理任务</label>
                     <span id="pendingCount">0</span>
                 </div>
             </div>
@@ -878,7 +882,10 @@
             }
         }
 
-        // 更新版本信息
+        // 统一的版本信息缓存
+        let unifiedVersionInfo = null;
+
+        // 更新版本信息 - 从统一配置读取
         async function updateVersionInfo() {
             const currentVersionEl = document.getElementById('currentVersion');
             const lastUpdatedEl = document.getElementById('lastUpdated');
@@ -887,39 +894,198 @@
             if (currentVersionEl) currentVersionEl.textContent = '读取中...';
             if (lastUpdatedEl) lastUpdatedEl.textContent = '读取中...';
             
-            // 从 sw.js 读取实际版本
+            // 从 update-config.json 读取统一版本（与SW版本同步）
             try {
-                const response = await fetch('../sw.js?nocache=' + Date.now());
+                const response = await fetch('../data/update-config.json?nocache=' + Date.now());
                 if (!response.ok) throw new Error('fetch failed');
-                const text = await response.text();
-                const versionMatch = text.match(/CACHE_VERSION\s*=\s*['"](v\d+)['"]/);
-                if (versionMatch && currentVersionEl) {
-                    currentVersionEl.textContent = versionMatch[1];
-                } else if (currentVersionEl) {
-                    currentVersionEl.textContent = 'v45';
+                const config = await response.json();
+                
+                unifiedVersionInfo = {
+                    version: config.version || 'v48.20260330.001',
+                    swVersion: config.swVersion || 'v48',
+                    lastUpdated: config.lastUpdated,
+                    swCacheVersion: config.swCacheVersion || 'v48'
+                };
+                
+                if (currentVersionEl) {
+                    currentVersionEl.textContent = unifiedVersionInfo.version;
                 }
-            } catch (e) {
-                console.log('[Admin] 读取版本失败:', e);
-                if (currentVersionEl) currentVersionEl.textContent = 'v45';
-            }
-            
-            // 尝试读取部署时间（从Git状态文件）
-            try {
-                const response = await fetch('../data/local-git-status.json?nocache=' + Date.now());
-                if (!response.ok) throw new Error('fetch failed');
-                const data = await response.json();
-                if (data.lastCheck && lastUpdatedEl) {
-                    lastUpdatedEl.textContent = new Date(data.lastCheck).toLocaleString('zh-CN');
+                
+                // 显示SW缓存版本
+                const swVersionEl = document.getElementById('swVersion');
+                if (swVersionEl) {
+                    swVersionEl.textContent = unifiedVersionInfo.swCacheVersion || unifiedVersionInfo.swVersion || 'v48';
+                }
+                
+                if (lastUpdatedEl && unifiedVersionInfo.lastUpdated) {
+                    lastUpdatedEl.textContent = new Date(unifiedVersionInfo.lastUpdated).toLocaleString('zh-CN');
                 } else if (lastUpdatedEl) {
                     lastUpdatedEl.textContent = new Date().toLocaleString('zh-CN');
                 }
+                
+                console.log('[Admin] 统一版本信息:', unifiedVersionInfo);
             } catch (e) {
-                console.log('[Admin] 读取时间失败:', e);
-                if (lastUpdatedEl) lastUpdatedEl.textContent = new Date().toLocaleString('zh-CN');
+                console.log('[Admin] 读取统一版本失败:', e);
+                // 回退到读取SW版本
+                await fallbackToSwVersion(currentVersionEl, lastUpdatedEl);
             }
             
             // 检查部署状态
             await checkDeployStatus();
+            
+            // 检查版本一致性
+            await checkVersionConsistency();
+        }
+        
+        // 检查版本一致性（SW版本 vs 配置版本）
+        async function checkVersionConsistency() {
+            if (!unifiedVersionInfo) return;
+            
+            try {
+                // 读取实际SW版本
+                const swResponse = await fetch('../sw.js?nocache=' + Date.now());
+                const swText = await swResponse.text();
+                const swVersionMatch = swText.match(/CACHE_VERSION\s*=\s*['"](v\d+)['"]/);
+                const actualSwVersion = swVersionMatch ? swVersionMatch[1] : 'v48';
+                
+                // 读取配置中的SW版本
+                const configSwVersion = unifiedVersionInfo.swCacheVersion || unifiedVersionInfo.swVersion || 'v48';
+                
+                if (actualSwVersion !== configSwVersion) {
+                    console.log(`[Admin] 版本不一致: SW=${actualSwVersion}, 配置=${configSwVersion}`);
+                    
+                    // 创建版本同步任务
+                    const syncTask = {
+                        id: `version-sync-${Date.now()}`,
+                        type: 'version_sync',
+                        title: '版本同步',
+                        description: `SW版本 (${actualSwVersion}) 与配置版本 (${configSwVersion}) 不一致，需要同步`,
+                        swVersion: actualSwVersion,
+                        configVersion: configSwVersion,
+                        timestamp: new Date().toISOString(),
+                        autoGenerated: true
+                    };
+                    
+                    // 添加到待处理任务显示
+                    addVersionSyncTask(syncTask);
+                }
+            } catch (e) {
+                console.log('[Admin] 版本一致性检查失败:', e);
+            }
+        }
+        
+        // 添加版本同步任务到待处理列表
+        function addVersionSyncTask(task) {
+            const container = document.getElementById('pendingUpdates');
+            const badge = document.getElementById('updateBadge');
+            const pendingCount = document.getElementById('pendingCount');
+            
+            // 更新计数
+            const currentCount = parseInt(badge.textContent) || 0;
+            badge.textContent = currentCount + 1;
+            pendingCount.textContent = currentCount + 1;
+            
+            // 如果当前是空状态，清空容器
+            if (container.querySelector('.empty-state')) {
+                container.innerHTML = '';
+            }
+            
+            // 添加版本同步任务卡片
+            const taskCard = document.createElement('div');
+            taskCard.className = 'update-card';
+            taskCard.style.cssText = 'border-left-color: #f59e0b;';
+            taskCard.innerHTML = `
+                <div class="update-card-header">
+                    <div class="update-title">
+                        <i class="fas fa-sync-alt" style="color: #f59e0b;"></i>
+                        ${task.title}
+                        <span class="update-type">自动检测</span>
+                    </div>
+                    <span class="update-time">刚刚</span>
+                </div>
+                <div class="update-description">${task.description}</div>
+                <div class="update-actions">
+                    <button class="btn-apply" onclick="syncVersionToConfig('${task.swVersion}')">
+                        <i class="fas fa-check"></i> 同步到配置
+                    </button>
+                    <button class="btn-skip" onclick="skipVersionSync('${task.id}')">
+                        <i class="fas fa-times"></i> 忽略
+                    </button>
+                </div>
+            `;
+            
+            container.insertBefore(taskCard, container.firstChild);
+            
+            // 显示批量操作按钮
+            const batchActions = document.getElementById('batchActions');
+            if (batchActions) batchActions.style.display = 'flex';
+        }
+        
+        // 同步版本到配置
+        async function syncVersionToConfig(swVersion) {
+            showLoading('正在同步版本...');
+            
+            try {
+                // 生成新的统一版本号
+                const now = new Date();
+                const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+                const newVersion = `${swVersion}.${dateStr}.001`;
+                
+                // 这里应该调用API更新update-config.json
+                // 由于前端不能直接写文件，显示提示让用户手动更新
+                hideLoading();
+                
+                const message = `请将 data/update-config.json 中的版本更新为:\n\n` +
+                    `"version": "${newVersion}",\n` +
+                    `"swVersion": "${swVersion}",\n` +
+                    `"swCacheVersion": "${swVersion}",\n` +
+                    `"lastUpdated": "${now.toISOString()}"`;
+                
+                alert(message);
+                showSuccessToast('版本同步提示已显示');
+            } catch (error) {
+                hideLoading();
+                showErrorToast('同步失败: ' + error.message);
+            }
+        }
+        
+        // 忽略版本同步任务
+        function skipVersionSync(taskId) {
+            const container = document.getElementById('pendingUpdates');
+            const badge = document.getElementById('updateBadge');
+            const pendingCount = document.getElementById('pendingCount');
+            
+            // 找到并移除任务卡片
+            const cards = container.querySelectorAll('.update-card');
+            cards.forEach(card => {
+                if (card.innerHTML.includes(taskId)) {
+                    card.remove();
+                }
+            });
+            
+            // 更新计数
+            const currentCount = parseInt(badge.textContent) || 0;
+            if (currentCount > 0) {
+                badge.textContent = currentCount - 1;
+                pendingCount.textContent = currentCount - 1;
+            }
+            
+            showInfoToast('已忽略版本同步任务');
+        }
+        
+        // 回退到SW版本读取
+        async function fallbackToSwVersion(currentVersionEl, lastUpdatedEl) {
+            try {
+                const response = await fetch('../sw.js?nocache=' + Date.now());
+                const text = await response.text();
+                const versionMatch = text.match(/CACHE_VERSION\s*=\s*['"](v\d+)['"]/);
+                if (versionMatch && currentVersionEl) {
+                    currentVersionEl.textContent = versionMatch[1];
+                }
+            } catch (e) {
+                if (currentVersionEl) currentVersionEl.textContent = 'v48';
+            }
+            if (lastUpdatedEl) lastUpdatedEl.textContent = new Date().toLocaleString('zh-CN');
         }
 
         // 检查部署状态
@@ -990,7 +1156,8 @@
                 const response = await fetch('../data/local-git-status.json?nocache=' + Date.now());
                 if (response.ok) {
                     const data = await response.json();
-                    return { changes: data.uncommitted || 0 };
+                    // 使用 changes 字段（总变更数）
+                    return { changes: data.changes || 0 };
                 }
             } catch (e) {
                 // 状态文件不存在，返回未知
@@ -1248,7 +1415,7 @@
             showSuccessToast('报告已导出');
         }
 
-        // 渲染更新历史
+        // 渲染更新历史（只显示最近日期的5条）
         function renderUpdateHistory() {
             const list = document.getElementById('historyList');
             const history = window.updateManager.updateHistory;
@@ -1258,8 +1425,12 @@
                 return;
             }
 
-            list.innerHTML = history.map((h, index) => `
-                <div class="history-item" onclick="showHistoryDetail(${index})" style="cursor: pointer;">
+            // 按日期降序排序，取最近5条
+            const sortedHistory = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const recentHistory = sortedHistory.slice(0, 5);
+
+            list.innerHTML = recentHistory.map((h, index) => `
+                <div class="history-item" onclick="showHistoryDetail(${history.indexOf(h)})" style="cursor: pointer;">
                     <div class="history-item-info">
                         <span class="history-version">${h.version}</span>
                         <span class="history-date">${new Date(h.date).toLocaleString('zh-CN')}</span>
@@ -1272,6 +1443,16 @@
                     </div>
                 </div>
             `).join('');
+
+            // 如果有更多历史记录，显示提示
+            if (history.length > 5) {
+                list.innerHTML += `
+                    <div style="text-align: center; padding: 15px; color: var(--text-secondary); font-size: 0.85rem;">
+                        <i class="fas fa-ellipsis-h" style="margin-right: 5px;"></i>
+                        还有 ${history.length - 5} 条更早的历史记录
+                    </div>
+                `;
+            }
         }
 
         // 显示历史详情

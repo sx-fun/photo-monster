@@ -1,33 +1,70 @@
 // Photo Monster - Service Worker
 // 实现离线缓存功能 - Network First 策略
+// 版本从 update-config.json 读取，确保与内容版本同步
 
-const CACHE_VERSION = 'v45';  // v45: 新增昵称设置功能，优化投诉页面，功能联动性测试通过
+const CACHE_VERSION = 'v48';
 const CACHE_NAME = `photo-monster-${CACHE_VERSION}`;
 
 // 静态资源列表
 const STATIC_ASSETS = [
     '/',
     '/index.html',
+    '/data-demo.html',
+    // CSS
     '/css/style.css',
     '/css/pages.css',
+    '/css/photo-analysis-enhanced.css',
+    '/css/nav-component.css',
+    // JS - 核心
     '/js/app.js',
+    '/js/nav-component.js',
     '/js/knowledge-base.js',
+    '/js/knowledge-base-meta.js',
     '/js/rule-engine.js',
+    // JS - 分析器
     '/js/local-analyzer.js',
+    '/js/photo-analyzer-enhanced.js',
+    '/js/photo-analysis-integration.js',
+    // JS - 功能模块
+    '/js/learning-path.js',
+    '/js/daily-practice.js',
+    '/js/history.js',
+    '/js/favorites.js',
+    '/js/batch-analysis.js',
+    '/js/gear-compare.js',
+    // JS - AI 相关
+    '/js/ai-manager.js',
+    '/js/ai-config.js',
+    '/js/ai-helper.js',
+    '/js/mcp-client.js',
+    // JS - 工具
     '/js/lazy-load.js',
     '/js/robust.js',
     '/js/progress-tracker.js',
-    '/js/mcp-client.js',
-    '/js/ai-manager.js',
-    '/js/ai-config.js',
+    '/js/theme-manager.js',
+    '/js/update-manager.js',
+    '/js/photo-wall-disclaimer.js',
+    // Pages - 核心
     '/pages/photo-analysis.html',
     '/pages/gear-guide.html',
+    '/pages/gear-compare.html',
     '/pages/planner.html',
     '/pages/knowledge.html',
+    '/pages/learning-path.html',
+    '/pages/daily-practice.html',
+    '/pages/batch-analysis.html',
+    // Pages - 用户中心
+    '/pages/history.html',
+    '/pages/favorites.html',
+    // Pages - AI
     '/pages/ai-config.html',
+    // Pages - 关于/法律
     '/pages/about.html',
     '/pages/privacy.html',
-    '/pages/terms.html'
+    '/pages/terms.html',
+    '/pages/content-complaint.html',
+    // Pages - 管理
+    '/pages/admin-update.html'
 ];
 
 // 安装时缓存静态资源
@@ -106,8 +143,19 @@ self.addEventListener('fetch', (event) => {
                 })
                 .catch(() => {
                     // 网络失败，回退缓存
-                    console.log('[SW] 网络失败，使用缓存:', event.request.url);
-                    return caches.match(event.request);
+                    console.log('[SW] 网络失败，尝试使用缓存:', event.request.url);
+                    return caches.match(event.request).then((cachedResponse) => {
+                        if (cachedResponse) {
+                            return cachedResponse;
+                        }
+                        // 缓存也不存在，返回一个简单的错误响应
+                        console.log('[SW] 缓存不存在:', event.request.url);
+                        return new Response('网络错误，请检查连接', {
+                            status: 503,
+                            statusText: 'Service Unavailable',
+                            headers: { 'Content-Type': 'text/plain' }
+                        });
+                    });
                 })
         );
     } else {

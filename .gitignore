@@ -32,3 +32,30 @@ tmp/
 # 依赖（如果有）
 node_modules/
 package-lock.json
+
+# WorkBuddy / CodeBuddy 工作文件
+.workbuddy/
+.codebuddy/
+
+# 备份文件
+backups/
+*.backup*
+
+# 工具生成的数据文件（可选，根据需求决定是否提交）
+# 如果希望网站数据随仓库更新，可以保留 data/new-gear-data.json 等
+# 如果希望数据独立管理，取消下面注释：
+# data/new-gear-data.js
+# data/new-gear-data.json
+# data/news-data.js
+# data/news-data.json
+# data/price-data.js
+# data/price-data.json
+
+# 演示/测试文件
+data-demo.html
+sw-clear.html
+new-gear.html
+
+# 文档草稿
+docs/*.draft.md
+docs/*.plan.md

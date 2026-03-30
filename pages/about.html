@@ -91,14 +91,14 @@
 
                 <div class="version-info">
                     <h3><i class="fas fa-code-branch"></i> 版本信息</h3>
-                    <table class="version-table">
+                    <table class="version-table" id="version-table">
                         <tr>
                             <td>版本号</td>
-                            <td>v45</td>
+                            <td id="version-number">加载中...</td>
                         </tr>
                         <tr>
                             <td>更新日期</td>
-                            <td>2026年3月28日</td>
+                            <td id="version-date">加载中...</td>
                         </tr>
                         <tr>
                             <td>知识库主题</td>
@@ -143,5 +143,35 @@
     <!-- 加载脚本 -->
     <script src="../js/nav-component.js"></script>
     <script src="../js/app.js"></script>
+    <script>
+        // 动态加载版本信息
+        async function loadVersionInfo() {
+            try {
+                const response = await fetch('../data/update-config.json');
+                const config = await response.json();
+                
+                // 更新版本号
+                document.getElementById('version-number').textContent = config.version;
+                
+                // 格式化日期
+                const date = new Date(config.lastUpdated);
+                const formattedDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+                document.getElementById('version-date').textContent = formattedDate;
+                
+                // 更新页脚版本
+                const footerVersion = document.querySelector('.footer p span');
+                if (footerVersion) {
+                    footerVersion.textContent = config.version;
+                }
+            } catch (error) {
+                console.error('加载版本信息失败:', error);
+                // 失败时显示默认版本
+                document.getElementById('version-number').textContent = 'v48';
+                document.getElementById('version-date').textContent = '2026年3月30日';
+            }
+        }
+        
+        loadVersionInfo();
+    </script>
 </body>
 </html>

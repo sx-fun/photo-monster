@@ -99,6 +99,26 @@ const cameraDatabase = {
                     mount: 'RF',
                     bestFor: ['portrait', 'landscape', 'video', 'sports']
                 },
+                'EOS R6 Mark III': {
+                    type: 'mirrorless',
+                    sensor: 'fullframe',
+                    mp: 24,
+                    lowLight: 10,
+                    price: 'pro',
+                    video: '4K120',
+                    mount: 'RF',
+                    bestFor: ['portrait', 'sports', 'video', 'lowlight']
+                },
+                'EOS R7 Mark II': {
+                    type: 'mirrorless',
+                    sensor: 'apsc',
+                    mp: 32,
+                    lowLight: 8,
+                    price: 'mid',
+                    video: '4K60',
+                    mount: 'RF',
+                    bestFor: ['sports', 'wildlife', 'video']
+                },
                 'EOS R1': {
                     type: 'mirrorless',
                     sensor: 'fullframe',
@@ -263,6 +283,36 @@ const cameraDatabase = {
                     video: '4K',
                     mount: 'FE',
                     bestFor: ['landscape', 'travel']
+                },
+                'A1 II': {
+                    type: 'mirrorless',
+                    sensor: 'fullframe',
+                    mp: 50,
+                    lowLight: 9,
+                    price: 'flagship',
+                    video: '8K30',
+                    mount: 'FE',
+                    bestFor: ['sports', 'wildlife', 'video', 'portrait']
+                },
+                'A7 VI': {
+                    type: 'mirrorless',
+                    sensor: 'fullframe',
+                    mp: 33,
+                    lowLight: 9,
+                    price: 'pro',
+                    video: '4K60',
+                    mount: 'FE',
+                    bestFor: ['general', 'portrait', 'travel', 'video']
+                },
+                'A7S IV': {
+                    type: 'mirrorless',
+                    sensor: 'fullframe',
+                    mp: 24,
+                    lowLight: 10,
+                    price: 'pro',
+                    video: '4K120',
+                    mount: 'FE',
+                    bestFor: ['video', 'lowlight']
                 },
                 A6700: {
                     type: 'mirrorless',
@@ -468,6 +518,36 @@ const cameraDatabase = {
                     video: '4K',
                     mount: 'Z',
                     bestFor: ['vlog', 'travel']
+                },
+                'Z6 III': {
+                    type: 'mirrorless',
+                    sensor: 'fullframe',
+                    mp: 24,
+                    lowLight: 9,
+                    price: 'pro',
+                    video: '6K',
+                    mount: 'Z',
+                    bestFor: ['general', 'video', 'portrait']
+                },
+                'Z5 II': {
+                    type: 'mirrorless',
+                    sensor: 'fullframe',
+                    mp: 24,
+                    lowLight: 8,
+                    price: 'mid',
+                    video: '4K',
+                    mount: 'Z',
+                    bestFor: ['general', 'travel', 'portrait']
+                },
+                'Z6 IV': {
+                    type: 'mirrorless',
+                    sensor: 'fullframe',
+                    mp: 33,
+                    lowLight: 9,
+                    price: 'pro',
+                    video: '6K',
+                    mount: 'Z',
+                    bestFor: ['general', 'video', 'sports']
                 },
                 Z7: {
                     type: 'mirrorless',
@@ -683,6 +763,46 @@ const cameraDatabase = {
                     video: '6K',
                     mount: 'Fixed',
                     bestFor: ['street', 'travel']
+                },
+                'X-M5': {
+                    type: 'mirrorless',
+                    sensor: 'apsc',
+                    mp: 26,
+                    lowLight: 7,
+                    price: 'entry',
+                    video: '4K',
+                    mount: 'X',
+                    bestFor: ['general', 'vlog', 'travel']
+                },
+                'X-T6': {
+                    type: 'mirrorless',
+                    sensor: 'apsc',
+                    mp: 40,
+                    lowLight: 8,
+                    price: 'pro',
+                    video: '4K60',
+                    mount: 'X',
+                    bestFor: ['general', 'street', 'travel']
+                },
+                'X-Pro4': {
+                    type: 'mirrorless',
+                    sensor: 'apsc',
+                    mp: 40,
+                    lowLight: 8,
+                    price: 'pro',
+                    video: '4K',
+                    mount: 'X',
+                    bestFor: ['street', 'documentary']
+                },
+                'GFX100RF': {
+                    type: 'mirrorless',
+                    sensor: 'medium',
+                    mp: 102,
+                    lowLight: 7,
+                    price: 'flagship',
+                    video: '4K',
+                    mount: 'GF',
+                    bestFor: ['portrait', 'landscape', 'commercial']
                 },
                 'GFX 100S': {
                     type: 'mirrorless',
@@ -908,6 +1028,26 @@ const cameraDatabase = {
                     video: '5.7K',
                     mount: 'M43',
                     bestFor: ['sports', 'video']
+                },
+                'Lumix S1 II': {
+                    type: 'mirrorless',
+                    sensor: 'fullframe',
+                    mp: 24,
+                    lowLight: 9,
+                    price: 'pro',
+                    video: '6K',
+                    mount: 'L',
+                    bestFor: ['video', 'general']
+                },
+                'Lumix GH7': {
+                    type: 'mirrorless',
+                    sensor: 'm43',
+                    mp: 25,
+                    lowLight: 7,
+                    price: 'pro',
+                    video: '4K120',
+                    mount: 'M43',
+                    bestFor: ['video']
                 }
             }
         },
@@ -933,6 +1073,16 @@ const cameraDatabase = {
                     video: '4K',
                     mount: 'M43',
                     bestFor: ['travel', 'general']
+                },
+                'OM-3': {
+                    type: 'mirrorless',
+                    sensor: 'm43',
+                    mp: 20,
+                    lowLight: 7,
+                    price: 'pro',
+                    video: '4K',
+                    mount: 'M43',
+                    bestFor: ['travel', 'wildlife', 'general']
                 },
                 'E-M10 IV': {
                     type: 'mirrorless',
@@ -4745,6 +4895,39 @@ function displayComboSummary() {
     
     const cameraPriceStr = '¥' + cameraPriceNum.toLocaleString();
     
+    // 检查是否为新器材
+    const isNewGear = cameraData?.isNew === true;
+    const newGearBadge = isNewGear ? `
+        <span class="new-gear-badge" style="
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 8px;
+            font-weight: 500;
+        ">
+            ${cameraData?.status === 'official' ? '✅ 新发布' : cameraData?.status === 'announced' ? '📢 已宣布' : '💬 传闻'}
+        </span>
+    ` : '';
+    const newGearInfo = isNewGear ? `
+        <div class="new-gear-info" style="
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #856404;
+        ">
+            <i class="fas fa-info-circle"></i> 
+            <strong>新器材提示：</strong>
+            ${cameraData?.status === 'official' ? '该机型的官方信息已发布，预计售价 ¥' + (cameraData?.expectedPrice || '待定').toLocaleString() : 
+              cameraData?.status === 'announced' ? '该机型已正式宣布，预计 ' + (cameraData?.releaseDate || '近期') + ' 上市' : 
+              '该机型目前处于传闻阶段，规格和价格可能存在变动'}
+        </div>
+    ` : '';
+    
     // 生成套装ID用于对比功能
     const comboId = `combo_${comboSelection.cameraBrand}_${camera.replace(/\s+/g, '_')}_${lens?.id || 'fixed'}_${Date.now()}`;
     
@@ -4775,12 +4958,13 @@ function displayComboSummary() {
         <div class="combo-summary-item camera-item">
             <div class="item-icon"><i class="fas fa-camera"></i></div>
             <div class="item-details">
-                <h6>${brandName} ${camera}</h6>
+                <h6>${brandName} ${camera}${newGearBadge}</h6>
                 <div class="item-specs">
                     <span class="spec">${sensorType}</span>
                     <span class="spec">${cameraData?.mp || ''}MP</span>
                     <span class="spec">${isFixedLens ? '固定镜头' : (cameraData?.mount || '') + '卡口'}</span>
                 </div>
+                ${newGearInfo}
             </div>
             <div class="item-price">${cameraPriceStr}</div>
         </div>
@@ -7240,17 +7424,8 @@ let currentImageElement = null;
 function initImageAnalysisTools() {
     console.log('初始化图像分析工具...');
     
-    // 直方图按钮
-    const histogramBtn = document.getElementById('histogramBtn');
-    if (histogramBtn) {
-        histogramBtn.addEventListener('click', toggleHistogram);
-    }
-    
-    // 关闭直方图按钮
-    const closeHistogramBtn = document.getElementById('closeHistogram');
-    if (closeHistogramBtn) {
-        closeHistogramBtn.addEventListener('click', hideHistogram);
-    }
+    // 注意：直方图按钮由 photo-analysis-integration.js 处理（增强版功能）
+    // 这里不再绑定，避免重复绑定导致冲突
     
     // 构图辅助线按钮
     const ruleOfThirdsBtn = document.getElementById('ruleOfThirdsBtn');
@@ -7311,20 +7486,20 @@ function extractImageData(imgElement) {
     }
 }
 
-// 切换直方图显示
-function toggleHistogram() {
+// 切换直方图显示 (app.js 版本 - 简单亮度直方图)
+function toggleHistogramSimple() {
     const container = document.getElementById('histogramContainer');
     if (!container) return;
     
     if (container.style.display === 'none') {
-        showHistogram();
+        showHistogramSimple();
     } else {
-        hideHistogram();
+        hideHistogramSimple();
     }
 }
 
-// 显示直方图
-function showHistogram() {
+// 显示直方图 (app.js 版本)
+function showHistogramSimple() {
     const container = document.getElementById('histogramContainer');
     const canvas = document.getElementById('histogramCanvas');
     
@@ -7334,7 +7509,7 @@ function showHistogram() {
     }
     
     container.style.display = 'block';
-    drawHistogram(canvas, currentImageData);
+    drawHistogramSimple(canvas, currentImageData);
     
     // 更新按钮状态
     const btn = document.getElementById('histogramBtn');
@@ -7342,7 +7517,7 @@ function showHistogram() {
 }
 
 // 隐藏直方图
-function hideHistogram() {
+function hideHistogramSimple() {
     const container = document.getElementById('histogramContainer');
     if (container) container.style.display = 'none';
     
@@ -7350,8 +7525,8 @@ function hideHistogram() {
     if (btn) btn.classList.remove('active');
 }
 
-// 绘制直方图
-function drawHistogram(canvas, imageData) {
+// 绘制简单亮度直方图 (app.js 版本，避免与 enhanced 版本冲突)
+function drawHistogramSimple(canvas, imageData) {
     const ctx = canvas.getContext('2d');
     const width = canvas.width;
     const height = canvas.height;

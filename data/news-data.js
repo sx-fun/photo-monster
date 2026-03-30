@@ -1,0 +1,120 @@
+/**
+ * 新闻数据
+ * 生成时间: 2026/3/28 15:42:45
+ */
+
+const NewsData = {
+  "generatedAt": "2026-03-28T07:42:45.088Z",
+  "items": [
+    {
+      "id": "news-001",
+      "title": "【传闻】Sony A7V 详细规格曝光：44MP + AI对焦",
+      "summary": "据 SonyAlphaRumors 消息，A7V 将搭载4400万像素BSI传感器，配备全新AI主体识别对焦系统，支持8K30p视频录制，预计2026年Q2发布，售价约$2499。",
+      "url": "https://www.sonyalpharumors.com",
+      "date": "2026-03-26",
+      "source": "SonyAlphaRumors",
+      "type": "rumor",
+      "credibility": 3,
+      "tags": [
+        "sony",
+        "a7v",
+        "fullframe",
+        "rumor"
+      ]
+    },
+    {
+      "id": "news-002",
+      "title": "【传闻】Canon EOS R6 Mark III 规格泄露",
+      "summary": "CanonRumors 泄露了 R6 III 的详细规格：2400万像素堆栈式传感器，40fps连拍，支持8K60p视频录制，预计售价$2299。",
+      "url": "https://www.canonrumors.com",
+      "date": "2026-03-24",
+      "source": "CanonRumors",
+      "type": "rumor",
+      "credibility": 3,
+      "tags": [
+        "canon",
+        "r6",
+        "fullframe",
+        "rumor"
+      ]
+    },
+    {
+      "id": "news-003",
+      "title": "【官方】尼康发布 Z6 III 固件更新 v2.0",
+      "summary": "尼康官方发布 Z6 III 固件2.0版本，新增鸟类检测AF、改进低光对焦性能，同时优化了视频录制时的散热表现。",
+      "url": "https://www.nikon.com",
+      "date": "2026-03-23",
+      "source": "Nikon Official",
+      "type": "official",
+      "credibility": 5,
+      "tags": [
+        "nikon",
+        "z6iii",
+        "firmware",
+        "official"
+      ]
+    },
+    {
+      "id": "news-004",
+      "title": "【传闻】Fujifilm X-T50 将于4月发布",
+      "summary": "FujiRumors 称 X-T50 将在4月发布，搭载4000万像素X-Trans V传感器，7档IBIS防抖，预计售价$1499。",
+      "url": "https://www.fujirumors.com",
+      "date": "2026-03-21",
+      "source": "FujiRumors",
+      "type": "rumor",
+      "credibility": 3,
+      "tags": [
+        "fujifilm",
+        "xt50",
+        "aps-c",
+        "rumor"
+      ]
+    },
+    {
+      "id": "news-005",
+      "title": "【官方】松下 Lumix S9 正式发布",
+      "summary": "松下正式发布全画幅紧凑型相机 Lumix S9，2420万像素，仅重486g，支持实时LUT，售价$1499。",
+      "url": "https://www.panasonic.com",
+      "date": "2026-03-20",
+      "source": "Panasonic Official",
+      "type": "official",
+      "credibility": 5,
+      "tags": [
+        "panasonic",
+        "s9",
+        "fullframe",
+        "official"
+      ]
+    },
+    {
+      "id": "news-006",
+      "title": "【行业】2026年Q1相机市场报告：无反增长15%",
+      "summary": "CIPA发布最新数据：无反相机出货量同比增长15%，中国市场表现强劲，高端机型需求持续上升。",
+      "url": "https://www.cipa.jp",
+      "date": "2026-03-18",
+      "source": "CIPA",
+      "type": "industry",
+      "credibility": 3,
+      "tags": [
+        "industry",
+        "market",
+        "cipa"
+      ]
+    },
+    {
+      "id": "news-1774683765088-yn8yu6iwa",
+      "title": "Mint&#8217;s Sharpa Lens Promises to Dramatically Improve Polaroid SX-70 Photos",
+      "summary": "Mint Camera has announced the Sharpa Lens, a newly-designed replacement optic for the Polaroid SX-70 that it says is \"the sharpest lens ever made\" for the instant camera. [ Read More ]...",
+      "url": "https://petapixel.com/2026/03/27/mints-sharpa-lens-promises-to-dramatically-improve-polaroid-sx-70-photos/",
+      "date": "Fri, 27 Mar 2026 19:54:49 +0000",
+      "source": "PetaPixel",
+      "type": "news",
+      "credibility": "medium",
+      "tags": []
+    }
+  ]
+};
+
+if (typeof module !== 'undefined') {
+    module.exports = { NewsData };
+}
