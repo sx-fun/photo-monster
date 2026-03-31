@@ -1,9 +1,9 @@
 {
   "_comment": "Photo Monster 统一版本配置文件 - 格式: v{SW版本}.{YYYYMMDD}.{序号}",
-  "version": "v48.20260330.001",
-  "swVersion": "v48",
-  "lastUpdated": "2026-03-30T09:30:00.000Z",
-  "swCacheVersion": "v48",
+  "version": "v49.20260331.001",
+  "swVersion": "v49",
+  "lastUpdated": "2026-03-31T11:00:00.000Z",
+  "swCacheVersion": "v49",
   "updateSources": [
     {
       "id": "camera-database",
