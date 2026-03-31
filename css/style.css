@@ -54,7 +54,19 @@ body {
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
     z-index: 1000;
-    transition: var(--transition);
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 滚动后的导航栏样式 */
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-bottom-color: transparent;
+}
+
+/* 向下滚动隐藏导航栏 */
+.navbar.hidden {
+    transform: translateY(-100%);
 }
 
 .nav-container {
@@ -2278,6 +2290,127 @@ body {
 ::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: 4px;
+}
+
+/* ==================== 移动端底部 Tab 导航栏 ==================== */
+
+/* body 添加底部 padding 避免内容被遮挡 */
+body.has-mobile-tab {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Tab 栏容器 */
+.mobile-tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-color);
+    z-index: 999;
+    display: none; /* 默认隐藏，移动端显示 */
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Tab 容器 */
+.mobile-tab-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 60px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Tab 项 */
+.mobile-tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    position: relative;
+    gap: 4px;
+}
+
+/* Tab 图标 */
+.mobile-tab-item .tab-icon {
+    font-size: 1.3rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+/* Tab 标题 */
+.mobile-tab-item .tab-title {
+    font-size: 0.7rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* 激活状态 */
+.mobile-tab-item.active {
+    color: var(--primary-color);
+}
+
+.mobile-tab-item.active .tab-icon {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.mobile-tab-item.active .tab-title {
+    font-weight: 600;
+}
+
+/* 点击效果 */
+.mobile-tab-item:active {
+    transform: scale(0.9);
+}
+
+/* 安全区域占位（适配 iPhone 刘海屏） */
+.safe-area-bottom {
+    height: env(safe-area-inset-bottom, 0px);
+    background: rgba(255, 255, 255, 0.98);
+}
+
+/* 移动端显示 Tab 栏 */
+@media (max-width: 768px) {
+    .mobile-tab-bar {
+        display: block;
+    }
+    
+    /* 调整页面底部间距 */
+    .footer {
+        padding-bottom: calc(40px + 70px);
+    }
+}
+
+/* 小屏幕优化 */
+@media (max-width: 380px) {
+    .mobile-tab-item .tab-icon {
+        font-size: 1.1rem;
+        width: 28px;
+        height: 28px;
+    }
+    
+    .mobile-tab-item .tab-title {
+        font-size: 0.65rem;
+    }
+    
+    .mobile-tab-container {
+        height: 55px;
+    }
 }
 
 ::-webkit-scrollbar-thumb:hover {

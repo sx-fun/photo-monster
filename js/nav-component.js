@@ -384,4 +384,42 @@ NavComponent.saveNickname = function() {
 // 自动初始化
 document.addEventListener('DOMContentLoaded', () => {
     new NavComponent();
+    initStickyNavbar();
 });
+
+// 粘性导航栏滚动效果
+function initStickyNavbar() {
+    const navbar = document.getElementById('main-nav');
+    if (!navbar) return;
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    function updateNavbar() {
+        const scrollY = window.scrollY;
+        
+        // 滚动超过50px时添加scrolled类
+        if (scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+
+        // 向下滚动超过100px且滚动距离大于上次时隐藏导航栏
+        if (scrollY > 100 && scrollY > lastScrollY) {
+            navbar.classList.add('hidden');
+        } else {
+            navbar.classList.remove('hidden');
+        }
+
+        lastScrollY = scrollY;
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(updateNavbar);
+            ticking = true;
+        }
+    }, { passive: true });
+}
