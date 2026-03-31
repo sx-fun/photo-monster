@@ -176,6 +176,50 @@
                 <span id="analysisTitleText">AI 点评</span>
                 <span class="analysis-type-badge" id="analysisTypeBadge" style="display: none;"></span>
             </h2>
+            
+            <!-- 对比视图工具栏 -->
+            <div class="compare-toolbar" id="compareToolbar" style="display: none;">
+                <button class="tool-btn active" id="viewNormalBtn" title="正常视图">
+                    <i class="fas fa-image"></i>
+                    <span>正常</span>
+                </button>
+                <button class="tool-btn" id="viewCompareBtn" title="对比视图">
+                    <i class="fas fa-columns"></i>
+                    <span>对比</span>
+                </button>
+                <button class="tool-btn" id="viewSplitBtn" title="分割对比">
+                    <i class="fas fa-arrows-alt-h"></i>
+                    <span>分割</span>
+                </button>
+            </div>
+            
+            <!-- 对比视图容器 -->
+            <div class="compare-view-container" id="compareViewContainer" style="display: none;">
+                <div class="compare-view original-view">
+                    <div class="compare-label">原图</div>
+                    <img id="compareOriginalImg" src="" alt="原图">
+                </div>
+                <div class="compare-view analyzed-view">
+                    <div class="compare-label">分析标注</div>
+                    <canvas id="compareAnalyzedCanvas"></canvas>
+                </div>
+            </div>
+            
+            <!-- 分割对比视图 -->
+            <div class="split-compare-container" id="splitCompareContainer" style="display: none;">
+                <div class="split-wrapper">
+                    <img id="splitOriginalImg" src="" alt="原图">
+                    <div class="split-overlay">
+                        <canvas id="splitAnalyzedCanvas"></canvas>
+                    </div>
+                    <div class="split-slider">
+                        <div class="split-handle">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="analysis-content" id="analysisContent">
                 <!-- 动态生成点评内容 -->
             </div>

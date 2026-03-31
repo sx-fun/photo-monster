@@ -7354,10 +7354,13 @@ function setButtonLoading(button, loading = true) {
     }
 }
 
-// 拖拽反馈
+// 拖拽反馈 - 增强版
 function initDragFeedback(dropZone) {
     if (!dropZone) return;
 
+    let dragCounter = 0; // 用于处理子元素触发dragleave的问题
+
+    // 阻止默认行为
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, (e) => {
             e.preventDefault();
@@ -7365,17 +7368,144 @@ function initDragFeedback(dropZone) {
         });
     });
 
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.classList.add('drag-over');
-        });
+    // 拖拽进入
+    dropZone.addEventListener('dragenter', (e) => {
+        dragCounter++;
+        if (dragCounter === 1) {
+            dropZone.classList.add('drag-active');
+            showDragOverlay(dropZone, '释放以上传文件');
+        }
     });
 
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.classList.remove('drag-over');
-        });
+    // 拖拽悬停
+    dropZone.addEventListener('dragover', (e) => {
+        e.dataTransfer.dropEffect = 'copy';
+        if (!dropZone.classList.contains('drag-active')) {
+            dropZone.classList.add('drag-active');
+        }
     });
+
+    // 拖拽离开
+    dropZone.addEventListener('dragleave', (e) => {
+        dragCounter--;
+        if (dragCounter === 0) {
+            dropZone.classList.remove('drag-active');
+            hideDragOverlay(dropZone);
+        }
+    });
+
+    // 释放文件
+    dropZone.addEventListener('drop', (e) => {
+        dragCounter = 0;
+        dropZone.classList.remove('drag-active');
+        hideDragOverlay(dropZone);
+        
+        const files = Array.from(e.dataTransfer.files).filter(file => {
+            return file.type.startsWith('image/') || 
+                   /\.(jpg|jpeg|png|gif|webp|heic|heif|raw|cr2|nef|arw|dng|orf|rw2)$/i.test(file.name);
+        });
+
+        if (files.length === 0) {
+            showErrorToast('请拖拽图片文件');
+            return;
+        }
+
+        // 显示文件计数
+        showSuccessToast(`已选择 ${files.length} 个文件`);
+        
+        // 处理文件
+        handleFiles(files);
+    });
+}
+
+// 显示拖拽覆盖层
+function showDragOverlay(dropZone, text) {
+    let overlay = dropZone.querySelector('.drag-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'drag-overlay';
+        overlay.innerHTML = `
+            <div class="drag-overlay-content">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>${text}</span>
+            </div>
+        `;
+        dropZone.appendChild(overlay);
+    }
+    overlay.classList.add('show');
+}
+
+// 隐藏拖拽覆盖层
+function hideDragOverlay(dropZone) {
+    const overlay = dropZone.querySelector('.drag-overlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+    }
+}
+
+// 处理多个文件
+function handleFiles(files) {
+    if (!files || files.length === 0) return;
+    
+    // 限制最多10个文件
+    const maxFiles = 10;
+    const filesToProcess = files.slice(0, maxFiles);
+    
+    if (files.length > maxFiles) {
+        showWarningToast(`一次最多处理 ${maxFiles} 个文件，已自动选择前 ${maxFiles} 个`);
+    }
+
+    // 显示加载状态
+    showLoading(`正在处理 ${filesToProcess.length} 个文件...`);
+    
+    // 逐个处理文件
+    let processedCount = 0;
+    const processNext = () => {
+        if (processedCount >= filesToProcess.length) {
+            hideLoading();
+            if (filesToProcess.length > 1) {
+                showBatchAnalysisButton();
+            }
+            return;
+        }
+        
+        const file = filesToProcess[processedCount];
+        processedCount++;
+        
+        updateLoadingText(`正在处理 ${processedCount}/${filesToProcess.length}: ${file.name}`);
+        
+        processFile(file).then(() => {
+            processNext();
+        }).catch(err => {
+            console.error('处理文件失败:', file.name, err);
+            processNext();
+        });
+    };
+    
+    processNext();
+}
+
+// 显示批量分析按钮
+function showBatchAnalysisButton() {
+    const batchBtn = document.getElementById('batchAnalyzeBtn');
+    const singleBtn = document.getElementById('analyzeBtn');
+    if (batchBtn && uploadedImages.length > 1) {
+        batchBtn.style.display = 'inline-flex';
+        if (singleBtn) singleBtn.style.display = 'none';
+    }
+}
+
+// 更新加载文本
+function updateLoadingText(text) {
+    const loadingText = document.getElementById('loadingText');
+    if (loadingText) {
+        loadingText.textContent = text;
+    }
+}
+
+// 显示警告Toast
+function showWarningToast(message) {
+    showToast(message, 'warning');
 }
 
 // 添加骨架屏
@@ -7534,64 +7664,137 @@ function hideHistogramSimple() {
     if (btn) btn.classList.remove('active');
 }
 
-// 绘制简单亮度直方图 (app.js 版本，避免与 enhanced 版本冲突)
+// 绘制增强版RGB直方图
 function drawHistogramSimple(canvas, imageData) {
     const ctx = canvas.getContext('2d');
     const width = canvas.width;
     const height = canvas.height;
+    const padding = 30;
+    const graphHeight = height - padding * 2;
+    const graphWidth = width - padding * 2;
     
-    // 清空画布
-    ctx.fillStyle = '#1a1a2e';
+    // 清空画布 - 深色背景
+    const gradient = ctx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, '#1a1a2e');
+    gradient.addColorStop(1, '#16213e');
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
     
-    // 初始化256个亮度值的计数
-    const histogram = new Array(256).fill(0);
+    // 初始化RGB和亮度直方图
+    const histR = new Array(256).fill(0);
+    const histG = new Array(256).fill(0);
+    const histB = new Array(256).fill(0);
+    const histL = new Array(256).fill(0);
     const data = imageData.data;
     
-    // 计算亮度直方图
+    // 计算直方图数据
     for (let i = 0; i < data.length; i += 4) {
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
-        // 使用标准亮度公式
         const luminance = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
-        histogram[luminance]++;
+        
+        histR[r]++;
+        histG[g]++;
+        histB[b]++;
+        histL[luminance]++;
     }
     
     // 找到最大值用于归一化
-    const maxCount = Math.max(...histogram);
+    const maxCount = Math.max(
+        Math.max(...histR),
+        Math.max(...histG),
+        Math.max(...histB),
+        Math.max(...histL)
+    );
     
-    // 如果没有数据，直接返回
     if (maxCount === 0) {
         console.warn('直方图数据为空');
         return;
     }
     
-    // 绘制直方图
-    const barWidth = width / 256;
-    
-    for (let i = 0; i < 256; i++) {
-        const barHeight = (histogram[i] / maxCount) * (height - 20);
-        
-        // 根据亮度值设置颜色
-        if (i < 64) {
-            ctx.fillStyle = '#3498db'; // 阴影 - 蓝色
-        } else if (i < 192) {
-            ctx.fillStyle = '#2ecc71'; // 中间调 - 绿色
-        } else {
-            ctx.fillStyle = '#e74c3c'; // 高光 - 红色
-        }
-        
-        ctx.fillRect(i * barWidth, height - barHeight - 10, barWidth + 0.5, barHeight);
+    // 绘制网格线
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+        const y = padding + (graphHeight / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - padding, y);
+        ctx.stroke();
     }
     
-    // 绘制刻度线
+    // 绘制RGB通道
+    const barWidth = graphWidth / 256;
+    
+    // 绘制红色通道
+    ctx.fillStyle = 'rgba(255, 71, 87, 0.6)';
+    for (let i = 0; i < 256; i++) {
+        const barHeight = (histR[i] / maxCount) * graphHeight;
+        ctx.fillRect(padding + i * barWidth, height - padding - barHeight, barWidth + 0.5, barHeight);
+    }
+    
+    // 绘制绿色通道
+    ctx.fillStyle = 'rgba(46, 213, 115, 0.6)';
+    for (let i = 0; i < 256; i++) {
+        const barHeight = (histG[i] / maxCount) * graphHeight;
+        ctx.fillRect(padding + i * barWidth, height - padding - barHeight, barWidth + 0.5, barHeight);
+    }
+    
+    // 绘制蓝色通道
+    ctx.fillStyle = 'rgba(54, 162, 235, 0.6)';
+    for (let i = 0; i < 256; i++) {
+        const barHeight = (histB[i] / maxCount) * graphHeight;
+        ctx.fillRect(padding + i * barWidth, height - padding - barHeight, barWidth + 0.5, barHeight);
+    }
+    
+    // 绘制亮度直方图（白色半透明）
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    for (let i = 0; i < 256; i++) {
+        const barHeight = (histL[i] / maxCount) * graphHeight;
+        ctx.fillRect(padding + i * barWidth, height - padding - barHeight, barWidth + 0.5, barHeight);
+    }
+    
+    // 绘制区域分隔线（阴影/中间调/高光）
+    const shadowEnd = padding + (64 / 256) * graphWidth;
+    const highlightStart = padding + (192 / 256) * graphWidth;
+    
     ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.setLineDash([5, 5]);
     ctx.lineWidth = 1;
+    
+    // 阴影区结束线
     ctx.beginPath();
-    ctx.moveTo(0, height - 10);
-    ctx.lineTo(width, height - 10);
+    ctx.moveTo(shadowEnd, padding);
+    ctx.lineTo(shadowEnd, height - padding);
     ctx.stroke();
+    
+    // 高光区开始线
+    ctx.beginPath();
+    ctx.moveTo(highlightStart, padding);
+    ctx.lineTo(highlightStart, height - padding);
+    ctx.stroke();
+    
+    ctx.setLineDash([]);
+    
+    // 绘制底部刻度
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('0', padding, height - 10);
+    ctx.fillText('64', shadowEnd, height - 10);
+    ctx.fillText('128', padding + graphWidth / 2, height - 10);
+    ctx.fillText('192', highlightStart, height - 10);
+    ctx.fillText('255', width - padding, height - 10);
+    
+    // 绘制区域标签
+    ctx.font = '11px sans-serif';
+    ctx.fillStyle = 'rgba(52, 152, 219, 0.8)';
+    ctx.fillText('阴影', padding + (shadowEnd - padding) / 2, padding + 15);
+    ctx.fillStyle = 'rgba(46, 204, 113, 0.8)';
+    ctx.fillText('中间调', (shadowEnd + highlightStart) / 2, padding + 15);
+    ctx.fillStyle = 'rgba(231, 76, 60, 0.8)';
+    ctx.fillText('高光', highlightStart + (width - padding - highlightStart) / 2, padding + 15);
 }
 
 // 绘制构图辅助线
@@ -7698,7 +7901,219 @@ function clearCompositionOverlay() {
 // 页面加载完成后初始化图像分析工具
 document.addEventListener('DOMContentLoaded', () => {
     initImageAnalysisTools();
+    initCompareView();
 });
+
+// ==================== 对比视图功能 ====================
+
+// 初始化对比视图
+function initCompareView() {
+    const viewNormalBtn = document.getElementById('viewNormalBtn');
+    const viewCompareBtn = document.getElementById('viewCompareBtn');
+    const viewSplitBtn = document.getElementById('viewSplitBtn');
+    
+    if (viewNormalBtn) {
+        viewNormalBtn.addEventListener('click', () => switchCompareView('normal'));
+    }
+    if (viewCompareBtn) {
+        viewCompareBtn.addEventListener('click', () => switchCompareView('compare'));
+    }
+    if (viewSplitBtn) {
+        viewSplitBtn.addEventListener('click', () => switchCompareView('split'));
+    }
+}
+
+// 切换对比视图模式
+function switchCompareView(mode) {
+    const toolbar = document.getElementById('compareToolbar');
+    const compareContainer = document.getElementById('compareViewContainer');
+    const splitContainer = document.getElementById('splitCompareContainer');
+    
+    // 更新按钮状态
+    document.querySelectorAll('.compare-toolbar .tool-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    if (mode === 'normal') {
+        document.getElementById('viewNormalBtn').classList.add('active');
+        compareContainer.style.display = 'none';
+        splitContainer.style.display = 'none';
+    } else if (mode === 'compare') {
+        document.getElementById('viewCompareBtn').classList.add('active');
+        if (currentImageElement) {
+            showCompareView();
+        }
+    } else if (mode === 'split') {
+        document.getElementById('viewSplitBtn').classList.add('active');
+        if (currentImageElement) {
+            showSplitView();
+        }
+    }
+}
+
+// 显示并排对比视图
+function showCompareView() {
+    const container = document.getElementById('compareViewContainer');
+    const originalImg = document.getElementById('compareOriginalImg');
+    const analyzedCanvas = document.getElementById('compareAnalyzedCanvas');
+    
+    if (!container || !originalImg || !analyzedCanvas || !currentImageElement) {
+        return;
+    }
+    
+    // 设置原图
+    originalImg.src = currentImageElement.src;
+    
+    // 等待原图加载后获取尺寸
+    originalImg.onload = () => {
+        const width = originalImg.width;
+        const height = originalImg.height;
+        
+        // 设置Canvas尺寸
+        analyzedCanvas.width = width;
+        analyzedCanvas.height = height;
+        analyzedCanvas.style.width = width + 'px';
+        analyzedCanvas.style.height = height + 'px';
+        
+        // 绘制分析标注（颜色分布、区域标记等）
+        drawAnalysisOverlay(analyzedCanvas, currentImageData);
+    };
+    
+    container.style.display = 'grid';
+}
+
+// 显示分割对比视图
+function showSplitView() {
+    const container = document.getElementById('splitCompareContainer');
+    const splitOriginal = document.getElementById('splitOriginalImg');
+    const splitCanvas = document.getElementById('splitAnalyzedCanvas');
+    
+    if (!container || !splitOriginal || !splitCanvas || !currentImageElement) {
+        return;
+    }
+    
+    // 设置原图
+    splitOriginal.src = currentImageElement.src;
+    
+    splitOriginal.onload = () => {
+        const width = splitOriginal.width;
+        const height = splitOriginal.height;
+        
+        // 设置Canvas尺寸为原图的两倍宽度（方便覆盖）
+        splitCanvas.width = width * 2;
+        splitCanvas.height = height;
+        splitCanvas.style.width = width + 'px';
+        splitCanvas.style.height = height + 'px';
+        
+        // 绘制分析标注
+        const ctx = splitCanvas.getContext('2d');
+        ctx.drawImage(currentImageElement, 0, 0);
+        drawAnalysisOverlay(splitCanvas, currentImageData);
+        
+        // 初始化分割滑块
+        initSplitSlider(container);
+    };
+    
+    container.style.display = 'block';
+}
+
+// 绘制分析标注（可视化分析结果）
+function drawAnalysisOverlay(canvas, imageData) {
+    const ctx = canvas.getContext('2d');
+    
+    // 绘制曝光问题区域（暗红色标记过暗区域）
+    if (imageData) {
+        const data = imageData.data;
+        const imgData = ctx.createImageData(imageData.width, imageData.height);
+        
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+            const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+            
+            // 如果太暗（<30）用红色标记
+            if (luminance < 30) {
+                imgData.data[i] = 255;
+                imgData.data[i + 1] = 50;
+                imgData.data[i + 2] = 50;
+                imgData.data[i + 3] = 30;
+            } 
+            // 如果太亮（>240）用蓝色标记
+            else if (luminance > 240) {
+                imgData.data[i] = 50;
+                imgData.data[i + 1] = 50;
+                imgData.data[i + 2] = 255;
+                imgData.data[i + 3] = 30;
+            } else {
+                imgData.data[i] = r;
+                imgData.data[i + 1] = g;
+                imgData.data[i + 2] = b;
+                imgData.data[i + 3] = a;
+            }
+        }
+        
+        ctx.putImageData(imgData, 0, 0);
+    }
+}
+
+// 初始化分割滑块
+function initSplitSlider(container) {
+    const slider = container.querySelector('.split-slider');
+    const overlay = container.querySelector('.split-overlay');
+    const wrapper = container.querySelector('.split-wrapper');
+    
+    if (!slider || !overlay || !wrapper) return;
+    
+    let isMoving = false;
+    
+    const updateSlider = (e) => {
+        if (!isMoving) return;
+        
+        const rect = wrapper.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        
+        // 处理触摸事件
+        if (e.touches) {
+            x = e.touches[0].clientX - rect.left;
+        }
+        
+        // 限制在边界内
+        x = Math.max(0, Math.min(x, rect.width));
+        
+        // 更新覆盖层宽度
+        overlay.style.width = x + 'px';
+        slider.style.left = x + 'px';
+    };
+    
+    // 鼠标事件
+    slider.addEventListener('mousedown', () => {
+        isMoving = true;
+    });
+    
+    document.addEventListener('mouseup', () => {
+        isMoving = false;
+    });
+    
+    document.addEventListener('mousemove', updateSlider);
+    
+    // 触摸事件
+    slider.addEventListener('touchstart', () => {
+        isMoving = true;
+    });
+    
+    document.addEventListener('touchend', () => {
+        isMoving = false;
+    });
+    
+    document.addEventListener('touchmove', updateSlider);
+    
+    // 初始位置：50%
+    const rect = wrapper.getBoundingClientRect();
+    overlay.style.width = (rect.width / 2) + 'px';
+    slider.style.left = (rect.width / 2) + 'px';
+}
 
 // ==================== 全局更新检测 ====================
 
