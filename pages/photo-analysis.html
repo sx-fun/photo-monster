@@ -289,6 +289,7 @@
     <script src="../js/rule-engine.js"></script>
     <script src="../js/photo-analyzer-enhanced.js"></script>
     <script src="../js/photo-analysis-integration.js"></script>
+    <script src="../js/error-monitor.js"></script>
     <script src="../js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -335,19 +336,158 @@
         
         // 显示历史记录详情
         function displayHistoryDetail(item) {
-            // 滚动到分析结果区域
-            const resultsSection = document.getElementById('analysis-results');
-            if (resultsSection) {
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            // 创建或获取详情展示区域
+            let detailContainer = document.getElementById('history-detail-container');
+            if (!detailContainer) {
+                detailContainer = document.createElement('div');
+                detailContainer.id = 'history-detail-container';
+                detailContainer.className = 'history-detail-container';
+                detailContainer.style.cssText = `
+                    background: white;
+                    border-radius: 12px;
+                    padding: 24px;
+                    margin: 20px 0;
+                    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+                `;
+                
+                // 插入到页面合适位置
+                const uploadSection = document.querySelector('.upload-section');
+                if (uploadSection) {
+                    uploadSection.parentNode.insertBefore(detailContainer, uploadSection.nextSibling);
+                }
             }
+            
+            // 构建详情HTML
+            const analysis = item.analysis || {};
+            const exif = item.exif || {};
+            const date = new Date(item.timestamp).toLocaleString('zh-CN');
+            
+            detailContainer.innerHTML = `
+                <div class="detail-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb;">
+                    <div>
+                        <h3 style="margin: 0 0 8px 0; font-size: 1.25rem; color: #111827;">
+                            <i class="fas fa-history" style="color: #3b82f6; margin-right: 8px;"></i>
+                            历史分析详情
+                        </h3>
+                        <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">
+                            ${item.filename} · ${date}
+                        </p>
+                    </div>
+                    <button onclick="closeHistoryDetail()" class="btn btn-outline" style="padding: 8px 16px;">
+                        <i class="fas fa-times"></i> 关闭
+                    </button>
+                </div>
+                
+                <div class="detail-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <!-- 评分卡片 -->
+                    <div class="detail-card" style="background: #f9fafb; border-radius: 8px; padding: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: #374151; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                            <i class="fas fa-star" style="color: #fbbf24; margin-right: 6px;"></i>综合评分
+                        </h4>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #3b82f6; line-height: 1;">
+                            ${analysis.score || '--'}
+                            <span style="font-size: 1rem; color: #9ca3af; font-weight: 400;">/100</span>
+                        </div>
+                        <div style="margin-top: 8px; color: #6b7280; font-size: 0.875rem;">
+                            ${analysis.level || '暂无评级'}
+                        </div>
+                    </div>
+                    
+                    <!-- 构图评分 -->
+                    <div class="detail-card" style="background: #f9fafb; border-radius: 8px; padding: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: #374151; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                            <i class="fas fa-crop-alt" style="color: #10b981; margin-right: 6px;"></i>构图评分
+                        </h4>
+                        <div style="font-size: 2rem; font-weight: 600; color: #10b981;">
+                            ${analysis.composition?.score || '--'}
+                        </div>
+                        <div style="margin-top: 8px; color: #6b7280; font-size: 0.875rem;">
+                            ${analysis.composition?.feedback || '暂无反馈'}
+                        </div>
+                    </div>
+                    
+                    <!-- 曝光评分 -->
+                    <div class="detail-card" style="background: #f9fafb; border-radius: 8px; padding: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: #374151; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                            <i class="fas fa-sun" style="color: #f59e0b; margin-right: 6px;"></i>曝光评分
+                        </h4>
+                        <div style="font-size: 2rem; font-weight: 600; color: #f59e0b;">
+                            ${analysis.exposure?.score || '--'}
+                        </div>
+                        <div style="margin-top: 8px; color: #6b7280; font-size: 0.875rem;">
+                            ${analysis.exposure?.feedback || '暂无反馈'}
+                        </div>
+                    </div>
+                    
+                    <!-- 色彩评分 -->
+                    <div class="detail-card" style="background: #f9fafb; border-radius: 8px; padding: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: #374151; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                            <i class="fas fa-palette" style="color: #8b5cf6; margin-right: 6px;"></i>色彩评分
+                        </h4>
+                        <div style="font-size: 2rem; font-weight: 600; color: #8b5cf6;">
+                            ${analysis.color?.score || '--'}
+                        </div>
+                        <div style="margin-top: 8px; color: #6b7280; font-size: 0.875rem;">
+                            ${analysis.color?.feedback || '暂无反馈'}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- EXIF 信息 -->
+                ${Object.keys(exif).length > 0 ? `
+                <div class="exif-section" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <h4 style="margin: 0 0 16px 0; color: #374151; font-size: 1rem;">
+                        <i class="fas fa-camera" style="color: #6b7280; margin-right: 8px;"></i>EXIF 信息
+                    </h4>
+                    <div class="exif-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 0.875rem;">
+                        ${exif.camera ? `<div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #f3f4f6; border-radius: 6px;"><span style="color: #6b7280;">相机</span><span style="color: #111827; font-weight: 500;">${exif.camera}</span></div>` : ''}
+                        ${exif.lens ? `<div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #f3f4f6; border-radius: 6px;"><span style="color: #6b7280;">镜头</span><span style="color: #111827; font-weight: 500;">${exif.lens}</span></div>` : ''}
+                        ${exif.aperture ? `<div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #f3f4f6; border-radius: 6px;"><span style="color: #6b7280;">光圈</span><span style="color: #111827; font-weight: 500;">${exif.aperture}</span></div>` : ''}
+                        ${exif.shutter ? `<div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #f3f4f6; border-radius: 6px;"><span style="color: #6b7280;">快门</span><span style="color: #111827; font-weight: 500;">${exif.shutter}</span></div>` : ''}
+                        ${exif.iso ? `<div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #f3f4f6; border-radius: 6px;"><span style="color: #6b7280;">ISO</span><span style="color: #111827; font-weight: 500;">${exif.iso}</span></div>` : ''}
+                        ${exif.focalLength ? `<div style="display: flex; justify-content: space-between; padding: 8px 12px; background: #f3f4f6; border-radius: 6px;"><span style="color: #6b7280;">焦距</span><span style="color: #111827; font-weight: 500;">${exif.focalLength}</span></div>` : ''}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <!-- 分析建议 -->
+                ${analysis.suggestions?.length ? `
+                <div class="suggestions-section" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <h4 style="margin: 0 0 16px 0; color: #374151; font-size: 1rem;">
+                        <i class="fas fa-lightbulb" style="color: #f59e0b; margin-right: 8px;"></i>改进建议
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
+                        ${analysis.suggestions.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+                
+                <!-- 分析总结 -->
+                ${analysis.summary ? `
+                <div class="summary-section" style="margin-top: 24px; padding: 16px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <h4 style="margin: 0 0 8px 0; color: #1e40af; font-size: 1rem;">
+                        <i class="fas fa-clipboard-check" style="margin-right: 8px;"></i>分析总结
+                    </h4>
+                    <p style="margin: 0; color: #1e3a8a; line-height: 1.6;">${analysis.summary}</p>
+                </div>
+                ` : ''}
+            `;
+            
+            // 滚动到详情区域
+            detailContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             
             // 显示提示
             if (typeof showNotification === 'function') {
-                showNotification(`正在查看: ${item.filename}`, 'info');
+                showNotification(`已加载: ${item.filename}`, 'success');
             }
-            
-            // TODO: 在这里添加更多详情展示逻辑
-            // 例如：显示评分、EXIF信息、分析建议等
+        }
+        
+        // 关闭历史详情
+        function closeHistoryDetail() {
+            const detailContainer = document.getElementById('history-detail-container');
+            if (detailContainer) {
+                detailContainer.remove();
+            }
         }
     </script>
 </body>
