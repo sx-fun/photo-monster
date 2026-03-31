@@ -1667,8 +1667,9 @@
             });
             
             if (currentVersionEl) {
-                currentVersionEl.textContent = 'v45';
-                console.log('[Admin] 设置版本: v45');
+                currentVersionEl.textContent = '加载中...';
+                currentVersionEl.style.color = '#6b7280';
+                console.log('[Admin] 设置版本: 加载中');
             }
             if (lastUpdatedEl) {
                 lastUpdatedEl.textContent = new Date().toLocaleString('zh-CN');
@@ -1679,13 +1680,13 @@
                 console.log('[Admin] 设置状态');
             }
             if (localChangesEl) {
-                localChangesEl.textContent = '无变更';
-                localChangesEl.style.color = '#22c55e';
-                console.log('[Admin] 设置本地变更');
+                localChangesEl.textContent = '检测中...';
+                localChangesEl.style.color = '#6b7280';
+                console.log('[Admin] 设置本地变更: 检测中');
             }
             if (pendingCountEl) {
-                pendingCountEl.textContent = '0';
-                console.log('[Admin] 设置待处理数');
+                pendingCountEl.textContent = '-';
+                console.log('[Admin] 设置待处理数: 检测中');
             }
             
             console.log('[Admin] immediateInit 完成');
