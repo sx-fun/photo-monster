@@ -411,7 +411,7 @@
 }
 
 .progress-step.active i {
-    animation: stepPulse 1s ease-in-out infinite;
+    animation: stepPulse 1.5s ease-in-out infinite;
 }
 
 @keyframes stepPulse {

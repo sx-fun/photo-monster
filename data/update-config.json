@@ -2,8 +2,28 @@
   "_comment": "Photo Monster 统一版本配置文件 - 格式: v{SW版本}.{YYYYMMDD}.{序号}",
   "version": "v49.20260331.001",
   "swVersion": "v49",
-  "lastUpdated": "2026-03-31T11:00:00.000Z",
+  "lastUpdated": "2026-04-01T00:57:43.008Z",
   "swCacheVersion": "v49",
+  "publishStatus": "pending",
+  "pendingRelease": {
+    "version": "v49.20260401.001",
+    "swVersion": "v49",
+    "swCacheVersion": "v49",
+    "createdAt": "2026-04-01T00:57:43.008Z",
+    "changes": [
+      "性能优化(直方图采样/CSS动画/滚动监听)",
+      "发布流程改造(deploy-prep/publish)",
+      "数据更新"
+    ],
+    "releaseNote": {
+      "title": "版本 v49.20260401.001",
+      "changes": [
+        "性能优化(直方图采样/CSS动画/滚动监听)",
+        "发布流程改造(deploy-prep/publish)",
+        "数据更新"
+      ]
+    }
+  },
   "updateSources": [
     {
       "id": "camera-database",
@@ -54,8 +74,20 @@
       "description": "新增场景拍摄方案"
     }
   ],
-  "pendingChanges": [],
+  "pendingChanges": [
+    "性能优化(直方图采样/CSS动画/滚动监听)",
+    "发布流程改造(deploy-prep/publish)",
+    "数据更新"
+  ],
   "updateHistory": [
+    {
+      "version": "v49.20260331.001",
+      "date": "2026-03-31T11:00:00.000Z",
+      "changes": [
+        "统一版本管理系统"
+      ],
+      "status": "published"
+    },
     {
       "version": "v48.20260330.001",
       "date": "2026-03-30T09:30:00.000Z",

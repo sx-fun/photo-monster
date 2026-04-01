@@ -1,20 +1,20 @@
 {
-  "lastCheck": "2026-03-31T02:58:00Z",
+  "lastCheck": "2026-04-01T08:01:00Z",
   "files": {
     "js/knowledge-base.js": {
       "hash": "C0F17B93B2C69C74C914A78478F086C3",
-      "checkedAt": "2026-03-31T02:58:00Z",
+      "checkedAt": "2026-04-01T08:01:00Z",
       "previousHash": "C0F17B93B2C69C74C914A78478F086C3",
       "changed": false
     },
     "js/rule-engine.js": {
       "hash": "04F96CC1D27527ED9BC94042FD624BD7",
-      "checkedAt": "2026-03-31T02:58:00Z",
+      "checkedAt": "2026-04-01T08:01:00Z",
       "previousHash": "04F96CC1D27527ED9BC94042FD624BD7",
       "changed": false
     }
   },
-  "executionCount": 20,
-  "lastScrape": null,
-  "nextScrape": "2026-04-01T09:00:00Z"
+  "executionCount": 21,
+  "lastScrape": "2026-04-01T08:01:00Z",
+  "nextScrape": "2026-04-15T09:00:00Z"
 }

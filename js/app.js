@@ -3907,15 +3907,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// 导航栏滚动效果
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    } else {
-        navbar.style.boxShadow = 'none';
-    }
-});
+// 导航栏滚动效果 - 已由 nav-component.js 处理，使用 requestAnimationFrame 优化
+// 如需添加额外的滚动效果，请在 nav-component.js 的 updateNavbar 函数中添加
 
 // ==================== AI 配置管理 ====================
 
@@ -7596,32 +7589,42 @@ function setCurrentAnalysisImage(imgElement) {
 function extractImageData(imgElement) {
     if (!imgElement) return;
     
-    try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // 限制采样大小以提高性能
-        const maxSize = 400;
-        let width = imgElement.naturalWidth || imgElement.width;
-        let height = imgElement.naturalHeight || imgElement.height;
-        
-        if (width > maxSize || height > maxSize) {
-            const ratio = Math.min(maxSize / width, maxSize / height);
-            width = Math.floor(width * ratio);
-            height = Math.floor(height * ratio);
+    // 性能优化：使用 requestIdleCallback 或 setTimeout 延迟执行，避免阻塞主线程
+    const doExtract = () => {
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            
+            // 限制采样大小以提高性能
+            const maxSize = 400;
+            let width = imgElement.naturalWidth || imgElement.width;
+            let height = imgElement.naturalHeight || imgElement.height;
+            
+            if (width > maxSize || height > maxSize) {
+                const ratio = Math.min(maxSize / width, maxSize / height);
+                width = Math.floor(width * ratio);
+                height = Math.floor(height * ratio);
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(imgElement, 0, 0, width, height);
+            
+            window.currentImageData = ctx.getImageData(0, 0, width, height);
+            currentImageData = window.currentImageData; // 同步本地引用
+            console.log('图像数据提取完成:', width, 'x', height);
+        } catch (error) {
+            console.error('提取图像数据失败:', error);
+            window.currentImageData = null;
+            currentImageData = null;
         }
-        
-        canvas.width = width;
-        canvas.height = height;
-        ctx.drawImage(imgElement, 0, 0, width, height);
-        
-        window.currentImageData = ctx.getImageData(0, 0, width, height);
-        currentImageData = window.currentImageData; // 同步本地引用
-        console.log('图像数据提取完成:', width, 'x', height);
-    } catch (error) {
-        console.error('提取图像数据失败:', error);
-        window.currentImageData = null;
-        currentImageData = null;
+    };
+    
+    // 使用 requestIdleCallback 如果可用，否则用 setTimeout 延迟执行
+    if (typeof requestIdleCallback !== 'undefined') {
+        requestIdleCallback(doExtract, { timeout: 100 });
+    } else {
+        setTimeout(doExtract, 0);
     }
 }
 
@@ -7687,8 +7690,23 @@ function drawHistogramSimple(canvas, imageData) {
     const histL = new Array(256).fill(0);
     const data = imageData.data;
     
-    // 计算直方图数据
-    for (let i = 0; i < data.length; i += 4) {
+    // 性能优化：根据数据量动态调整采样步长
+    // 对于大图片，采样计算可以显著减少CPU占用而不影响直方图视觉效果
+    const pixelCount = data.length / 4;
+    let step = 4; // 默认步长：每4个像素取1个
+    
+    if (pixelCount > 10000000) {
+        step = 16; // 1000万像素以上：每16个像素取1个（减少93.75%计算量）
+    } else if (pixelCount > 5000000) {
+        step = 8;  // 500万像素以上：每8个像素取1个（减少87.5%计算量）
+    } else if (pixelCount > 2000000) {
+        step = 4;  // 200万像素以上：每4个像素取1个（减少75%计算量）
+    } else {
+        step = 2;  // 小图片：每2个像素取1个（减少50%计算量）
+    }
+    
+    // 计算直方图数据（使用采样优化）
+    for (let i = 0; i < data.length; i += step) {
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];

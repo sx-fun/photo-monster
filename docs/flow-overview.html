@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Monster - 发布流程 & 性能优化图示</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #0f1117;
+      color: #e0e0e0;
+      padding: 32px 24px;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 40px;
+    }
+    .section {
+      max-width: 900px;
+      margin: 0 auto 56px;
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #7dd3fc;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #1e2d3d;
+    }
+    .section-title .icon {
+      font-size: 1.3rem;
+    }
+    .diagram-card {
+      background: #161b27;
+      border: 1px solid #1e2d3d;
+      border-radius: 14px;
+      padding: 28px 20px;
+      overflow-x: auto;
+    }
+    .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 性能对比表格 */
+    .perf-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .perf-card {
+      background: #161b27;
+      border: 1px solid #1e2d3d;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .perf-card.before { border-left: 4px solid #ef4444; }
+    .perf-card.after  { border-left: 4px solid #22c55e; }
+    .perf-card h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .perf-card.before h3 { color: #ef4444; }
+    .perf-card.after  h3 { color: #22c55e; }
+    .perf-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #1e2d3d;
+      font-size: 0.82rem;
+    }
+    .perf-item:last-child { border-bottom: none; }
+    .perf-item .label { color: #94a3b8; }
+    .perf-item .value { font-weight: 600; }
+    .perf-card.before .value { color: #fca5a5; }
+    .perf-card.after  .value { color: #86efac; }
+
+    /* 优化指标条 */
+    .bar-section {
+      background: #161b27;
+      border: 1px solid #1e2d3d;
+      border-radius: 14px;
+      padding: 24px;
+      margin-top: 16px;
+    }
+    .bar-item {
+      margin-bottom: 18px;
+    }
+    .bar-item:last-child { margin-bottom: 0; }
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.82rem;
+    }
+    .bar-header .name { color: #cbd5e1; }
+    .bar-header .pct  { color: #7dd3fc; font-weight: 700; }
+    .bar-track {
+      height: 10px;
+      background: #1e2d3d;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #3b82f6, #7dd3fc);
+      transition: width 0.6s ease;
+    }
+    .bar-item.high .bar-fill   { background: linear-gradient(90deg, #22c55e, #86efac); }
+    .bar-item.medium .bar-fill { background: linear-gradient(90deg, #f59e0b, #fcd34d); }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    .tag.new    { background: #1d4ed8; color: #bfdbfe; }
+    .tag.change { background: #7c3aed; color: #ddd6fe; }
+    .tag.fix    { background: #166534; color: #bbf7d0; }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 0.75rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; color: #94a3b8; }
+    .legend-dot  { width: 10px; height: 10px; border-radius: 50%; }
+  </style>
+</head>
+<body>
+
+<h1>📷 Photo Monster</h1>
+<p class="subtitle">发布流程 & 性能优化全图示 · April 2026</p>
+
+<!-- ══════════════════════════════════
+     Section 1: 发布流程
+════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon">🚀</span> 发布流程（本地 → 线上）
+  </div>
+  <div class="diagram-card">
+    <div class="mermaid">
+flowchart TD
+    A([👨‍💻 本地修改代码]) --> B["运行 deploy.bat"]
+    B --> C["deploy-prep.js\n自动执行"]
+    C --> D{"检查 Git 状态"}
+    D -->|"有变更"| E["版本号 +1\n例: v48 → v49"]
+    D -->|"无变更"| Z([⚠️ 退出提示])
+    E --> F["创建 pendingRelease\n写入 update-config.json"]
+    F --> G["备份配置\n→ data/backups/"]
+    G --> H["git add && git commit"]
+    H --> I["git push → GitHub"]
+    I --> J[/"🌐 GitHub Pages\n自动部署 (约2分钟)"/]
+    J --> K["打开线上管理页面\nadmin-update.html"]
+    K --> L{"看到待发布卡片?"}
+    L -->|"✅ 是"| M["点击「确认发布」按钮"]
+    L -->|"❌ 否"| N["等待部署完成\n刷新页面"]
+    N --> L
+    M --> O["自动复制终端命令\n到剪贴板"]
+    O --> P["在 WorkBuddy 终端\n粘贴并执行"]
+    P --> Q["deploy-publish.js\n更新发布状态"]
+    Q --> R["git push 最终配置"]
+    R --> S([✅ 发布完成])
+
+    style A fill:#1e3a5f,stroke:#3b82f6,color:#bfdbfe
+    style S fill:#14532d,stroke:#22c55e,color:#bbf7d0
+    style Z fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style J fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    style B fill:#1e293b,stroke:#475569,color:#cbd5e1
+    style C fill:#1e293b,stroke:#475569,color:#cbd5e1
+    style Q fill:#1e293b,stroke:#475569,color:#cbd5e1
+    </div>
+  </div>
+
+  <!-- 文件角色说明 -->
+  <div class="bar-section" style="margin-top:16px;">
+    <div style="font-size:0.85rem;color:#7dd3fc;font-weight:700;margin-bottom:14px;">📁 关键文件职责</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="perf-item" style="flex-direction:column;align-items:flex-start;gap:4px;border:none;">
+        <div style="color:#fff;font-weight:600;font-size:0.83rem;">deploy.bat <span class="tag change">改造</span></div>
+        <div style="color:#94a3b8;font-size:0.78rem;">调用 deploy-prep.js → git push，一键触发整个流程</div>
+      </div>
+      <div class="perf-item" style="flex-direction:column;align-items:flex-start;gap:4px;border:none;">
+        <div style="color:#fff;font-weight:600;font-size:0.83rem;">deploy-prep.js <span class="tag new">新增</span></div>
+        <div style="color:#94a3b8;font-size:0.78rem;">版本递增 + 创建 pendingRelease + 自动备份配置</div>
+      </div>
+      <div class="perf-item" style="flex-direction:column;align-items:flex-start;gap:4px;border:none;">
+        <div style="color:#fff;font-weight:600;font-size:0.83rem;">deploy-publish.js <span class="tag new">新增</span></div>
+        <div style="color:#94a3b8;font-size:0.78rem;">将 pendingRelease 标记为 published，追加历史记录</div>
+      </div>
+      <div class="perf-item" style="flex-direction:column;align-items:flex-start;gap:4px;border:none;">
+        <div style="color:#fff;font-weight:600;font-size:0.83rem;">admin-update.html <span class="tag change">改造</span></div>
+        <div style="color:#94a3b8;font-size:0.78rem;">显示待发布卡片 + 生成可复制的终端命令</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     Section 2: 性能优化
+════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon">⚡</span> 性能优化效果
+  </div>
+
+  <!-- 优化前后对比 -->
+  <div class="perf-grid">
+    <div class="perf-card before">
+      <h3>❌ 优化前（问题点）</h3>
+      <div class="perf-item">
+        <span class="label">1000万像素图直方图</span>
+        <span class="value">遍历全部像素</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">计算耗时（大图）</span>
+        <span class="value">~2–5 秒卡顿</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">CSS 动画周期</span>
+        <span class="value">1s / 2s（偏短）</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">滚动监听</span>
+        <span class="value">app.js 重复注册</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">图片数据提取</span>
+        <span class="value">同步阻塞主线程</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">Canvas 读取</span>
+        <span class="value">未启用优化标志</span>
+      </div>
+    </div>
+    <div class="perf-card after">
+      <h3>✅ 优化后（改进点）</h3>
+      <div class="perf-item">
+        <span class="label">1000万像素图直方图</span>
+        <span class="value">每16px取1个</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">计算量削减</span>
+        <span class="value">减少 93.75%</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">CSS 动画周期</span>
+        <span class="value">1.5s / 3s（流畅）</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">滚动监听</span>
+        <span class="value">rAF 单一版本</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">图片数据提取</span>
+        <span class="value">requestIdleCallback</span>
+      </div>
+      <div class="perf-item">
+        <span class="label">Canvas 读取</span>
+        <span class="value">willReadFrequently: true</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 直方图采样策略 -->
+  <div class="bar-section">
+    <div style="font-size:0.85rem;color:#7dd3fc;font-weight:700;margin-bottom:16px;">📊 直方图动态采样策略（计算量削减比例）</div>
+    <div class="bar-item high">
+      <div class="bar-header">
+        <span class="name">超大图（＞1000万像素，如 A7R V 6100万像素）</span>
+        <span class="pct">削减 93.75%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:93.75%"></div></div>
+    </div>
+    <div class="bar-item high">
+      <div class="bar-header">
+        <span class="name">大图（500–1000万像素）</span>
+        <span class="pct">削减 87.5%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:87.5%"></div></div>
+    </div>
+    <div class="bar-item medium">
+      <div class="bar-header">
+        <span class="name">中图（200–500万像素）</span>
+        <span class="pct">削减 75%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+    </div>
+    <div class="bar-item" style="">
+      <div class="bar-header">
+        <span class="name">小图（＜200万像素）</span>
+        <span class="pct">削减 50%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:50%;background:linear-gradient(90deg,#6366f1,#a5b4fc)"></div></div>
+    </div>
+  </div>
+
+  <!-- 优化技术详解 -->
+  <div class="bar-section" style="margin-top:16px;">
+    <div style="font-size:0.85rem;color:#7dd3fc;font-weight:700;margin-bottom:16px;">🔧 四项核心优化技术</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div>
+        <div style="color:#fff;font-size:0.85rem;font-weight:700;margin-bottom:6px;">① 动态采样</div>
+        <div style="color:#94a3b8;font-size:0.78rem;line-height:1.6;">根据像素总量自动调整 step（2/4/8/16），保证视觉准确性的同时大幅减少计算量</div>
+      </div>
+      <div>
+        <div style="color:#fff;font-size:0.85rem;font-weight:700;margin-bottom:6px;">② CSS will-change</div>
+        <div style="color:#94a3b8;font-size:0.78rem;line-height:1.6;">提前告知浏览器哪些元素会变化，GPU 提前分配图层，避免动画触发重排</div>
+      </div>
+      <div>
+        <div style="color:#fff;font-size:0.85rem;font-weight:700;margin-bottom:6px;">③ requestAnimationFrame</div>
+        <div style="color:#94a3b8;font-size:0.78rem;line-height:1.6;">滚动事件节流，每帧最多执行一次，移除 app.js 重复注册的监听器</div>
+      </div>
+      <div>
+        <div style="color:#fff;font-size:0.85rem;font-weight:700;margin-bottom:6px;">④ requestIdleCallback</div>
+        <div style="color:#94a3b8;font-size:0.78rem;line-height:1.6;">图片 EXIF 提取推迟到浏览器空闲期，不阻塞渲染和用户交互</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     Section 3: 版本管理体系
+════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon">🏷️</span> 统一版本管理体系
+  </div>
+  <div class="diagram-card">
+    <div class="mermaid">
+flowchart LR
+    A["版本格式\nv{SW版本}.{YYYYMMDD}.{序号}"] --> B["示例: v48.20260330.001"]
+    
+    subgraph 组成部分
+        C["v48\nSW缓存大版本\n架构变更时递增"]
+        D["20260330\n日期标识\n每天重置序号"]
+        E["001\n当日第几次更新\n自动递增"]
+    end
+    
+    B --> C
+    B --> D
+    B --> E
+    
+    subgraph 版本一致性检查
+        F["页面加载时\n自动检测 SW 版本"]
+        G{"配置版本\n== SW版本?"}
+        H["✅ 正常运行"]
+        I["⚠️ 显示同步任务"]
+    end
+    
+    C --> F
+    F --> G
+    G -->|"一致"| H
+    G -->|"不一致"| I
+
+    style A fill:#1e3a5f,stroke:#3b82f6,color:#bfdbfe
+    style B fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    style H fill:#14532d,stroke:#22c55e,color:#bbf7d0
+    style I fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    </div>
+  </div>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#1e3a5f',
+      primaryTextColor: '#bfdbfe',
+      primaryBorderColor: '#3b82f6',
+      lineColor: '#475569',
+      secondaryColor: '#1e293b',
+      tertiaryColor: '#0f172a',
+      background: '#161b27',
+      mainBkg: '#161b27',
+      nodeBorder: '#475569',
+      clusterBkg: '#1e293b',
+      titleColor: '#e2e8f0',
+      edgeLabelBackground: '#1e293b',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif',
+      fontSize: '13px'
+    },
+    flowchart: {
+      htmlLabels: true,
+      curve: 'basis',
+      rankSpacing: 60,
+      nodeSpacing: 40
+    }
+  });
+</script>
+</body>
+</html>

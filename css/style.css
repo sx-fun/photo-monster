@@ -475,7 +475,8 @@ body {
 
 .drag-overlay-content i {
     font-size: 3rem;
-    animation: bounce 1s ease infinite;
+    animation: bounce 1.5s ease infinite;
+    will-change: transform;
 }
 
 .drag-overlay-content span {
@@ -3407,7 +3408,8 @@ img.lazy-loading {
     transition: opacity 0.3s ease;
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
-    animation: lazy-shimmer 1.5s infinite;
+    animation: lazy-shimmer 2.5s infinite;
+    will-change: background-position;
 }
 
 /* 懒加载图片 - 已加载 */

@@ -1,11 +1,11 @@
 /**
  * 自动生成的器材数据
- * 生成时间: 2026/3/28 15:42:45
+ * 生成时间: 2026/4/1 08:03:01
  * 来源: 抓取系统
  */
 
 const NewGearData = {
-  "generatedAt": "2026-03-28T07:42:45.046Z",
+  "generatedAt": "2026-04-01T00:03:01.608Z",
   "sourceFile": "unknown",
   "cameras": [
     {
@@ -312,17 +312,6 @@ const NewGearData = {
       ],
       "dataSource": "local",
       "reliability": 3
-    },
-    {
-      "title": "Mint&#8217;s Sharpa Lens Promises to Dramatically Improve Polaroid SX-70 Photos",
-      "summary": "Mint Camera has announced the Sharpa Lens, a newly-designed replacement optic for the Polaroid SX-70 that it says is \"the sharpest lens ever made\" for the instant camera. [ Read More ]...",
-      "url": "https://petapixel.com/2026/03/27/mints-sharpa-lens-promises-to-dramatically-improve-polaroid-sx-70-photos/",
-      "date": "Fri, 27 Mar 2026 19:54:49 +0000",
-      "source": "PetaPixel",
-      "type": "news",
-      "credibility": "medium",
-      "dataSource": "rss",
-      "reliability": 2
     }
   ]
 };

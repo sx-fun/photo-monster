@@ -1,20 +1,26 @@
 {
   "isGitRepo": true,
-  "changes": 3,
+  "changes": 9,
   "files": [
-    "[修改] .workbuddy/photomonster/state.json",
+    "[修改] css/photo-analysis-enhanced.css",
+    "[修改] css/style.css",
     "[修改] data/local-git-status.json",
-    "[新增] photo-monster-deploy.bundle"
+    "[修改] data/update-config.json",
+    "[修改] deploy.bat",
+    "[修改] js/app.js",
+    "[修改] pages/admin-update.html",
+    "[新增] deploy-prep.js",
+    "[新增] deploy-publish.js"
   ],
   "fileCount": {
-    "modified": 2,
+    "modified": 7,
     "staged": 0,
-    "untracked": 1,
-    "total": 3
+    "untracked": 2,
+    "total": 9
   },
   "branch": "main",
-  "lastCommit": "8e6c078 - fix: 升级SW缓存版本到v49，强制清除浏览器旧缓存",
+  "lastCommit": "6f68dcd - feat: 第二阶段优化完成 - 拖拽上传、直方图、对比视图、进度条 (17 hours ago)",
   "hasUncommittedChanges": true,
-  "lastCheck": "2026-03-31T12:47:00.000Z",
-  "checkTimeFormatted": "2026/3/31 12:47:00"
+  "lastCheck": "2026-04-01T00:01:44.647Z",
+  "checkTimeFormatted": "2026/4/1 08:01:44"
 }
