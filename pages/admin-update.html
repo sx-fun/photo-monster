@@ -1439,6 +1439,31 @@
         function showErrorToast(message) { showToast('error', '错误', message); }
         function showInfoToast(message) { showToast('info', '提示', message); }
 
+        // ESC 键关闭所有弹窗，背景点击关闭预览模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePreview();
+                closeHistoryDetail();
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) loginModal.remove();
+            }
+        });
+        // 点击背景遮罩关闭预览模态框
+        document.addEventListener('click', function(e) {
+            const previewModal = document.getElementById('previewModal');
+            if (previewModal && e.target === previewModal) {
+                closePreview();
+            }
+        });
+        // 关闭预览模态框
+        function closePreview() {
+            const previewModal = document.getElementById('previewModal');
+            if (previewModal) {
+                previewModal.classList.remove('active');
+                previewModal.style.display = 'none';
+            }
+        }
+
         // 打开项目文件夹
         function openDeployFolder() {
             window.open('file:///D:/PhotoMonster', '_blank');
