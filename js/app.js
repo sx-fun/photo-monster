@@ -2483,22 +2483,31 @@ async function handleFiles(files) {
                 continue;
             }
 
-            // 并行执行：压缩预览图 + 生成AI视觉base64（一次读取，两路并行）
+            // 统一读取文件一次，共用 Image 对象（关键优化：避免重复 readAsDataURL）
+            let loadedImg;
+            try {
+                loadedImg = await withTimeout(loadImageElement(processedFile), 10000, `读取 ${file.name} 超时`);
+            } catch (loadErr) {
+                console.error('图片加载失败:', loadErr);
+                showErrorToast(`无法加载 ${file.name}，跳过此文件`, '加载失败');
+                continue;
+            }
+
+            // 并行执行：压缩预览图 + 生成AI视觉base64（共用同一个 loadedImg，不再重复读文件）
             let compressedFile, visionBase64;
             try {
                 [compressedFile, visionBase64] = await Promise.all([
-                    withTimeout(compressImage(processedFile, {
+                    withTimeout(compressImage(loadedImg, {
                         maxWidth: maxDimension === 'original' ? undefined : parseInt(maxDimension),
                         maxHeight: maxDimension === 'original' ? undefined : parseInt(maxDimension),
                         quality: quality,
                         convertSize: maxSize * 1024 * 1024
                     }), 15000, `压缩 ${file.name} 超时，跳过压缩`),
-                    withTimeout(generateVisionBase64(processedFile), 15000, null)
+                    withTimeout(generateVisionBase64(loadedImg), 15000, null)
                 ]);
             } catch (compressError) {
-                // 压缩超时：使用原始文件降级处理
-                console.warn('图片压缩失败，降级使用原始文件:', compressError.message);
-                showWarningToast(`${file.name} 压缩超时，使用原文件继续处理`, '处理降级');
+                console.warn('图片处理失败，降级使用原文件:', compressError.message);
+                showWarningToast(`${file.name} 处理超时，使用原文件继续`, '处理降级');
                 compressedFile = processedFile;
                 try { visionBase64 = await withTimeout(generateVisionBase64(processedFile), 10000, null); } catch { visionBase64 = null; }
             }
@@ -2559,6 +2568,21 @@ async function handleFiles(files) {
     }
 }
 
+// 统一文件读取函数：File → Image（只读一次，所有操作共用）
+function loadImageElement(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() { resolve(img); };
+            img.onerror = () => reject(new Error('图片解码失败'));
+            img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('文件读取失败'));
+        reader.readAsDataURL(file);
+    });
+}
+
 // 超时包装器：防止图片处理卡死
 function withTimeout(promise, ms, errMsg) {
     return Promise.race([
@@ -2570,42 +2594,49 @@ function withTimeout(promise, ms, errMsg) {
 }
 
 // 压缩图片
-function compressImage(file, options) {
+// 压缩图片（支持File或已加载的Image元素，避免重复读取）
+function compressImage(source, options) {
     return new Promise((resolve, reject) => {
-        // 检查 Compressor 是否可用
+        // 模式A：直接传入已加载的Image元素（原生路径复用，避免重复读文件）
+        if (source instanceof HTMLImageElement) {
+            const img = source;
+            const maxWidth = options.maxWidth || 1920;
+            const maxHeight = options.maxHeight || 1920;
+            const quality = options.quality || 0.8;
+
+            let width = img.naturalWidth || img.width;
+            let height = img.naturalHeight || img.height;
+
+            if (width > maxWidth || height > maxHeight) {
+                if (width / height > maxWidth / maxHeight) {
+                    height = Math.round(height * (maxWidth / width));
+                    width = maxWidth;
+                } else {
+                    width = Math.round(width * (maxHeight / height));
+                    height = maxHeight;
+                }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob(resolve, 'image/jpeg', quality);
+            return;
+        }
+
+        const file = source;
+        // 模式B：传入File对象，检查 Compressor 是否可用
         if (typeof Compressor === 'undefined' || Compressor === null) {
             console.warn('Compressor 未加载，使用原生图片压缩');
-            // 使用原生 Canvas 压缩作为备用
+            // 原生路径：读文件 → 加载Image → 画Canvas → 输出Blob
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    const maxWidth = options.maxWidth || 1920;
-                    const maxHeight = options.maxHeight || 1920;
-                    const quality = options.quality || 0.8;
-                    
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    if (width > maxWidth || height > maxHeight) {
-                        if (width / height > maxWidth / maxHeight) {
-                            height = Math.round(height * (maxWidth / width));
-                            width = maxWidth;
-                        } else {
-                            width = Math.round(width * (maxHeight / height));
-                            height = maxHeight;
-                        }
-                    }
-                    
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    canvas.toBlob(function(blob) {
-                        resolve(blob);
-                    }, 'image/jpeg', quality);
+                    // 复用模式A逻辑，传入已加载的Image
+                    compressImage(img, options).then(resolve).catch(reject);
                 };
                 img.onerror = reject;
                 img.src = e.target.result;
@@ -2627,18 +2658,16 @@ function compressImage(file, options) {
     });
 }
 
-// 生成用于AI视觉分析的base64（尺寸适中，平衡质量和API传输）
-function generateVisionBase64(file) {
+// 生成用于AI视觉分析的base64（支持从Image对象复用，或直接读文件）
+function generateVisionBase64(source, quality = 0.85, maxSize = 1024) {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.onload = function() {
-                // 计算目标尺寸（最大1024px，保持比例）
-                const maxSize = 1024;
+        // 模式A：直接传入已加载的Image元素（推荐，避免重复读取）
+        if (source instanceof HTMLImageElement) {
+            try {
+                const img = source;
                 let width = img.width;
                 let height = img.height;
-                
+
                 if (width > maxSize || height > maxSize) {
                     if (width > height) {
                         height = Math.round(height * (maxSize / width));
@@ -2648,17 +2677,28 @@ function generateVisionBase64(file) {
                         height = maxSize;
                     }
                 }
-                
-                // 绘制到canvas
+
                 const canvas = document.createElement('canvas');
                 canvas.width = width;
                 canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                
-                // 转换为base64（JPEG，质量0.85）
-                const base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+                const base64 = canvas.toDataURL('image/jpeg', quality).split(',')[1];
                 resolve(base64);
+            } catch (e) {
+                reject(new Error('从Image生成base64失败: ' + e.message));
+            }
+            return;
+        }
+
+        // 模式B：传入File对象（首次读取）
+        const file = source;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                // 复用模式A的逻辑，传入已加载的Image
+                generateVisionBase64(img, quality, maxSize).then(resolve).catch(reject);
             };
             img.onerror = () => reject(new Error('图片加载失败'));
             img.src = e.target.result;
