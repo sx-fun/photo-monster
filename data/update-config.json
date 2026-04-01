@@ -1,29 +1,11 @@
 {
   "_comment": "Photo Monster 统一版本配置文件 - 格式: v{SW版本}.{YYYYMMDD}.{序号}",
-  "version": "v49.20260331.001",
+  "version": "v49.20260401.001",
   "swVersion": "v49",
-  "lastUpdated": "2026-04-01T00:57:43.008Z",
+  "lastUpdated": "2026-04-01T07:24:57.004Z",
   "swCacheVersion": "v49",
-  "publishStatus": "pending",
-  "pendingRelease": {
-    "version": "v49.20260401.001",
-    "swVersion": "v49",
-    "swCacheVersion": "v49",
-    "createdAt": "2026-04-01T00:57:43.008Z",
-    "changes": [
-      "性能优化(直方图采样/CSS动画/滚动监听)",
-      "发布流程改造(deploy-prep/publish)",
-      "数据更新"
-    ],
-    "releaseNote": {
-      "title": "版本 v49.20260401.001",
-      "changes": [
-        "性能优化(直方图采样/CSS动画/滚动监听)",
-        "发布流程改造(deploy-prep/publish)",
-        "数据更新"
-      ]
-    }
-  },
+  "publishStatus": "published",
+  "pendingRelease": null,
   "updateSources": [
     {
       "id": "camera-database",
@@ -74,12 +56,16 @@
       "description": "新增场景拍摄方案"
     }
   ],
-  "pendingChanges": [
-    "性能优化(直方图采样/CSS动画/滚动监听)",
-    "发布流程改造(deploy-prep/publish)",
-    "数据更新"
-  ],
+  "pendingChanges": [],
   "updateHistory": [
+    {
+      "version": "v49.20260401.001",
+      "date": "2026-04-01T07:24:57.004Z",
+      "changes": [
+        "'[性能优化(直方图采样/CSS动画/滚动监听),发布流程改造(deploy-prep/publish),数据更新]'"
+      ],
+      "status": "published"
+    },
     {
       "version": "v49.20260331.001",
       "date": "2026-03-31T11:00:00.000Z",
