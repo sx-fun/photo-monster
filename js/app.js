@@ -2440,11 +2440,11 @@ async function handleFiles(files) {
             if (fileName.endsWith('.heic') || fileName.endsWith('.heif')) {
                 console.log('检测到 HEIC/HEIF 格式，开始转换...');
                 try {
-                    const blob = await heic2any({
+                    const blob = await withTimeout(heic2any({
                         blob: file,
                         toType: 'image/jpeg',
                         quality: quality
-                    });
+                    }), 20000, `HEIC转换 ${file.name} 超时，跳过`);
                     // 创建新的 File 对象
                     processedFile = new File([blob], file.name.replace(/\.heic|\.heif/i, '.jpg'), {
                         type: 'image/jpeg',
@@ -2483,16 +2483,25 @@ async function handleFiles(files) {
                 continue;
             }
 
-            // 压缩图片（用于预览和EXIF读取）
-            const compressedFile = await compressImage(processedFile, {
-                maxWidth: maxDimension === 'original' ? undefined : parseInt(maxDimension),
-                maxHeight: maxDimension === 'original' ? undefined : parseInt(maxDimension),
-                quality: quality,
-                convertSize: maxSize * 1024 * 1024
-            });
-
-            // 同时生成用于AI视觉分析的base64（尺寸适中，平衡质量和传输）
-            const visionBase64 = await generateVisionBase64(processedFile);
+            // 并行执行：压缩预览图 + 生成AI视觉base64（一次读取，两路并行）
+            let compressedFile, visionBase64;
+            try {
+                [compressedFile, visionBase64] = await Promise.all([
+                    withTimeout(compressImage(processedFile, {
+                        maxWidth: maxDimension === 'original' ? undefined : parseInt(maxDimension),
+                        maxHeight: maxDimension === 'original' ? undefined : parseInt(maxDimension),
+                        quality: quality,
+                        convertSize: maxSize * 1024 * 1024
+                    }), 15000, `压缩 ${file.name} 超时，跳过压缩`),
+                    withTimeout(generateVisionBase64(processedFile), 15000, null)
+                ]);
+            } catch (compressError) {
+                // 压缩超时：使用原始文件降级处理
+                console.warn('图片压缩失败，降级使用原始文件:', compressError.message);
+                showWarningToast(`${file.name} 压缩超时，使用原文件继续处理`, '处理降级');
+                compressedFile = processedFile;
+                try { visionBase64 = await withTimeout(generateVisionBase64(processedFile), 10000, null); } catch { visionBase64 = null; }
+            }
 
             // 存储图片对象，包含文件和base64
             compressedImages.push({
@@ -2548,6 +2557,16 @@ async function handleFiles(files) {
             showSuccessToast(`成功处理 ${processedCount} 张图片`, '处理完成');
         }
     }
+}
+
+// 超时包装器：防止图片处理卡死
+function withTimeout(promise, ms, errMsg) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) =>
+            setTimeout(() => reject(new Error(errMsg)), ms)
+        )
+    ]);
 }
 
 // 压缩图片
