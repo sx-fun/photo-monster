@@ -2,7 +2,7 @@
 // 实现离线缓存功能 - Network First 策略
 // 版本从 update-config.json 读取，确保与内容版本同步
 
-const CACHE_VERSION = 'v49';
+const CACHE_VERSION = 'v50';
 const CACHE_NAME = `photo-monster-${CACHE_VERSION}`;
 
 // 静态资源列表
