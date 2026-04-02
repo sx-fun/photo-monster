@@ -1,9 +1,9 @@
 {
   "_comment": "Photo Monster 统一版本配置文件 - 格式: v{SW版本}.{YYYYMMDD}.{序号}",
-  "version": "v49.20260401.001",
-  "swVersion": "v49",
+  "version": "v50.20260402.001",
+  "swVersion": "v50",
   "lastUpdated": "2026-04-01T07:24:57.004Z",
-  "swCacheVersion": "v49",
+  "swCacheVersion": "v50",
   "publishStatus": "published",
   "pendingRelease": null,
   "updateSources": [
