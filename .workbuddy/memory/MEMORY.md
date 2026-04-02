@@ -20,6 +20,17 @@
 - 2026-03-26: 完成套装推荐功能改进（镜头筛选/兼容性标签/详细报告）
 - 2026-03-26: 完成 about.html 商标免责声明添加
 
+## 月度更新执行
+- **ID**: photo-monster-1
+- **名称**: Photo Monster 月度深度更新
+- **时间**: 每月1日 09:00
+- **执行内容**: 深度抓取新器材、数据验证、同步到网站
+- **数据源**: tools/sources/local-data.js (本地结构化数据)
+- **价格库**: 51款相机 + 24款镜头 (tools/sources/price-reference.js)
+- **最新执行**: 2026-04-01 (成功)
+  - 5款相机/4款镜头/6条新闻已同步
+  - 下月关注: Fujifilm X-T50发布、Nikon Z 28-400mm上市
+
 ## 偏好设置
 - 浏览器本地预览：使用 python -m http.server + Start-Process，不使用 preview_url
 - 桌面路径：D:\HuaweiMoveData\Users\HUAWEI\Desktop

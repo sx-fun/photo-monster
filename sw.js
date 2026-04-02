@@ -38,6 +38,7 @@ const STATIC_ASSETS = [
     '/js/ai-helper.js',
     '/js/mcp-client.js',
     // JS - 工具
+    '/js/error-monitor.js',
     '/js/lazy-load.js',
     '/js/robust.js',
     '/js/progress-tracker.js',

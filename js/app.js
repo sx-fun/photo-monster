@@ -7495,49 +7495,7 @@ function hideDragOverlay(dropZone) {
     }
 }
 
-// 处理多个文件
-function handleFiles(files) {
-    if (!files || files.length === 0) return;
-    
-    // 限制最多10个文件
-    const maxFiles = 10;
-    const filesToProcess = files.slice(0, maxFiles);
-    
-    if (files.length > maxFiles) {
-        showWarningToast(`一次最多处理 ${maxFiles} 个文件，已自动选择前 ${maxFiles} 个`);
-    }
 
-    // 显示加载状态
-    showLoading(`正在处理 ${filesToProcess.length} 个文件...`);
-    
-    // 逐个处理文件
-    let processedCount = 0;
-    const processNext = () => {
-        if (processedCount >= filesToProcess.length) {
-            hideLoading();
-            if (filesToProcess.length > 1) {
-                showBatchAnalysisButton();
-            }
-            return;
-        }
-        
-        const file = filesToProcess[processedCount];
-        processedCount++;
-        
-        updateLoadingText(`正在处理 ${processedCount}/${filesToProcess.length}: ${file.name}`);
-        
-        processFile(file).then(() => {
-            processNext();
-        }).catch(err => {
-            console.error('处理文件失败:', file.name, err);
-            processNext();
-        });
-    };
-    
-    processNext();
-}
-
-// 显示批量分析按钮
 function showBatchAnalysisButton() {
     const batchBtn = document.getElementById('batchAnalyzeBtn');
     const singleBtn = document.getElementById('analyzeBtn');
@@ -7553,11 +7511,6 @@ function updateLoadingText(text) {
     if (loadingText) {
         loadingText.textContent = text;
     }
-}
-
-// 显示警告Toast
-function showWarningToast(message) {
-    showToast(message, 'warning');
 }
 
 // 添加骨架屏

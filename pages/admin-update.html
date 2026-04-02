@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>内容更新管理 - Photo Monster</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/nav-component.css">
     <link rel="stylesheet" href="../css/pages.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* 更新管理页面专用样式 */
         .admin-container {
@@ -1088,7 +1089,7 @@
             `;
         }
 
-        // 确认发布（将待发布版本设为当前版本）
+        // 确认发布（将待发布版本设为当前版本）- 一键发布
         async function publishVersion() {
             if (!unifiedVersionInfo || !unifiedVersionInfo.pendingRelease) {
                 showErrorToast('没有待发布的版本');
@@ -1098,31 +1099,60 @@
             if (!confirm('确定要发布此版本吗？发布后线上网站将更新为新版本。')) return;
             
             const pending = unifiedVersionInfo.pendingRelease;
-            const now = new Date().toISOString();
+            const changesStr = pending.releaseNote?.changes || pending.changes || ['代码更新'];
             
-            // 生成发布命令（用户在本地 WorkBuddy 终端执行）
-            const changesStr = JSON.stringify(pending.releaseNote?.changes || pending.changes || ['代码更新'])
-                .replace(/"/g, '\\"');
-            
-            const cmd = `node deploy-publish.js "${pending.version}" "${pending.swVersion}" "${changesStr}"`;
-            
-            // 显示命令弹窗，方便复制
+            // 显示加载状态
             const publishCmd = document.getElementById('publishCmdDisplay');
             if (publishCmd) {
                 publishCmd.style.display = 'block';
-                publishCmd.querySelector('code').textContent = cmd;
+                publishCmd.querySelector('code').textContent = '正在连接发布服务器...';
+                publishCmd.querySelector('p').textContent = '正在执行发布，请稍候...';
             }
+            showLoading('正在发布...', 50);
             
-            // 复制到剪贴板
             try {
-                await navigator.clipboard.writeText(cmd);
-                showSuccessToast('发布命令已复制到剪贴板！请在本地终端粘贴执行');
-            } catch (e) {
-                showWarningToast('请手动复制以下命令并在本地终端执行：' + cmd);
+                const response = await fetch('http://localhost:8891/publish', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        key: 'photo-monster-publish-2026',
+                        version: pending.version,
+                        swVersion: pending.swVersion,
+                        changes: JSON.stringify(changesStr)
+                    })
+                });
+                
+                const result = await response.json();
+                hideLoading();
+                
+                if (result.success) {
+                    showSuccessToast('发布成功！版本已更新');
+                    if (publishCmd) {
+                        publishCmd.querySelector('code').textContent = result.output;
+                        publishCmd.querySelector('p').textContent = '发布完成！';
+                    }
+                    // 刷新页面显示最新状态
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showErrorToast('发布失败: ' + (result.error || '未知错误'));
+                    if (publishCmd) {
+                        publishCmd.querySelector('code').textContent = '发布失败: ' + (result.error || '未知错误');
+                    }
+                }
+            } catch (err) {
+                hideLoading();
+                console.error('发布请求失败:', err);
+                
+                // 如果服务器未运行，提示用户启动
+                if (err.message.includes('fetch') || err.message.includes('network')) {
+                    showErrorToast('无法连接发布服务器！请在本地终端运行: node publish-server.js');
+                } else {
+                    showErrorToast('发布失败: ' + err.message);
+                }
             }
         }
 
-        // 取消发布（清除待发布版本）
+        // 取消发布（清除待发布版本）- 一键取消
         async function cancelRelease() {
             if (!unifiedVersionInfo || !unifiedVersionInfo.pendingRelease) {
                 showErrorToast('没有待发布的版本');
@@ -1131,13 +1161,33 @@
             
             if (!confirm('确定要取消发布吗？待发布版本将被清除，线上网站保持当前版本。')) return;
             
-            const cmd = 'node deploy-publish.js --cancel';
+            showLoading('正在取消发布...', 50);
             
             try {
-                await navigator.clipboard.writeText(cmd);
-                showSuccessToast('取消命令已复制到剪贴板！请在本地终端粘贴执行');
-            } catch (e) {
-                showWarningToast('请手动复制以下命令并在本地终端执行：' + cmd);
+                const response = await fetch('http://localhost:8891/cancel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        key: 'photo-monster-publish-2026'
+                    })
+                });
+                
+                const result = await response.json();
+                hideLoading();
+                
+                if (result.success) {
+                    showSuccessToast('已取消发布');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showErrorToast('取消失败: ' + (result.error || '未知错误'));
+                }
+            } catch (err) {
+                hideLoading();
+                if (err.message.includes('fetch') || err.message.includes('network')) {
+                    showErrorToast('无法连接发布服务器！请在本地终端运行: node publish-server.js');
+                } else {
+                    showErrorToast('取消失败: ' + err.message);
+                }
             }
         }
 
