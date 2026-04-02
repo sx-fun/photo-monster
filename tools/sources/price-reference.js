@@ -6,8 +6,8 @@
 
 const PRICE_REFERENCE = {
     // 数据版本
-    version: '2026.03.28',
-    lastUpdated: '2026-03-28',
+    version: '2026.04.02',
+    lastUpdated: '2026-04-02',
     
     // 价格区间定义（用于分级显示）
     priceTiers: {
@@ -41,6 +41,7 @@ const PRICE_REFERENCE = {
             'A1': { price: 47999, tier: 'luxury', date: '2026-03', source: '京东自营' },
             'A9 III': { price: 44999, tier: 'luxury', date: '2026-03', source: '京东自营' },
             'A7R V': { price: 23999, tier: 'flagship', date: '2026-03', source: '京东自营' },
+            'Alpha 7 V': { price: 17999, tier: 'pro', date: '2026-04', source: '索尼中国官方建议零售价' },
             'A7 IV': { price: 14999, tier: 'pro', date: '2026-03', source: '京东自营' },
             'A7C II': { price: 12999, tier: 'pro', date: '2026-03', source: '京东自营' },
             'A7C': { price: 9999, tier: 'mid', date: '2026-03', source: '京东自营' },
@@ -71,6 +72,7 @@ const PRICE_REFERENCE = {
             'GFX 100 II': { price: 53999, tier: 'luxury', date: '2026-03', source: '京东自营', note: '中画幅' },
             'GFX 100S II': { price: 36500, tier: 'luxury', date: '2026-03', source: '京东自营', note: '中画幅' },
             'GFX 50S II': { price: 22900, tier: 'flagship', date: '2026-03', source: '京东自营', note: '中画幅' },
+            'X-T50': { price: 9999, tier: 'mid', date: '2026-04', source: '公开市场价', note: 'APS-C 轻量机身' },
             'X-H2S': { price: 14999, tier: 'pro', date: '2026-03', source: '京东自营' },
             'X-H2': { price: 12999, tier: 'pro', date: '2026-03', source: '京东自营' },
             'X-T5': { price: 11999, tier: 'pro', date: '2026-03', source: '京东自营' },
@@ -129,8 +131,10 @@ const PRICE_REFERENCE = {
             'Z 85mm f/1.2 S': { price: 16999, tier: 'pro', date: '2026-03' },
             'Z 24-70mm f/2.8 S': { price: 13999, tier: 'pro', date: '2026-03' },
             'Z 70-200mm f/2.8 VR S': { price: 15999, tier: 'pro', date: '2026-03' },
+            'Z 70-200mm f/2.8 VR S II': { price: 19999, tier: 'pro', date: '2026-04', source: '尼康中国官方 / 市场公开价' },
             'Z 14-24mm f/2.8 S': { price: 13999, tier: 'pro', date: '2026-03' },
             'Z 24-120mm f/4 S': { price: 7999, tier: 'mid', date: '2026-03' },
+            'Z 24-105mm f/4-7.1': { price: 3980, tier: 'entry', date: '2026-04', source: '尼康中国官方 / 市场公开价' },
             'Z 40mm f/2': { price: 1799, tier: 'entry', date: '2026-03' },
             'Z 28mm f/2.8': { price: 1999, tier: 'entry', date: '2026-03' }
         }

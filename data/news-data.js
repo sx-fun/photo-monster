@@ -1,89 +1,89 @@
 /**
  * 新闻数据
- * 生成时间: 2026/4/1 14:11:33
+ * 生成时间: 2026/4/2 16:01:23
  */
 
 const NewsData = {
-  "generatedAt": "2026-04-01T06:11:33.448Z",
+  "generatedAt": "2026-04-02T08:01:23.751Z",
   "items": [
     {
       "id": "news-001",
-      "title": "【传闻】Sony A7V 详细规格曝光：44MP + AI对焦",
-      "summary": "据 SonyAlphaRumors 消息，A7V 将搭载4400万像素BSI传感器，配备全新AI主体识别对焦系统，支持8K30p视频录制，预计2026年Q2发布，售价约$2499。",
-      "url": "https://www.sonyalpharumors.com",
-      "date": "2026-03-26",
-      "source": "SonyAlphaRumors",
-      "type": "rumor",
-      "credibility": 3,
+      "title": "【官方】索尼 Alpha 7 V 已正式发布并上市",
+      "summary": "索尼中国官方已发布 Alpha 7 V，确认约3300万有效像素、AI实时识别对焦，以及全画幅7K超采样4K60p视频规格，中国区建议零售价为17999元。",
+      "url": "https://www.sony.com.cn/content/sonyportal/zh-cn/cms/newscenter/product/2025/20251202.html.html",
+      "date": "2025-12-02",
+      "source": "Sony China Official",
+      "type": "official",
+      "credibility": 5,
       "tags": [
         "sony",
         "a7v",
         "fullframe",
-        "rumor"
+        "official"
       ]
     },
     {
       "id": "news-002",
-      "title": "【传闻】Canon EOS R6 Mark III 规格泄露",
-      "summary": "CanonRumors 泄露了 R6 III 的详细规格：2400万像素堆栈式传感器，40fps连拍，支持8K60p视频录制，预计售价$2299。",
-      "url": "https://www.canonrumors.com",
-      "date": "2026-03-24",
-      "source": "CanonRumors",
-      "type": "rumor",
-      "credibility": 3,
+      "title": "【官方】佳能 EOS R6 Mark III 产品页确认核心规格",
+      "summary": "佳能中国官网已上线 EOS R6 Mark III 产品页，可确认其采用约3250万像素全画幅传感器，支持40fps电子连拍、7K RAW 与 4K120p 视频。",
+      "url": "https://www.canon.com.cn/product/r6iii/",
+      "date": "2025-11-06",
+      "source": "Canon China Official",
+      "type": "official",
+      "credibility": 5,
       "tags": [
         "canon",
         "r6",
         "fullframe",
-        "rumor"
+        "official"
       ]
     },
     {
       "id": "news-003",
-      "title": "【官方】尼康发布 Z6 III 固件更新 v2.0",
-      "summary": "尼康官方发布 Z6 III 固件2.0版本，新增鸟类检测AF、改进低光对焦性能，同时优化了视频录制时的散热表现。",
-      "url": "https://www.nikon.com",
-      "date": "2026-03-23",
-      "source": "Nikon Official",
+      "title": "【官方】尼康发布 Z 70-200mm f/2.8 VR S II",
+      "summary": "尼康中国于2月下旬发布新一代 Z 70-200mm f/2.8 VR S II，主打更轻量机身、内变焦设计和更快自动对焦，国行定价约19999元。",
+      "url": "https://www.nikon.com.cn/sc_CN/product/nikkor-lenses/z-mount/zoom/telephoto-zoom/z-70-200mm-f-2-8-vr-s-ii",
+      "date": "2026-02-24",
+      "source": "Nikon China Official",
       "type": "official",
       "credibility": 5,
       "tags": [
         "nikon",
-        "z6iii",
-        "firmware",
+        "z-mount",
+        "lens",
         "official"
       ]
     },
     {
       "id": "news-004",
-      "title": "【传闻】Fujifilm X-T50 将于4月发布",
-      "summary": "FujiRumors 称 X-T50 将在4月发布，搭载4000万像素X-Trans V传感器，7档IBIS防抖，预计售价$1499。",
-      "url": "https://www.fujirumors.com",
-      "date": "2026-03-21",
-      "source": "FujiRumors",
-      "type": "rumor",
-      "credibility": 3,
+      "title": "【官方】尼康发布轻量化 Z 24-105mm f/4-7.1",
+      "summary": "尼康中国发布 Z 24-105mm f/4-7.1 全画幅变焦镜头，定位日常挂机和旅行拍摄，国行定价约3980元。",
+      "url": "https://www.nikon.com.cn/sc_CN/product/nikkor-lenses/z-mount/zoom/telephoto-zoom/z-24-105mm-f-4-7-1",
+      "date": "2026-02-03",
+      "source": "Nikon China Official",
+      "type": "official",
+      "credibility": 5,
       "tags": [
-        "fujifilm",
-        "xt50",
-        "aps-c",
-        "rumor"
+        "nikon",
+        "z-mount",
+        "lens",
+        "official"
       ]
     },
     {
       "id": "news-005",
-      "title": "【官方】松下 Lumix S9 正式发布",
-      "summary": "松下正式发布全画幅紧凑型相机 Lumix S9，2420万像素，仅重486g，支持实时LUT，售价$1499。",
-      "url": "https://www.panasonic.com",
-      "date": "2026-03-20",
-      "source": "Panasonic Official",
-      "type": "official",
-      "credibility": 5,
+      "title": "【传闻】佳能 RE-1 复古全画幅机型持续发酵",
+      "summary": "多家摄影媒体在3月继续跟进 Canon RE-1 传闻，普遍认为其将围绕 AE-1 五十周年节点推出，但目前仍缺少官方确认与完整规格。",
+      "url": "https://www.canonrumors.com",
+      "date": "2026-03-01",
+      "source": "CanonRumors / 媒体汇总",
+      "type": "rumor",
+      "credibility": 3,
       "tags": [
-        "panasonic",
-        "s9",
+        "canon",
+        "re-1",
         "fullframe",
-        "official"
+        "rumor"
       ]
     },
     {
@@ -100,6 +100,17 @@ const NewsData = {
         "market",
         "cipa"
       ]
+    },
+    {
+      "id": "news-1775116883751-madl748lq",
+      "title": "Thypoch Announced an AI Camera and It Might Not Be a Joke",
+      "summary": "As expected, there have been a lot of April Fools' Day pranks in the photo industry today. Mixed in with the standard goofy and funny joke products, like ISO 0 film, a helium-filled camera backpack th...",
+      "url": "https://petapixel.com/2026/04/01/thypoch-announced-an-ai-camera-and-it-might-not-be-a-joke/",
+      "date": "Wed, 01 Apr 2026 19:46:24 +0000",
+      "source": "PetaPixel",
+      "type": "news",
+      "credibility": "medium",
+      "tags": []
     }
   ]
 };

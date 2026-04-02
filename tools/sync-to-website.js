@@ -115,7 +115,7 @@ class WebsiteSync {
             brand: c.brand,
             model: c.model,
             type: c.type || 'mirrorless',
-            sensor: c.sensor || 'fullframe',
+            sensor: c.sensor || c.expectedSpecs?.sensor || 'fullframe',
             mp: c.mp || c.expectedSpecs?.mp || 0,
             mount: c.mount || c.expectedSpecs?.mount || '',
             status: c.status || 'unknown',

@@ -1,12 +1,12 @@
 /**
  * 价格参考数据
- * 版本: 2026.03.28
- * 更新: 2026-03-28
+ * 版本: 2026.04.02
+ * 更新: 2026-04-02
  */
 
 const PriceReferenceData = {
-  "version": "2026.03.28",
-  "lastUpdated": "2026-03-28",
+  "version": "2026.04.02",
+  "lastUpdated": "2026-04-02",
   "tiers": {
     "entry": {
       "min": 0,
@@ -128,6 +128,12 @@ const PriceReferenceData = {
         "tier": "flagship",
         "date": "2026-03",
         "source": "京东自营"
+      },
+      "Alpha 7 V": {
+        "price": 17999,
+        "tier": "pro",
+        "date": "2026-04",
+        "source": "索尼中国官方建议零售价"
       },
       "A7 IV": {
         "price": 14999,
@@ -273,6 +279,13 @@ const PriceReferenceData = {
         "date": "2026-03",
         "source": "京东自营",
         "note": "中画幅"
+      },
+      "X-T50": {
+        "price": 9999,
+        "tier": "mid",
+        "date": "2026-04",
+        "source": "公开市场价",
+        "note": "APS-C 轻量机身"
       },
       "X-H2S": {
         "price": 14999,
@@ -482,6 +495,12 @@ const PriceReferenceData = {
         "tier": "pro",
         "date": "2026-03"
       },
+      "Z 70-200mm f/2.8 VR S II": {
+        "price": 19999,
+        "tier": "pro",
+        "date": "2026-04",
+        "source": "尼康中国官方 / 市场公开价"
+      },
       "Z 14-24mm f/2.8 S": {
         "price": 13999,
         "tier": "pro",
@@ -491,6 +510,12 @@ const PriceReferenceData = {
         "price": 7999,
         "tier": "mid",
         "date": "2026-03"
+      },
+      "Z 24-105mm f/4-7.1": {
+        "price": 3980,
+        "tier": "entry",
+        "date": "2026-04",
+        "source": "尼康中国官方 / 市场公开价"
       },
       "Z 40mm f/2": {
         "price": 1799,
