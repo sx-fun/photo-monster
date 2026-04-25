@@ -1,10 +1,10 @@
 /**
  * 新闻数据
- * 生成时间: 2026/4/2 16:01:23
+ * 生成时间: 2026/4/7 18:47:05
  */
 
 const NewsData = {
-  "generatedAt": "2026-04-02T08:01:23.751Z",
+  "generatedAt": "2026-04-07T10:47:05.752Z",
   "items": [
     {
       "id": "news-001",
@@ -102,7 +102,7 @@ const NewsData = {
       ]
     },
     {
-      "id": "news-1775116883751-madl748lq",
+      "id": "news-1775558825753-wbg1af2tz",
       "title": "Thypoch Announced an AI Camera and It Might Not Be a Joke",
       "summary": "As expected, there have been a lot of April Fools' Day pranks in the photo industry today. Mixed in with the standard goofy and funny joke products, like ISO 0 film, a helium-filled camera backpack th...",
       "url": "https://petapixel.com/2026/04/01/thypoch-announced-an-ai-camera-and-it-might-not-be-a-joke/",

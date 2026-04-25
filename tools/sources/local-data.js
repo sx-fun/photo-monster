@@ -6,8 +6,8 @@
 
 const LOCAL_DATA = {
     // 数据版本（用于追踪变更）
-    version: '2026.04.02.001',
-    lastUpdated: '2026-04-02',
+    version: '2026.05.01.001',
+    lastUpdated: '2026-04-22',
     
     // 数据来源说明
     sources: [
@@ -20,6 +20,28 @@ const LOCAL_DATA = {
     
     // 相机数据（带完整元数据）
     cameras: [
+        {
+            id: 'sony-a7rv-2026',
+            brand: 'sony',
+            model: 'Alpha 7R VI',
+            status: 'rumored',
+            rumorDate: '2026-04-11',
+            expectedSpecs: {
+                mp: 67,
+                sensor: 'fullframe',
+                sensorType: 'Exmor RS 堆栈式 CMOS',
+                mount: 'FE',
+                ibis: '8轴防抖',
+                video: '8K30p / 4K120p',
+                af: 'AI实时识别对焦V3',
+                burst: '20fps'
+            },
+            expectedPrice: { cn: 24999, us: 3499, eu: 3799 },
+            expectedRelease: '2026-05',
+            sources: ['SonyAlphaRumors', 'IT之家', '知乎'],
+            confidence: 'high',
+            notes: '三位可靠消息源确认6700万像素，5月发布，BIONZ XR2处理器'
+        },
         {
             id: 'sony-a7v-2026',
             brand: 'sony',
@@ -106,34 +128,64 @@ const LOCAL_DATA = {
             expectedRelease: '2026-Q3',
             sources: ['NikonRumors'],
             confidence: 'low',
-            notes: '传闻较少，可能推迟到下半年'
+            notes: 'NikonRumors官方确认：目前网上流传的Z7 III规格均为伪造/编造，请勿轻信。真实发布计划尚不明朗。'
         },
         {
             id: 'panasonic-s1ii-2026',
             brand: 'panasonic',
             model: 'Lumix S1 II',
-            status: 'rumored',
-            rumorDate: '2026-03-05',
+            status: 'official',
+            rumorDate: '2025-05-13',
             expectedSpecs: {
-                mp: 36,
+                mp: 24,
                 sensor: 'fullframe',
-                sensorType: 'BSI CMOS',
+                sensorType: '部分堆叠 CMOS',
                 mount: 'L',
-                ibis: '7.5-stop',
-                video: '6K60p ProRes',
+                ibis: '高规格防抖',
+                video: '4K120p',
                 af: '相位对焦V2',
-                burst: '15fps'
+                burst: '70fps'
             },
-            expectedPrice: { cn: 18999, us: 2499, eu: 2799 },
-            expectedRelease: '2026-Q3',
-            sources: ['43Rumors'],
-            confidence: 'medium',
-            notes: 'S1系列时隔多年更新，视频功能仍是强项'
+            expectedPrice: { cn: 0, us: 3500, eu: 0 },
+            expectedRelease: '2025-05-13',
+            sources: ['Panasonic Official'],
+            confidence: 'high',
+            notes: '松下已于5月13日官方发布S1 II和S1 IIE两款机型，首款采用部分堆叠传感器的相机'
         }
     ],
     
     // 镜头数据
     lenses: [
+        {
+            id: 'sony-100400gm-2026',
+            brand: 'sony',
+            model: 'FE 100-400mm f/4.5 GM II',
+            status: 'rumored',
+            type: 'zoom',
+            focalLength: '100-400mm',
+            aperture: 'f/4.5',
+            mount: 'FE',
+            expectedPrice: { cn: 18999, us: 2499, eu: 2699 },
+            expectedRelease: '2026-05',
+            sources: ['SonyAlphaRumors', 'IT之家'],
+            confidence: 'high',
+            features: ['轻量化长焦', 'XD线性马达', '防尘防滴', '约5倍变焦']
+        },
+        {
+            id: 'sony-1628gm-2026',
+            brand: 'sony',
+            model: 'FE 16-28mm f/2.0 GM',
+            status: 'rumored',
+            type: 'zoom',
+            focalLength: '16-28mm',
+            aperture: 'f/2.0',
+            mount: 'FE',
+            expectedPrice: { cn: 13999, us: 1899, eu: 2099 },
+            expectedRelease: '2026-05',
+            sources: ['SonyAlphaRumors'],
+            confidence: 'medium',
+            features: ['超广角恒定光圈', 'GM画质', '轻量化']
+        },
         {
             id: 'sony-85gm2-2026',
             brand: 'sony',

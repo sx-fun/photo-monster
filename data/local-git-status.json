@@ -1,6 +1,6 @@
 {
   "isGitRepo": true,
-  "changes": 29,
+  "changes": 9,
   "files": [
     "[修改] .workbuddy/memory/MEMORY.md",
     "[修改] .workbuddy/photomonster/state.json",
@@ -9,29 +9,18 @@
     "[修改] data/new-gear-data.json",
     "[修改] data/news-data.js",
     "[修改] data/news-data.json",
-    "[修改] index.html",
-    "[修改] js/app.js",
-    "[修改] pages/about.html",
-    "[修改] pages/admin-update.html",
-    "[修改] pages/ai-config.html",
-    "[修改] pages/batch-analysis.html",
-    "[修改] pages/content-complaint.html",
-    "[修改] pages/daily-practice.html",
-    "[修改] pages/favorites.html",
-    "[修改] pages/gear-compare.html",
-    "[修改] pages/gear-guide.html",
-    "[修改] pages/history.html",
-    "[修改] pages/knowledge.html"
+    "[修改] tools/sources/local-data.js",
+    "[新增] tools/validate-gear-data.js"
   ],
   "fileCount": {
-    "modified": 26,
+    "modified": 8,
     "staged": 0,
-    "untracked": 3,
-    "total": 29
+    "untracked": 1,
+    "total": 9
   },
   "branch": "main",
-  "lastCommit": "fbec559 - 发布版本 v49.20260401.001 (24 hours ago)",
+  "lastCommit": "06ce2c4 - chore: 同步版本到v50 (3 weeks ago)",
   "hasUncommittedChanges": true,
-  "lastCheck": "2026-04-02T07:38:22.396Z",
-  "checkTimeFormatted": "2026/4/2 15:38:22"
+  "lastCheck": "2026-04-25T00:50:41.018Z",
+  "checkTimeFormatted": "2026/4/25 08:50:41"
 }

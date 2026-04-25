@@ -27,10 +27,12 @@
 - **执行内容**: 深度抓取新器材、数据验证、同步到网站
 - **数据源**: tools/sources/local-data.js (本地结构化数据)
 - **价格库**: 53款相机 + 26款镜头 (tools/sources/price-reference.js)
-- **最新执行**: 2026-04-02 (成功，补执行)
+- **最新执行**: 2026-04-07 (成功)
   - 5款相机/6支镜头/7条新闻已同步
-  - 已校正 Sony Alpha 7 V、Canon EOS R6 Mark III、Fujifilm X-T50 为官方状态
+  - 数据验证通过: 新器材11项 + 价格79项
+  - 已标记 Sony Alpha 7 V、Canon EOS R6 Mark III、Fujifilm X-T50 为官方状态
   - 已新增 Nikon Z 70-200mm f/2.8 VR S II、Nikon Z 24-105mm f/4-7.1
+  - 新增 validate-gear-data.js 数据验证脚本
   - 下月关注: Canon RE-1官宣、Nikon Z7 III进展、Panasonic Lumix S1 II是否转正
 
 
