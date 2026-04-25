@@ -6,8 +6,8 @@
 
 const LOCAL_DATA = {
     // 数据版本（用于追踪变更）
-    version: '2026.05.01.001',
-    lastUpdated: '2026-04-22',
+    version: '2026.05.25.001',
+    lastUpdated: '2026-04-25',
     
     // 数据来源说明
     sources: [
@@ -21,11 +21,33 @@ const LOCAL_DATA = {
     // 相机数据（带完整元数据）
     cameras: [
         {
+            id: 'canon-r6v-2026',
+            brand: 'canon',
+            model: 'EOS R6 V',
+            status: 'announced',
+            rumorDate: '2026-04-21',
+            expectedSpecs: {
+                mp: 32.5,
+                sensor: 'fullframe',
+                sensorType: 'CMOS',
+                mount: 'RF',
+                ibis: '机身防抖',
+                video: '4K RAW Internal / 4K120p',
+                af: '双像素CMOS AF II',
+                burst: '40fps电子'
+            },
+            expectedPrice: { cn: 0, us: 0, eu: 0 },
+            expectedRelease: '2026-05-13',
+            sources: ['CanonRumors', 'notebookcheck'],
+            confidence: 'high',
+            notes: 'CanonRumors 确认将于 2026年5月13日与 RF 20-50mm f/4L IS USM PZ 镜头同步发布，32.5MP 全画幅传感器支持内录 RAW 视频，定位紧凑视频旗舰'
+        },
+        {
             id: 'sony-a7rv-2026',
             brand: 'sony',
             model: 'Alpha 7R VI',
             status: 'rumored',
-            rumorDate: '2026-04-11',
+            rumorDate: '2026-04-06',
             expectedSpecs: {
                 mp: 67,
                 sensor: 'fullframe',
@@ -38,9 +60,9 @@ const LOCAL_DATA = {
             },
             expectedPrice: { cn: 24999, us: 3499, eu: 3799 },
             expectedRelease: '2026-05',
-            sources: ['SonyAlphaRumors', 'IT之家', '知乎'],
+            sources: ['SonyAlphaRumors', 'IT之家', '知乎', '蜂鸟网'],
             confidence: 'high',
-            notes: '三位可靠消息源确认6700万像素，5月发布，BIONZ XR2处理器'
+            notes: '三位可靠消息源确认6700万像素，SonyAlphaRumors 独家披露5月发布，将与新款 16-28mm f/2 GM 及 100-400mm f/4 GM 镜头同步公布，BIONZ XR2处理器'
         },
         {
             id: 'sony-a7v-2026',
@@ -128,7 +150,29 @@ const LOCAL_DATA = {
             expectedRelease: '2026-Q3',
             sources: ['NikonRumors'],
             confidence: 'low',
-            notes: 'NikonRumors官方确认：目前网上流传的Z7 III规格均为伪造/编造，请勿轻信。真实发布计划尚不明朗。'
+            notes: 'NikonRumors官方确认：目前网上流传的Z7 III规格均为伪造/编造，请勿轻信。NAB 2026上尼康无相关新品。真实发布计划尚不明朗，预计最早2026年底。'
+        },
+        {
+            id: 'nikon-z9ii-2026',
+            brand: 'nikon',
+            model: 'Z9 II',
+            status: 'rumored',
+            rumorDate: '2026-01-07',
+            expectedSpecs: {
+                mp: 46,
+                sensor: 'fullframe',
+                sensorType: '堆叠式 CMOS (Global Shutter)',
+                mount: 'Z',
+                ibis: '高规格防抖',
+                video: '8K60p RAW / RED Integration',
+                af: '3D追焦 XP8',
+                burst: '60fps RAW'
+            },
+            expectedPrice: { cn: 49999, us: 6499, eu: 6999 },
+            expectedRelease: '2026-Q4',
+            sources: ['NikonRumors', 'dailycameranews'],
+            confidence: 'medium',
+            notes: '发布时间已从2025年底推迟至2026年Q4，正在整合RED视频技术，全局快门传感器，目标冲击2026年FIFA世界杯和冬奥会专业用户'
         },
         {
             id: 'panasonic-s1ii-2026',
@@ -146,16 +190,61 @@ const LOCAL_DATA = {
                 af: '相位对焦V2',
                 burst: '70fps'
             },
-            expectedPrice: { cn: 0, us: 3500, eu: 0 },
+            expectedPrice: { cn: 22398, us: 3500, eu: 0 },
             expectedRelease: '2025-05-13',
-            sources: ['Panasonic Official'],
+            sources: ['Panasonic China Official', '色影无忌', '什么值得买'],
             confidence: 'high',
-            notes: '松下已于5月13日官方发布S1 II和S1 IIE两款机型，首款采用部分堆叠传感器的相机'
+            notes: '松下中国于2025年5月14日公布国行价格：S1 II单机身22398元，S1 IIE入门版17498元，搭配R24105镜头套装28598元。首款采用部分堆叠传感器的松下相机，支持4K120p高速视频。'
         }
     ],
     
     // 镜头数据
     lenses: [
+        {
+            id: 'sony-100400gmii-2026',
+            brand: 'sony',
+            model: 'FE 100-400mm f/4 GM II',
+            status: 'rumored',
+            type: 'zoom',
+            focalLength: '100-400mm',
+            aperture: 'f/4',
+            mount: 'FE',
+            expectedPrice: { cn: 22999, us: 2999, eu: 3299 },
+            expectedRelease: '2026-05',
+            sources: ['SonyAlphaRumors', 'dailycameranews', 'photorumors'],
+            confidence: 'high',
+            features: ['恒定f/4光圈（较初代大半档）', 'XD线性马达升级', '防尘防滴', '与A7R VI同期发布']
+        },
+        {
+            id: 'sony-1628gmii-2026',
+            brand: 'sony',
+            model: 'FE 16-28mm f/2.0 GM',
+            status: 'rumored',
+            type: 'zoom',
+            focalLength: '16-28mm',
+            aperture: 'f/2.0',
+            mount: 'FE',
+            expectedPrice: { cn: 13999, us: 1899, eu: 2099 },
+            expectedRelease: '2026-05',
+            sources: ['SonyAlphaRumors', 'dailycameranews'],
+            confidence: 'high',
+            features: ['同级别最大恒定光圈f/2.0', '超广角 GM 品质', '与A7R VI同期发布']
+        },
+        {
+            id: 'canon-rf20-50pz-2026',
+            brand: 'canon',
+            model: 'RF 20-50mm f/4L IS USM PZ',
+            status: 'announced',
+            type: 'zoom',
+            focalLength: '20-50mm',
+            aperture: 'f/4',
+            mount: 'RF',
+            expectedPrice: { cn: 0, us: 0, eu: 0 },
+            expectedRelease: '2026-05-13',
+            sources: ['CanonRumors'],
+            confidence: 'high',
+            features: ['电动变焦（Power Zoom）', 'L级防尘防滴', '轻量化', '与EOS R6 V同期发布']
+        },
         {
             id: 'sony-100400gm-2026',
             brand: 'sony',
@@ -280,6 +369,39 @@ const LOCAL_DATA = {
     
     // 新闻条目
     news: [
+        {
+            id: 'news-007',
+            title: '【预告】佳能 EOS R6 V 确认5月13日发布，全画幅内录RAW',
+            type: 'announced',
+            date: '2026-04-21',
+            summary: 'CanonRumors 及多家媒体确认，佳能 EOS R6 V 将于2026年5月13日正式发布，搭配全新 RF 20-50mm f/4L IS USM PZ 电动变焦镜头同步推出。机型继承32.5MP传感器，主打支持内录RAW视频，定位为紧凑型全画幅视频旗舰。',
+            source: 'CanonRumors / notebookcheck',
+            url: 'https://www.canonrumors.com/the-canon-eos-r6-v-and-rf-20-50mm-f-4l-is-usm-pz-are-coming-may-13/',
+            tags: ['canon', 'r6v', 'fullframe', 'announced'],
+            relatedGear: ['canon-r6v-2026', 'canon-rf20-50pz-2026']
+        },
+        {
+            id: 'news-008',
+            title: '【独家传闻】索尼 Alpha 7R VI 5月发布，67MP新传感器',
+            type: 'rumor',
+            date: '2026-04-06',
+            summary: 'SonyAlphaRumors独家披露：Sony Alpha 7R VI 将于2026年5月发布上市，搭载约6700万像素新传感器，同步推出 FE 16-28mm f/2 GM 超广角变焦及 FE 100-400mm f/4 GM II 长焦变焦镜头。这将是索尼高像素系列的里程碑升级。',
+            source: 'SonyAlphaRumors / 蜂鸟网',
+            url: 'https://www.sonyalpharumors.com/exclusive-new-67-megapixel-sony-a7rvi-is-coming-in-may/',
+            tags: ['sony', 'a7rv', 'a7r6', 'fullframe', 'rumor'],
+            relatedGear: ['sony-a7rv-2026']
+        },
+        {
+            id: 'news-009',
+            title: '【官方】松下 Lumix S1 II 国行价格公布：22398元起',
+            type: 'official',
+            date: '2025-05-14',
+            summary: '松下中国正式公布 Lumix S1 II 和 S1 IIE 国行售价。S1 II单机身22398元，S1 IIE 17498元，均于2025年6月18日前后开启预售。这是松下首款采用部分堆叠CMOS传感器的全画幅相机，支持4K120p及70fps高速连拍。',
+            source: 'Panasonic China Official / 色影无忌',
+            url: 'https://info.xitek.com/allpage/news/202505/15-369521.html',
+            tags: ['panasonic', 's1ii', 'fullframe', 'official'],
+            relatedGear: ['panasonic-s1ii-2026']
+        },
         {
             id: 'news-001',
             title: '【官方】索尼 Alpha 7 V 已正式发布并上市',
