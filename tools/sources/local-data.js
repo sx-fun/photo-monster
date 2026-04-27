@@ -6,8 +6,8 @@
 
 const LOCAL_DATA = {
     // 数据版本（用于追踪变更）
-    version: '2026.05.25.001',
-    lastUpdated: '2026-04-25',
+    version: '2026.05.27.001',
+    lastUpdated: '2026-04-27',
     
     // 数据来源说明
     sources: [
@@ -32,15 +32,15 @@ const LOCAL_DATA = {
                 sensorType: 'CMOS',
                 mount: 'RF',
                 ibis: '机身防抖',
-                video: '4K RAW Internal / 4K120p',
+                video: '4K RAW Internal / 4K120p / 7K Open Gate',
                 af: '双像素CMOS AF II',
                 burst: '40fps电子'
             },
             expectedPrice: { cn: 0, us: 0, eu: 0 },
             expectedRelease: '2026-05-13',
-            sources: ['CanonRumors', 'notebookcheck'],
+            sources: ['CanonRumors', 'notebookcheck', 'thenewcamera'],
             confidence: 'high',
-            notes: 'CanonRumors 确认将于 2026年5月13日与 RF 20-50mm f/4L IS USM PZ 镜头同步发布，32.5MP 全画幅传感器支持内录 RAW 视频，定位紧凑视频旗舰'
+            notes: 'Notebookcheck 披露确认：EOS R6 V 将于本周发布（非 R8 V），采用 EOS R50 V 相近外观、无 EVF 设计（紧凑型），32.5MP 全画幅传感器支持 7K Open Gate 内录 RAW，定位紧凑全画幅视频旗舰，与 RF 20-50mm f/4L IS USM PZ 同步发布，国行价格待定'
         },
         {
             id: 'sony-a7rv-2026',
@@ -53,16 +53,16 @@ const LOCAL_DATA = {
                 sensor: 'fullframe',
                 sensorType: 'Exmor RS 堆栈式 CMOS',
                 mount: 'FE',
-                ibis: '8轴防抖',
+                ibis: '8轴8.5档',
                 video: '8K30p / 4K120p',
                 af: 'AI实时识别对焦V3',
-                burst: '20fps'
+                burst: '30fps 14-bit RAW'
             },
             expectedPrice: { cn: 24999, us: 3499, eu: 3799 },
             expectedRelease: '2026-05',
-            sources: ['SonyAlphaRumors', 'IT之家', '知乎', '蜂鸟网'],
+            sources: ['SonyAlphaRumors', 'IT之家', '知乎', '蜂鸟网', 'photoworkout'],
             confidence: 'high',
-            notes: '三位可靠消息源确认6700万像素，SonyAlphaRumors 独家披露5月发布，将与新款 16-28mm f/2 GM 及 100-400mm f/4 GM 镜头同步公布，BIONZ XR2处理器'
+            notes: '三位可靠消息源确认约6700万像素，SonyAlphaRumors 独家披露5月发货、全新机身设计，同步推出 FE 16-28mm f/2 GM 及 FE 100-400mm f/4 GM II 镜头。泄露规格：8轴8.5档IBIS、30fps 14-bit RAW、BIONZ XR2、10K超采8K30p全画幅、944万点OLED EVF（未经官方确认）。国行价格24999元为参考估算。'
         },
         {
             id: 'sony-a7v-2026',
@@ -137,20 +137,20 @@ const LOCAL_DATA = {
             status: 'rumored',
             rumorDate: '2026-02-28',
             expectedSpecs: {
-                mp: 60,
+                mp: 0,
                 sensor: 'fullframe',
-                sensorType: 'BSI CMOS',
+                sensorType: 'TBD',
                 mount: 'Z',
-                ibis: '6-stop',
-                video: '8K30p',
-                af: '3D追焦V2',
-                burst: '12fps'
+                ibis: 'TBD',
+                video: 'TBD',
+                af: 'TBD',
+                burst: 'TBD'
             },
-            expectedPrice: { cn: 22999, us: 2999, eu: 3299 },
-            expectedRelease: '2026-Q3',
-            sources: ['NikonRumors'],
-            confidence: 'low',
-            notes: 'NikonRumors官方确认：目前网上流传的Z7 III规格均为伪造/编造，请勿轻信。NAB 2026上尼康无相关新品。真实发布计划尚不明朗，预计最早2026年底。'
+            expectedPrice: { cn: 0, us: 0, eu: 0 },
+            expectedRelease: '2026-Q4',
+            sources: ['NikonRumors', 'dailycameranews'],
+            confidence: 'very-low',
+            notes: '⚠️ NikonRumors官方已确认：目前网上流传的Z7 III规格均为伪造/编造，请勿轻信。dailycameranews报道推测可能在2026年中后期发布（$3499），但同样无可靠规格。NAB 2026上尼康无相关新品。真实发布计划尚不明朗，预计最早2026年底。'
         },
         {
             id: 'nikon-z9ii-2026',
@@ -161,18 +161,18 @@ const LOCAL_DATA = {
             expectedSpecs: {
                 mp: 46,
                 sensor: 'fullframe',
-                sensorType: '堆叠式 CMOS (Global Shutter)',
+                sensorType: '堆叠式 CMOS (部分 Global Shutter)',
                 mount: 'Z',
-                ibis: '高规格防抖',
+                ibis: '8轴8.5档防抖',
                 video: '8K60p RAW / RED Integration',
                 af: '3D追焦 XP8',
-                burst: '60fps RAW'
+                burst: '60fps 14-bit RAW'
             },
             expectedPrice: { cn: 49999, us: 6499, eu: 6999 },
             expectedRelease: '2026-Q4',
-            sources: ['NikonRumors', 'dailycameranews'],
+            sources: ['NikonRumors', 'dailycameranews', 'digitalcameraworld'],
             confidence: 'medium',
-            notes: '发布时间已从2025年底推迟至2026年Q4，正在整合RED视频技术，全局快门传感器，目标冲击2026年FIFA世界杯和冬奥会专业用户'
+            notes: '发布时间已从2025年底推迟至2026年Q4，整合RED视频技术。DigitalCameraWorld泄露规格：ISO32原生感光度（"中画幅级"纯净度），60fps 14-bit RAW（比Z9快3.5倍），8轴8.5档IBIS。目标2026 FIFA世界杯和冬奥会专业用户。'
         },
         {
             id: 'panasonic-s1ii-2026',
@@ -370,15 +370,37 @@ const LOCAL_DATA = {
     // 新闻条目
     news: [
         {
-            id: 'news-007',
-            title: '【预告】佳能 EOS R6 V 确认5月13日发布，全画幅内录RAW',
+            id: 'news-010',
+            title: '【确认】佳能 EOS R6 V 本周发布：无EVF紧凑设计，7K Open Gate',
             type: 'announced',
-            date: '2026-04-21',
-            summary: 'CanonRumors 及多家媒体确认，佳能 EOS R6 V 将于2026年5月13日正式发布，搭配全新 RF 20-50mm f/4L IS USM PZ 电动变焦镜头同步推出。机型继承32.5MP传感器，主打支持内录RAW视频，定位为紧凑型全画幅视频旗舰。',
-            source: 'CanonRumors / notebookcheck',
-            url: 'https://www.canonrumors.com/the-canon-eos-r6-v-and-rf-20-50mm-f-4l-is-usm-pz-are-coming-may-13/',
+            date: '2026-04-27',
+            summary: 'Notebookcheck 独家披露 EOS R6 V 关键信息：确认本周内官宣（非 R8 V），外观继承 EOS R50 V 相近设计（无 EVF），32.5MP 全画幅传感器，7K Open Gate 内录 RAW，搭配 RF 20-50mm f/4L IS USM PZ 套机镜头。CanonRumors 确认 5月13日 为发布会日期。国行价格尚未公布。',
+            source: 'notebookcheck / CanonRumors / thenewcamera',
+            url: 'https://www.notebookcheck.net/Leak-Canon-EOS-R6-V-to-launch-this-week-with-full-frame-sensor-and-RAW-video.1278929.0.html',
             tags: ['canon', 'r6v', 'fullframe', 'announced'],
             relatedGear: ['canon-r6v-2026', 'canon-rf20-50pz-2026']
+        },
+        {
+            id: 'news-011',
+            title: '【高可信传闻】索尼 A7R VI 5月发货：67MP，新机身，同步两款GM镜',
+            type: 'rumor',
+            date: '2026-04-27',
+            summary: 'SonyAlphaRumors 独家披露（已核实三位可靠消息源）：Sony A7R VI 将于 2026年5月 上市发货，约6700万像素，全新机身设计，同步推出 FE 16-28mm f/2 GM 超广角变焦和 FE 100-400mm f/4 GM II 长焦镜头。未经确认规格：8轴8.5档IBIS、30fps 14bit RAW、BIONZ XR2处理器、10K超采8K30p视频。',
+            source: 'SonyAlphaRumors / photoworkout / 知乎',
+            url: 'https://www.sonyalpharumors.com/exclusive-new-67-megapixel-sony-a7rvi-is-coming-in-may/',
+            tags: ['sony', 'a7rv', 'a7r6', 'fullframe', 'rumor'],
+            relatedGear: ['sony-a7rv-2026', 'sony-1628gmii-2026', 'sony-100400gmii-2026']
+        },
+        {
+            id: 'news-012',
+            title: '【传闻】尼康 Z9 II 泄露：ISO32/60fps RAW/RED整合，Q4发布',
+            type: 'rumor',
+            date: '2026-04-27',
+            summary: 'DigitalCameraWorld 披露尼康 Z9 II 泄露规格：ISO32原生感光度（"中画幅级"纯净度），60fps 14-bit RAW 连拍（比 Z9 快3.5倍），传感器读出速度大幅提升，整合 RED 视频技术。NikonRumors 此前已报道发布推迟至 Q4，目标 2026 FIFA 世界杯和冬奥会专业用户。',
+            source: 'digitalcameraworld / NikonRumors / dailycameranews',
+            url: 'https://www.digitalcameraworld.com/cameras/mirrorless-cameras/nikon-z9-ii-leak-iso32-60fps-raw-bursts-and-more-red-flags-than-you-can-shake-a-monopod-at',
+            tags: ['nikon', 'z9ii', 'flagship', 'rumor'],
+            relatedGear: ['nikon-z9ii-2026']
         },
         {
             id: 'news-008',
@@ -448,13 +470,13 @@ const LOCAL_DATA = {
         },
         {
             id: 'news-005',
-            title: '【传闻】佳能 RE-1 复古全画幅机型持续发酵',
+            title: '【更新】佳能 RE-1：CP+2026展出概念机（1英寸传感器），全画幅版仍待定',
             type: 'rumor',
-            date: '2026-03-01',
-            summary: '多家摄影媒体在3月继续跟进 Canon RE-1 传闻，普遍认为其将围绕 AE-1 五十周年节点推出，但目前仍缺少官方确认与完整规格。',
-            source: 'CanonRumors / 媒体汇总',
-            url: 'https://www.canonrumors.com',
-            tags: ['canon', 're-1', 'fullframe', 'rumor']
+            date: '2026-04-27',
+            summary: 'CP+ 2026 展会上，佳能出乎意料地展出了一款概念相机——搭载1英寸传感器、腰平取景窗设计、灵感来自 Hasselblad 500 和海鸥4号，完全手动对焦，大概率不会量产。这与传闻中的全画幅 RE-1（致敬 AE-1 50周年，3250万像素，Q4 2026-Q1 2027）是不同产品。全画幅 RE-1 传闻持续发酵，Canon 高层 Kato 曾在 CP+ 2025 主动提及复古设计需求，被认为暗示产品属实。',
+            source: 'DUMBCAM BLOG / CanonRumors / 知乎',
+            url: 'https://www.dumbcamblog.com/blog/canon-re1-ae1-50th-anniversary-2026',
+            tags: ['canon', 're-1', 'fullframe', 'rumor', 'cpplus2026']
         },
         {
             id: 'news-006',

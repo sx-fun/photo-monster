@@ -6,8 +6,8 @@
 
 const PRICE_REFERENCE = {
     // 数据版本
-    version: '2026.04.02',
-    lastUpdated: '2026-04-02',
+    version: '2026.04.27',
+    lastUpdated: '2026-04-27',
     
     // 价格区间定义（用于分级显示）
     priceTiers: {
@@ -33,7 +33,10 @@ const PRICE_REFERENCE = {
             // DSLR
             'EOS 5D Mark IV': { price: 14999, tier: 'pro', date: '2026-03', source: '京东自营', note: '已停产，库存价' },
             'EOS 6D Mark II': { price: 8999, tier: 'mid', date: '2026-03', source: '京东自营', note: '已停产，库存价' },
-            'EOS 90D': { price: 7999, tier: 'mid', date: '2026-03', source: '京东自营' }
+            'EOS 90D': { price: 7999, tier: 'mid', date: '2026-03', source: '京东自营' },
+            // 2026新品（预期）
+            'EOS R6 V': { price: 0, tier: 'pro', date: '2026-05', source: '待官宣', note: '5月13日官宣，国行价格待定' },
+            'EOS R6 Mark III': { price: 16999, tier: 'pro', date: '2026-04', source: '佳能中国官方建议零售价' }
         },
         
         // Sony
@@ -41,6 +44,7 @@ const PRICE_REFERENCE = {
             'A1': { price: 47999, tier: 'luxury', date: '2026-03', source: '京东自营' },
             'A9 III': { price: 44999, tier: 'luxury', date: '2026-03', source: '京东自营' },
             'A7R V': { price: 23999, tier: 'flagship', date: '2026-03', source: '京东自营' },
+            'Alpha 7R VI': { price: 24999, tier: 'flagship', date: '2026-05', source: '估算参考价', note: '5月发布，高可信传闻，预估24999元' },
             'Alpha 7 V': { price: 17999, tier: 'pro', date: '2026-04', source: '索尼中国官方建议零售价' },
             'A7 IV': { price: 14999, tier: 'pro', date: '2026-03', source: '京东自营' },
             'A7C II': { price: 12999, tier: 'pro', date: '2026-03', source: '京东自营' },
@@ -84,6 +88,8 @@ const PRICE_REFERENCE = {
         
         // Panasonic
         panasonic: {
+            'Lumix S1 II': { price: 22398, tier: 'flagship', date: '2026-04', source: '松下中国官方建议零售价', note: '2025年5月发布，部分堆叠CMOS，4K120p' },
+            'Lumix S1 IIE': { price: 17498, tier: 'pro', date: '2026-04', source: '松下中国官方建议零售价', note: '入门版，无内录RAW' },
             'Lumix S5 II': { price: 10998, tier: 'mid', date: '2026-03', source: '京东自营' },
             'Lumix S5 IIx': { price: 11998, tier: 'mid', date: '2026-03', source: '京东自营' },
             'Lumix S9': { price: 8399, tier: 'mid', date: '2026-03', source: '京东自营' },

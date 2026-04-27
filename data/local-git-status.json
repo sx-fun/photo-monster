@@ -4,23 +4,23 @@
   "files": [
     "[修改] .workbuddy/memory/MEMORY.md",
     "[修改] .workbuddy/photomonster/state.json",
-    "[修改] data/local-git-status.json",
     "[修改] data/new-gear-data.js",
     "[修改] data/new-gear-data.json",
     "[修改] data/news-data.js",
     "[修改] data/news-data.json",
-    "[修改] tools/sources/local-data.js",
-    "[新增] tools/validate-gear-data.js"
+    "[修改] data/price-data.js",
+    "[修改] data/price-data.json",
+    "[修改] tools/sources/price-reference.js"
   ],
   "fileCount": {
-    "modified": 8,
+    "modified": 9,
     "staged": 0,
-    "untracked": 1,
+    "untracked": 0,
     "total": 9
   },
   "branch": "main",
-  "lastCommit": "06ce2c4 - chore: 同步版本到v50 (3 weeks ago)",
+  "lastCommit": "c280b53 - data: 新增Canon EOS R6 V器材数据，更新Sony A7R VI信息 (2 days ago)",
   "hasUncommittedChanges": true,
-  "lastCheck": "2026-04-25T00:50:41.018Z",
-  "checkTimeFormatted": "2026/4/25 08:50:41"
+  "lastCheck": "2026-04-27T05:24:06.135Z",
+  "checkTimeFormatted": "2026/4/27 13:24:06"
 }

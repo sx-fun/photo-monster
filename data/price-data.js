@@ -1,12 +1,12 @@
 /**
  * 价格参考数据
- * 版本: 2026.04.02
- * 更新: 2026-04-02
+ * 版本: 2026.04.27
+ * 更新: 2026-04-27
  */
 
 const PriceReferenceData = {
-  "version": "2026.04.02",
-  "lastUpdated": "2026-04-02",
+  "version": "2026.04.27",
+  "lastUpdated": "2026-04-27",
   "tiers": {
     "entry": {
       "min": 0,
@@ -108,6 +108,19 @@ const PriceReferenceData = {
         "tier": "mid",
         "date": "2026-03",
         "source": "京东自营"
+      },
+      "EOS R6 V": {
+        "price": 0,
+        "tier": "pro",
+        "date": "2026-05",
+        "source": "待官宣",
+        "note": "5月13日官宣，国行价格待定"
+      },
+      "EOS R6 Mark III": {
+        "price": 16999,
+        "tier": "pro",
+        "date": "2026-04",
+        "source": "佳能中国官方建议零售价"
       }
     },
     "sony": {
@@ -128,6 +141,13 @@ const PriceReferenceData = {
         "tier": "flagship",
         "date": "2026-03",
         "source": "京东自营"
+      },
+      "Alpha 7R VI": {
+        "price": 24999,
+        "tier": "flagship",
+        "date": "2026-05",
+        "source": "估算参考价",
+        "note": "5月发布，高可信传闻，预估24999元"
       },
       "Alpha 7 V": {
         "price": 17999,
@@ -332,6 +352,20 @@ const PriceReferenceData = {
       }
     },
     "panasonic": {
+      "Lumix S1 II": {
+        "price": 22398,
+        "tier": "flagship",
+        "date": "2026-04",
+        "source": "松下中国官方建议零售价",
+        "note": "2025年5月发布，部分堆叠CMOS，4K120p"
+      },
+      "Lumix S1 IIE": {
+        "price": 17498,
+        "tier": "pro",
+        "date": "2026-04",
+        "source": "松下中国官方建议零售价",
+        "note": "入门版，无内录RAW"
+      },
       "Lumix S5 II": {
         "price": 10998,
         "tier": "mid",
