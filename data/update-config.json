@@ -1,29 +1,11 @@
 {
   "_comment": "Photo Monster 统一版本配置文件 - 格式: v{SW版本}.{YYYYMMDD}.{序号}",
-  "version": "v50.20260402.001",
+  "version": "v50.20260427.001",
   "swVersion": "v50",
-  "lastUpdated": "2026-04-27T05:51:34.133Z",
+  "lastUpdated": "2026-04-27T05:52:02.309Z",
   "swCacheVersion": "v50",
-  "publishStatus": "pending",
-  "pendingRelease": {
-    "version": "v50.20260427.001",
-    "swVersion": "v50",
-    "swCacheVersion": "v50",
-    "createdAt": "2026-04-27T05:51:34.133Z",
-    "changes": [
-      "数据更新:器材/新闻/价格数据自动抓取更新",
-      "新增Canon R6 Mark III/Sony A7V等器材",
-      "更新价格参考数据"
-    ],
-    "releaseNote": {
-      "title": "版本 v50.20260427.001",
-      "changes": [
-        "数据更新:器材/新闻/价格数据自动抓取更新",
-        "新增Canon R6 Mark III/Sony A7V等器材",
-        "更新价格参考数据"
-      ]
-    }
-  },
+  "publishStatus": "published",
+  "pendingRelease": null,
   "updateSources": [
     {
       "id": "camera-database",
@@ -74,12 +56,16 @@
       "description": "新增场景拍摄方案"
     }
   ],
-  "pendingChanges": [
-    "数据更新:器材/新闻/价格数据自动抓取更新",
-    "新增Canon R6 Mark III/Sony A7V等器材",
-    "更新价格参考数据"
-  ],
+  "pendingChanges": [],
   "updateHistory": [
+    {
+      "version": "v50.20260427.001",
+      "date": "2026-04-27T05:52:02.309Z",
+      "changes": [
+        "[\\"
+      ],
+      "status": "published"
+    },
     {
       "version": "v49.20260401.001",
       "date": "2026-04-01T07:24:57.004Z",
